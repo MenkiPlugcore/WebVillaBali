@@ -5,9 +5,8 @@
   will-change: transform, background, box-shadow, backdrop-filter;
 }
 
-.site-header.nav-mounted {
-  animation: navEnter .62s cubic-bezier(.22,1,.36,1) both;
-}
+.site-header.nav-mounted { animation: navEnter .62s cubic-bezier(.22,1,.36,1) both; }
+.property-page .site-header { animation: navEnter .62s cubic-bezier(.22,1,.36,1) both; }
 
 .site-header::after {
   content: "";
@@ -47,11 +46,11 @@
   backdrop-filter: blur(16px) saturate(130%);
 }
 
-/* Fix: property-page anchor inheritance was making the white CTA text white too. */
+/* Fix: .property-page .site-header a{color:inherit} overrode the CTA text color. */
 .property-page .site-header .header-cta,
 .property-page .site-header .primary-btn.header-cta {
   color: #10221b !important;
-  background: #fff;
+  background: #fff !important;
 }
 
 .site-header .brand,
@@ -65,8 +64,8 @@
 .site-header .brand:hover { transform: translateY(-1px); }
 .site-header .brand:hover .brand-mark { transform: rotate(-7deg) scale(1.04); }
 .site-header .brand-mark { transition: transform .35s cubic-bezier(.22,1,.36,1); }
-
 .site-header .desktop-nav a:hover { transform: translateY(-2px); opacity: 1; }
+
 .site-header .header-actions .ghost-btn:hover {
   background: rgba(255,255,255,.1);
   border-color: rgba(255,255,255,.58);
@@ -77,10 +76,12 @@
   box-shadow: 0 10px 24px rgba(0,0,0,.16);
 }
 
-/* Slight staggered reveal so the navbar feels intentional instead of flashy. */
-.site-header.nav-mounted .brand { animation: navItemIn .55s .05s both; }
-.site-header.nav-mounted .desktop-nav { animation: navItemIn .55s .12s both; }
-.site-header.nav-mounted .header-actions { animation: navItemIn .55s .18s both; }
+.site-header.nav-mounted .brand,
+.property-page .site-header .brand { animation: navItemIn .55s .05s both; }
+.site-header.nav-mounted .desktop-nav,
+.property-page .site-header .desktop-nav { animation: navItemIn .55s .12s both; }
+.site-header.nav-mounted .header-actions,
+.property-page .site-header .header-actions { animation: navItemIn .55s .18s both; }
 
 @keyframes navEnter {
   from { transform: translateY(-18px); opacity: 0; }
@@ -91,7 +92,6 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Detail page mobile navbar */
 @media (max-width: 760px) {
   .property-page .site-header {
     height: 70px;
@@ -126,8 +126,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .site-header.nav-mounted,
+  .property-page .site-header,
   .site-header.nav-mounted .brand,
   .site-header.nav-mounted .desktop-nav,
-  .site-header.nav-mounted .header-actions { animation: none !important; }
+  .site-header.nav-mounted .header-actions,
+  .property-page .site-header .brand,
+  .property-page .site-header .desktop-nav,
+  .property-page .site-header .header-actions { animation: none !important; }
   .site-header, .site-header * { transition-duration: .01ms !important; }
 }
