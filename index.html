@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Agung Ubud Property — premium Bali property marketplace concept for villas, homes, land, rentals, and commercial spaces." />
+  <meta name="theme-color" content="#0c1713" />
+  <title>Agung Ubud Property — Premium Bali Property</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="Agung Ubud Property home">
+      <span class="brand-mark">A</span>
+      <span><strong>Agung Ubud</strong><small>PROPERTY</small></span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#properties" data-i18n="navProperties">Properties</a>
+      <a href="#locations" data-i18n="navLocations">Locations</a>
+      <a href="#services" data-i18n="navServices">Services</a>
+      <a href="#about" data-i18n="navAbout">About</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="ghost-btn compact" id="languageToggle" type="button" aria-label="Change language">EN</button>
+      <button class="ghost-btn compact" id="currencyToggle" type="button" aria-label="Change currency">USD</button>
+      <a class="primary-btn header-cta" href="#contact" data-i18n="talkToUs">Talk to us</a>
+      <button class="menu-btn" id="menuButton" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">☰</button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#properties" data-i18n="navProperties">Properties</a>
+      <a href="#locations" data-i18n="navLocations">Locations</a>
+      <a href="#services" data-i18n="navServices">Services</a>
+      <a href="#about" data-i18n="navAbout">About</a>
+      <a href="#contact" data-i18n="talkToUs">Talk to us</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content shell">
+        <p class="eyebrow" data-i18n="heroEyebrow">Bali property, curated with purpose</p>
+        <h1 data-i18n="heroTitle">Find your place<br>in Bali.</h1>
+        <p class="hero-copy" data-i18n="heroCopy">From private villas and long-term rentals to land and commercial opportunities — discover properties selected for living, investing and building your next chapter.</p>
+
+        <form class="search-panel" id="heroSearch">
+          <label>
+            <span data-i18n="searchLocationLabel">Location</span>
+            <select id="locationFilter">
+              <option value="all" data-i18n="allBali">All Bali</option>
+              <option value="Ubud">Ubud</option>
+              <option value="Canggu">Canggu</option>
+              <option value="Seminyak">Seminyak</option>
+              <option value="Uluwatu">Uluwatu</option>
+              <option value="Sanur">Sanur</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="searchTypeLabel">Property type</span>
+            <select id="typeFilter">
+              <option value="all" data-i18n="allTypes">All types</option>
+              <option value="Villa">Villa</option>
+              <option value="House">House</option>
+              <option value="Land">Land</option>
+              <option value="Rental">Rental</option>
+              <option value="Commercial">Commercial</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="searchPurposeLabel">Purpose</span>
+            <select id="purposeFilter">
+              <option value="all" data-i18n="saleAndRent">Sale & Rent</option>
+              <option value="sale" data-i18n="forSale">For sale</option>
+              <option value="rent" data-i18n="forRent">For rent</option>
+            </select>
+          </label>
+          <button class="search-btn" type="submit" data-i18n="searchButton">Search properties</button>
+        </form>
+      </div>
+
+      <div class="hero-trust shell">
+        <span data-i18n="trustOne">Local market knowledge</span>
+        <span data-i18n="trustTwo">International-ready service</span>
+        <span data-i18n="trustThree">Transparent inquiry process</span>
+      </div>
+    </section>
+
+    <section class="section shell intro-section" id="properties">
+      <div class="section-heading split-heading">
+        <div>
+          <p class="eyebrow dark" data-i18n="selectedProperties">Selected properties</p>
+          <h2 data-i18n="curatedForYou">Curated for the way you want to live.</h2>
+        </div>
+        <p data-i18n="propertyIntro">Browse a growing collection of villas, homes, land and investment opportunities across Bali.</p>
+      </div>
+
+      <div class="filter-row" id="filterRow">
+        <button class="filter-chip active" data-filter="all" data-i18n="filterAll">All</button>
+        <button class="filter-chip" data-filter="Villa">Villa</button>
+        <button class="filter-chip" data-filter="House">House</button>
+        <button class="filter-chip" data-filter="Land">Land</button>
+        <button class="filter-chip" data-filter="Rental">Rental</button>
+        <button class="filter-chip" data-filter="Commercial">Commercial</button>
+      </div>
+
+      <div class="property-grid" id="propertyGrid"></div>
+      <div class="empty-state" id="emptyState" hidden>
+        <h3 data-i18n="noResultsTitle">No matching properties.</h3>
+        <p data-i18n="noResultsCopy">Try another location or property type.</p>
+      </div>
+    </section>
+
+    <section class="section category-section">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow light" data-i18n="exploreByType">Explore by type</p>
+          <h2 class="light-title" data-i18n="propertyForEveryPlan">A property for every plan.</h2>
+        </div>
+        <div class="category-grid">
+          <article class="category-card category-villa"><span>01</span><h3>Villas</h3><p data-i18n="catVilla">Private stays, residences and investment villas.</p></article>
+          <article class="category-card category-land"><span>02</span><h3>Land</h3><p data-i18n="catLand">Strategic plots for building and long-term value.</p></article>
+          <article class="category-card category-home"><span>03</span><h3>Homes</h3><p data-i18n="catHome">Comfortable homes for families and long-term living.</p></article>
+          <article class="category-card category-commercial"><span>04</span><h3>Commercial</h3><p data-i18n="catCommercial">Spaces built for business, hospitality and growth.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell location-section" id="locations">
+      <div class="section-heading split-heading">
+        <div>
+          <p class="eyebrow dark" data-i18n="discoverBali">Discover Bali</p>
+          <h2 data-i18n="locationTitle">Choose the neighbourhood that fits your story.</h2>
+        </div>
+        <a class="text-link" href="#properties" data-i18n="viewProperties">View properties →</a>
+      </div>
+      <div class="location-grid">
+        <article class="location-card loc-ubud"><div><span>Ubud</span><small data-i18n="ubudText">Culture · Nature · Wellness</small></div></article>
+        <article class="location-card loc-canggu"><div><span>Canggu</span><small data-i18n="cangguText">Lifestyle · Surf · Dining</small></div></article>
+        <article class="location-card loc-uluwatu"><div><span>Uluwatu</span><small data-i18n="uluwatuText">Cliffs · Ocean · Luxury</small></div></article>
+      </div>
+    </section>
+
+    <section class="section shell services-section" id="services">
+      <div class="services-copy">
+        <p class="eyebrow dark" data-i18n="moreThanListings">More than listings</p>
+        <h2 data-i18n="serviceTitle">A clear path from discovery to decision.</h2>
+        <p data-i18n="serviceCopy">We help buyers, renters and investors navigate Bali property with a straightforward inquiry process and local support.</p>
+        <a class="primary-btn dark-btn" href="#contact" data-i18n="startInquiry">Start an inquiry</a>
+      </div>
+      <div class="service-list">
+        <article><span>01</span><div><h3 data-i18n="serviceOneTitle">Property discovery</h3><p data-i18n="serviceOneText">Shortlist options around your location, budget and purpose.</p></div></article>
+        <article><span>02</span><div><h3 data-i18n="serviceTwoTitle">Private inquiry</h3><p data-i18n="serviceTwoText">Ask questions, schedule viewings and verify property details.</p></div></article>
+        <article><span>03</span><div><h3 data-i18n="serviceThreeTitle">Payment coordination</h3><p data-i18n="serviceThreeText">Manual payment coordination through PayPal when applicable.</p></div></article>
+      </div>
+    </section>
+
+    <section class="about-banner" id="about">
+      <div class="about-overlay"></div>
+      <div class="shell about-content">
+        <p class="eyebrow light" data-i18n="aboutEyebrow">Agung Ubud Property</p>
+        <h2 data-i18n="aboutTitle">Local perspective.<br>Global standard.</h2>
+        <p data-i18n="aboutCopy">A premium property platform concept designed to connect local opportunities with buyers, renters and investors from around the world.</p>
+      </div>
+    </section>
+
+    <section class="section shell contact-section" id="contact">
+      <div>
+        <p class="eyebrow dark" data-i18n="contactEyebrow">Let’s find your Bali property</p>
+        <h2 data-i18n="contactTitle">Tell us what you’re looking for.</h2>
+        <p data-i18n="contactCopy">This demo uses a manual inquiry flow. In production, inquiries can be connected to WhatsApp, email, CRM and PayPal payment instructions.</p>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <label><span data-i18n="nameLabel">Name</span><input required name="name" type="text" placeholder="Your name"></label>
+          <label><span data-i18n="emailLabel">Email</span><input required name="email" type="email" placeholder="you@example.com"></label>
+        </div>
+        <label><span data-i18n="interestLabel">I’m interested in</span>
+          <select name="interest"><option>Villa</option><option>House</option><option>Land</option><option>Rental</option><option>Commercial</option></select>
+        </label>
+        <label><span data-i18n="messageLabel">Message</span><textarea name="message" rows="5" placeholder="Budget, preferred area, property type..."></textarea></label>
+        <button class="primary-btn dark-btn full-btn" type="submit" data-i18n="sendInquiry">Send inquiry</button>
+        <p class="form-note" data-i18n="demoNote">Demo only — no personal data is transmitted.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-grid">
+      <div class="footer-brand">
+        <a class="brand footer-logo" href="#top"><span class="brand-mark">A</span><span><strong>Agung Ubud</strong><small>PROPERTY</small></span></a>
+        <p data-i18n="footerTagline">Premium Bali property for living, renting and investing.</p>
+      </div>
+      <div><h4 data-i18n="footerExplore">Explore</h4><a href="#properties" data-i18n="navProperties">Properties</a><a href="#locations" data-i18n="navLocations">Locations</a><a href="#services" data-i18n="navServices">Services</a></div>
+      <div><h4 data-i18n="footerCompany">Company</h4><a href="#about" data-i18n="navAbout">About</a><a href="#contact" data-i18n="contactLink">Contact</a><a href="#" data-i18n="privacyLink">Privacy</a></div>
+      <div><h4 data-i18n="footerContact">Contact</h4><p>Ubud, Bali, Indonesia</p><p>hello@agungubudproperty.com</p><p>+62 XXX XXXX XXXX</p></div>
+    </div>
+    <div class="shell footer-bottom"><span>© 2026 Agung Ubud Property</span><span>Concept preview · Built by CADERA</span></div>
+  </footer>
+
+  <div class="modal-backdrop" id="propertyModal" aria-hidden="true">
+    <div class="property-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Close">×</button>
+      <div class="modal-image" id="modalImage"></div>
+      <div class="modal-body">
+        <p class="eyebrow dark" id="modalMeta"></p>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDescription"></p>
+        <div class="modal-specs" id="modalSpecs"></div>
+        <div class="modal-actions">
+          <a class="primary-btn dark-btn" href="#contact" id="modalInquiry" data-i18n="inquireProperty">Inquire about this property</a>
+          <button class="ghost-btn dark-outline" type="button" id="paypalButton">PayPal info</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
