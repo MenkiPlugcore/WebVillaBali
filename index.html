@@ -11,9 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="nav-enhancements.css" />
-  <style>
-    .property-image { display: block; }
-  </style>
+  <link rel="stylesheet" href="experience.css" />
+  <style>.property-image{display:block}</style>
 </head>
 <body>
   <header class="site-header" id="top">
@@ -55,36 +54,9 @@
         <p class="hero-copy" data-i18n="heroCopy">From private villas and long-term rentals to land and commercial opportunities — discover properties selected for living, investing and building your next chapter.</p>
 
         <form class="search-panel" id="heroSearch">
-          <label>
-            <span data-i18n="searchLocationLabel">Location</span>
-            <select id="locationFilter">
-              <option value="all" data-i18n="allBali">All Bali</option>
-              <option value="Ubud">Ubud</option>
-              <option value="Canggu">Canggu</option>
-              <option value="Seminyak">Seminyak</option>
-              <option value="Uluwatu">Uluwatu</option>
-              <option value="Sanur">Sanur</option>
-            </select>
-          </label>
-          <label>
-            <span data-i18n="searchTypeLabel">Property type</span>
-            <select id="typeFilter">
-              <option value="all" data-i18n="allTypes">All types</option>
-              <option value="Villa">Villa</option>
-              <option value="House">House</option>
-              <option value="Land">Land</option>
-              <option value="Rental">Rental</option>
-              <option value="Commercial">Commercial</option>
-            </select>
-          </label>
-          <label>
-            <span data-i18n="searchPurposeLabel">Purpose</span>
-            <select id="purposeFilter">
-              <option value="all" data-i18n="saleAndRent">Sale & Rent</option>
-              <option value="sale" data-i18n="forSale">For sale</option>
-              <option value="rent" data-i18n="forRent">For rent</option>
-            </select>
-          </label>
+          <label><span data-i18n="searchLocationLabel">Location</span><select id="locationFilter"><option value="all" data-i18n="allBali">All Bali</option><option value="Ubud">Ubud</option><option value="Canggu">Canggu</option><option value="Seminyak">Seminyak</option><option value="Uluwatu">Uluwatu</option><option value="Sanur">Sanur</option></select></label>
+          <label><span data-i18n="searchTypeLabel">Property type</span><select id="typeFilter"><option value="all" data-i18n="allTypes">All types</option><option value="Villa">Villa</option><option value="House">House</option><option value="Land">Land</option><option value="Rental">Rental</option><option value="Commercial">Commercial</option></select></label>
+          <label><span data-i18n="searchPurposeLabel">Purpose</span><select id="purposeFilter"><option value="all" data-i18n="saleAndRent">Sale & Rent</option><option value="sale" data-i18n="forSale">For sale</option><option value="rent" data-i18n="forRent">For rent</option></select></label>
           <button class="search-btn" type="submit" data-i18n="searchButton">Search properties</button>
         </form>
       </div>
@@ -96,12 +68,9 @@
       </div>
     </section>
 
-    <section class="section shell intro-section" id="properties">
+    <section class="section shell intro-section reveal-item" id="properties">
       <div class="section-heading split-heading">
-        <div>
-          <p class="eyebrow dark" data-i18n="selectedProperties">Selected properties</p>
-          <h2 data-i18n="curatedForYou">Curated for the way you want to live.</h2>
-        </div>
+        <div><p class="eyebrow dark" data-i18n="selectedProperties">Selected properties</p><h2 data-i18n="curatedForYou">Curated for the way you want to live.</h2></div>
         <p data-i18n="propertyIntro">Browse a growing collection of villas, homes, land and investment opportunities across Bali.</p>
       </div>
 
@@ -114,19 +83,13 @@
         <button class="filter-chip" data-filter="Commercial">Commercial</button>
       </div>
 
-      <div class="property-grid" id="propertyGrid"></div>
-      <div class="empty-state" id="emptyState" hidden>
-        <h3 data-i18n="noResultsTitle">No matching properties.</h3>
-        <p data-i18n="noResultsCopy">Try another location or property type.</p>
-      </div>
+      <div class="property-grid" id="propertyGrid" aria-live="polite"></div>
+      <div class="empty-state" id="emptyState" hidden><h3 data-i18n="noResultsTitle">No matching properties.</h3><p data-i18n="noResultsCopy">Try another location or property type.</p></div>
     </section>
 
-    <section class="section category-section">
+    <section class="section category-section reveal-item">
       <div class="shell">
-        <div class="section-heading">
-          <p class="eyebrow light" data-i18n="exploreByType">Explore by type</p>
-          <h2 class="light-title" data-i18n="propertyForEveryPlan">A property for every plan.</h2>
-        </div>
+        <div class="section-heading"><p class="eyebrow light" data-i18n="exploreByType">Explore by type</p><h2 class="light-title" data-i18n="propertyForEveryPlan">A property for every plan.</h2></div>
         <div class="category-grid">
           <article class="category-card category-villa"><span>01</span><h3>Villas</h3><p data-i18n="catVilla">Private stays, residences and investment villas.</p></article>
           <article class="category-card category-land"><span>02</span><h3>Land</h3><p data-i18n="catLand">Strategic plots for building and long-term value.</p></article>
@@ -136,12 +99,9 @@
       </div>
     </section>
 
-    <section class="section shell location-section" id="locations">
+    <section class="section shell location-section reveal-item" id="locations">
       <div class="section-heading split-heading">
-        <div>
-          <p class="eyebrow dark" data-i18n="discoverBali">Discover Bali</p>
-          <h2 data-i18n="locationTitle">Choose the neighbourhood that fits your story.</h2>
-        </div>
+        <div><p class="eyebrow dark" data-i18n="discoverBali">Discover Bali</p><h2 data-i18n="locationTitle">Choose the neighbourhood that fits your story.</h2></div>
         <a class="text-link" href="#properties" data-i18n="viewProperties">View properties →</a>
       </div>
       <div class="location-grid">
@@ -151,7 +111,7 @@
       </div>
     </section>
 
-    <section class="section shell services-section" id="services">
+    <section class="section shell services-section reveal-item" id="services">
       <div class="services-copy">
         <p class="eyebrow dark" data-i18n="moreThanListings">More than listings</p>
         <h2 data-i18n="serviceTitle">A clear path from discovery to decision.</h2>
@@ -165,7 +125,50 @@
       </div>
     </section>
 
-    <section class="about-banner" id="about">
+    <section class="trust-section shell" id="owners">
+      <div class="trust-panel reveal-item">
+        <div class="trust-copy">
+          <p class="eyebrow light" data-i18n="trustEyebrow">Built for long-term trust</p>
+          <h2 data-i18n="trustTitle">Built to become the place hundreds of owners trust with their property.</h2>
+          <p data-i18n="trustCopy">Premium presentation, direct inquiries, and international-ready communication help every listing feel represented with care — whether it is a villa, home, land, rental, or commercial space.</p>
+          <div class="trust-actions">
+            <a class="primary-btn" href="#contact" data-i18n="listProperty">List your property</a>
+            <a class="primary-btn trust-secondary" href="#reviews" data-i18n="seeExperience">See the experience</a>
+          </div>
+        </div>
+        <div class="trust-points">
+          <article class="trust-point reveal-item"><span>01</span><div><h3 data-i18n="ownerPointOneTitle">Premium presentation</h3><p data-i18n="ownerPointOneText">A polished listing format designed to make each property easier to understand and remember.</p></div></article>
+          <article class="trust-point reveal-item"><span>02</span><div><h3 data-i18n="ownerPointTwoTitle">International-ready</h3><p data-i18n="ownerPointTwoText">English and Indonesian presentation with USD and IDR support for local and overseas audiences.</p></div></article>
+          <article class="trust-point reveal-item"><span>03</span><div><h3 data-i18n="ownerPointThreeTitle">Direct inquiry flow</h3><p data-i18n="ownerPointThreeText">Keep the path from discovery to conversation simple, clear, and owner-friendly.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="review-section shell" id="reviews">
+      <div class="review-heading reveal-item">
+        <div><p class="eyebrow dark" data-i18n="reviewEyebrow">Sample client stories</p><h2 data-i18n="reviewTitle">What a great property experience should feel like.</h2></div>
+        <p class="review-note" data-i18n="reviewNote">Concept preview testimonials. Replace these with verified client reviews before the public launch.</p>
+      </div>
+      <div class="review-grid">
+        <article class="review-card reveal-item">
+          <div class="review-top"><span class="review-stars">★★★★★</span><span class="sample-badge" data-i18n="sampleBadge">Sample</span></div>
+          <blockquote class="review-quote" data-i18n="reviewOne">“The listing felt more premium, and it was much easier to share the property with serious prospects.”</blockquote>
+          <div class="review-person"><span class="review-avatar">U</span><div><strong data-i18n="reviewOneName">Villa owner</strong><small data-i18n="reviewOneMeta">Ubud · Property owner</small></div></div>
+        </article>
+        <article class="review-card reveal-item">
+          <div class="review-top"><span class="review-stars">★★★★★</span><span class="sample-badge" data-i18n="sampleBadge">Sample</span></div>
+          <blockquote class="review-quote" data-i18n="reviewTwo">“The English presentation gave the property a much more international feel when we shared it overseas.”</blockquote>
+          <div class="review-person"><span class="review-avatar">C</span><div><strong data-i18n="reviewTwoName">Property owner</strong><small data-i18n="reviewTwoMeta">Canggu · Rental property</small></div></div>
+        </article>
+        <article class="review-card reveal-item">
+          <div class="review-top"><span class="review-stars">★★★★★</span><span class="sample-badge" data-i18n="sampleBadge">Sample</span></div>
+          <blockquote class="review-quote" data-i18n="reviewThree">“Clear photos, details, and inquiry steps made it easier to understand the property before arranging a viewing.”</blockquote>
+          <div class="review-person"><span class="review-avatar">A</span><div><strong data-i18n="reviewThreeName">International buyer</strong><small data-i18n="reviewThreeMeta">Australia · Bali property search</small></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-banner reveal-item" id="about">
       <div class="about-overlay"></div>
       <div class="shell about-content">
         <p class="eyebrow light" data-i18n="aboutEyebrow">Agung Ubud Property</p>
@@ -174,20 +177,15 @@
       </div>
     </section>
 
-    <section class="section shell contact-section" id="contact">
+    <section class="section shell contact-section reveal-item" id="contact">
       <div>
         <p class="eyebrow dark" data-i18n="contactEyebrow">Let’s find your Bali property</p>
         <h2 data-i18n="contactTitle">Tell us what you’re looking for.</h2>
         <p data-i18n="contactCopy">This demo uses a manual inquiry flow. In production, inquiries can be connected to WhatsApp, email, CRM and PayPal payment instructions.</p>
       </div>
       <form class="contact-form" id="contactForm">
-        <div class="form-row">
-          <label><span data-i18n="nameLabel">Name</span><input required name="name" type="text" placeholder="Your name"></label>
-          <label><span data-i18n="emailLabel">Email</span><input required name="email" type="email" placeholder="you@example.com"></label>
-        </div>
-        <label><span data-i18n="interestLabel">I’m interested in</span>
-          <select name="interest"><option>Villa</option><option>House</option><option>Land</option><option>Rental</option><option>Commercial</option></select>
-        </label>
+        <div class="form-row"><label><span data-i18n="nameLabel">Name</span><input required name="name" type="text" placeholder="Your name"></label><label><span data-i18n="emailLabel">Email</span><input required name="email" type="email" placeholder="you@example.com"></label></div>
+        <label><span data-i18n="interestLabel">I’m interested in</span><select name="interest"><option>Villa</option><option>House</option><option>Land</option><option>Rental</option><option>Commercial</option></select></label>
         <label><span data-i18n="messageLabel">Message</span><textarea name="message" rows="5" placeholder="Budget, preferred area, property type..."></textarea></label>
         <button class="primary-btn dark-btn full-btn" type="submit" data-i18n="sendInquiry">Send inquiry</button>
         <p class="form-note" data-i18n="demoNote">Demo only — no personal data is transmitted.</p>
@@ -197,10 +195,7 @@
 
   <footer>
     <div class="shell footer-grid">
-      <div class="footer-brand">
-        <a class="brand footer-logo" href="#top"><span class="brand-mark">A</span><span><strong>Agung Ubud</strong><small>PROPERTY</small></span></a>
-        <p data-i18n="footerTagline">Premium Bali property for living, renting and investing.</p>
-      </div>
+      <div class="footer-brand"><a class="brand footer-logo" href="#top"><span class="brand-mark">A</span><span><strong>Agung Ubud</strong><small>PROPERTY</small></span></a><p data-i18n="footerTagline">Premium Bali property for living, renting and investing.</p></div>
       <div><h4 data-i18n="footerExplore">Explore</h4><a href="#properties" data-i18n="navProperties">Properties</a><a href="#locations" data-i18n="navLocations">Locations</a><a href="#services" data-i18n="navServices">Services</a></div>
       <div><h4 data-i18n="footerCompany">Company</h4><a href="#about" data-i18n="navAbout">About</a><a href="#contact" data-i18n="contactLink">Contact</a><a href="#" data-i18n="privacyLink">Privacy</a></div>
       <div><h4 data-i18n="footerContact">Contact</h4><p>Ubud, Bali, Indonesia</p><p>hello@agungubudproperty.com</p><p>+62 XXX XXXX XXXX</p></div>
