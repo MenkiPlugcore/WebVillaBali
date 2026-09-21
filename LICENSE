@@ -1,0 +1,34 @@
+MENKIESTES SOFTWARE LICENSE v1.0
+Copyright (c) 2026 CADERA / MENKIESTES
+All rights reserved.
+
+This software and associated source code, assets, documentation, and related materials (the "Software") are proprietary works of CADERA / MENKIESTES unless otherwise stated.
+
+Permission is granted to view, run, evaluate, and modify the Software solely for authorized MENKIESTES/CADERA projects, internal development, testing, maintenance, or client work for which access has been explicitly granted by the copyright holder.
+
+You may not, without prior written permission from CADERA / MENKIESTES:
+
+1. Sell, resell, sublicense, redistribute, publish, mirror, or commercially exploit the Software or substantial portions of it as a standalone product.
+2. Rebrand the Software in a way that falsely claims original authorship or removes required ownership notices.
+3. Distribute source code or compiled derivatives to unauthorized third parties.
+4. Use the Software to create a directly competing commercial product primarily derived from this codebase.
+
+Authorized modifications and deployments must preserve applicable copyright and license notices unless otherwise approved in writing.
+
+THIRD-PARTY SOFTWARE
+
+Third-party libraries, frameworks, fonts, images, assets, and other dependencies remain subject to their own licenses, terms, and attribution requirements. Nothing in this license overrides or restricts rights granted by third-party licenses, and all third-party obligations must be respected.
+
+CLIENT DELIVERABLES
+
+Where the Software is developed for a client, the client's usage rights are governed by the applicable agreement, proposal, invoice, statement of work, or other written authorization from CADERA / MENKIESTES. Transfer of a deployed deliverable does not automatically transfer ownership of reusable source components, internal tooling, frameworks, or unrelated MENKIESTES intellectual property unless explicitly agreed in writing.
+
+NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AVAILABILITY, OR FITNESS FOR PRODUCTION USE.
+
+LIMITATION OF LIABILITY
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, CADERA / MENKIESTES SHALL NOT BE LIABLE FOR ANY CLAIM, LOSS, DAMAGE, OR OTHER LIABILITY ARISING FROM USE OF OR INABILITY TO USE THE SOFTWARE.
+
+For permissions beyond this license, contact CADERA / MENKIESTES.
