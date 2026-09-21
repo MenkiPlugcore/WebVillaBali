@@ -1,0 +1,133 @@
+/* Shared premium navigation polish for homepage + property detail pages */
+.site-header {
+  --nav-bg: rgba(12, 23, 19, .94);
+  --nav-line: rgba(255,255,255,.11);
+  will-change: transform, background, box-shadow, backdrop-filter;
+}
+
+.site-header.nav-mounted {
+  animation: navEnter .62s cubic-bezier(.22,1,.36,1) both;
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 5vw;
+  right: 5vw;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+  transform: scaleX(.15);
+  opacity: 0;
+  transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+  pointer-events: none;
+}
+
+.site-header.nav-scrolled::after,
+.property-page .site-header::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.site-header.nav-scrolled,
+.site-header.scrolled {
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: 0 12px 34px rgba(0,0,0,.14);
+}
+
+/* Detail pages: keep navbar available while scrolling. */
+.property-page .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: rgba(12,23,19,.96);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  backdrop-filter: blur(16px) saturate(130%);
+}
+
+/* Fix: property-page anchor inheritance was making the white CTA text white too. */
+.property-page .site-header .header-cta,
+.property-page .site-header .primary-btn.header-cta {
+  color: #10221b !important;
+  background: #fff;
+}
+
+.site-header .brand,
+.site-header .desktop-nav a,
+.site-header .header-actions > * {
+  transition: transform .25s cubic-bezier(.22,1,.36,1), opacity .25s ease,
+              background .25s ease, border-color .25s ease, color .25s ease,
+              box-shadow .25s ease;
+}
+
+.site-header .brand:hover { transform: translateY(-1px); }
+.site-header .brand:hover .brand-mark { transform: rotate(-7deg) scale(1.04); }
+.site-header .brand-mark { transition: transform .35s cubic-bezier(.22,1,.36,1); }
+
+.site-header .desktop-nav a:hover { transform: translateY(-2px); opacity: 1; }
+.site-header .header-actions .ghost-btn:hover {
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.58);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.site-header .header-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.16);
+}
+
+/* Slight staggered reveal so the navbar feels intentional instead of flashy. */
+.site-header.nav-mounted .brand { animation: navItemIn .55s .05s both; }
+.site-header.nav-mounted .desktop-nav { animation: navItemIn .55s .12s both; }
+.site-header.nav-mounted .header-actions { animation: navItemIn .55s .18s both; }
+
+@keyframes navEnter {
+  from { transform: translateY(-18px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes navItemIn {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Detail page mobile navbar */
+@media (max-width: 760px) {
+  .property-page .site-header {
+    height: 70px;
+    grid-template-columns: minmax(0,1fr) auto;
+    padding: 0 18px;
+    gap: 10px;
+  }
+  .property-page .desktop-nav,
+  .property-page .header-cta { display: none !important; }
+  .property-page .header-actions { gap: 7px; }
+  .property-page .header-actions .compact {
+    min-width: 54px;
+    min-height: 40px;
+    padding: 0 12px;
+  }
+  .property-page .brand { min-width: 0; }
+  .property-page .brand strong { font-size: 15px; }
+  .property-page .brand small { font-size: 6px; }
+}
+
+@media (max-width: 430px) {
+  .property-page .site-header { padding: 0 14px; }
+  .property-page .brand > span:last-child { display: none; }
+  .property-page .brand-mark { width: 38px; height: 38px; }
+  .property-page .header-actions .compact {
+    min-width: 50px;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header.nav-mounted,
+  .site-header.nav-mounted .brand,
+  .site-header.nav-mounted .desktop-nav,
+  .site-header.nav-mounted .header-actions { animation: none !important; }
+  .site-header, .site-header * { transition-duration: .01ms !important; }
+}
