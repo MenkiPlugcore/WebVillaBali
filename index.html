@@ -10,6 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Property thumbnails are links now; force block layout so the card image keeps its height. */
+    .property-image { display: block; }
+  </style>
 </head>
 <body>
   <header class="site-header" id="top">
@@ -203,23 +207,6 @@
     </div>
     <div class="shell footer-bottom"><span>© 2026 Agung Ubud Property</span><span>Concept preview · Built by CADERA</span></div>
   </footer>
-
-  <div class="modal-backdrop" id="propertyModal" aria-hidden="true">
-    <div class="property-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal-close" id="modalClose" type="button" aria-label="Close">×</button>
-      <div class="modal-image" id="modalImage"></div>
-      <div class="modal-body">
-        <p class="eyebrow dark" id="modalMeta"></p>
-        <h2 id="modalTitle"></h2>
-        <p id="modalDescription"></p>
-        <div class="modal-specs" id="modalSpecs"></div>
-        <div class="modal-actions">
-          <a class="primary-btn dark-btn" href="#contact" id="modalInquiry" data-i18n="inquireProperty">Inquire about this property</a>
-          <button class="ghost-btn dark-outline" type="button" id="paypalButton">PayPal info</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
