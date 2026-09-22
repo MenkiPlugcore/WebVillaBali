@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Saved properties — Agung Ubud Property." />
+  <meta name="theme-color" content="#0c1713" />
+  <title>Saved Properties — Agung Ubud Property</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="nav-enhancements.css" />
+  <link rel="stylesheet" href="wishlist.css" />
+</head>
+<body class="saved-page">
+  <header class="site-header nav-mounted">
+    <a class="brand" href="index.html" aria-label="Agung Ubud Property home">
+      <span class="brand-mark">A</span>
+      <span><strong>Agung Ubud</strong><small>PROPERTY</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="index.html#properties" data-copy="properties">Properties</a>
+      <a href="index.html#locations" data-copy="locations">Locations</a>
+      <a href="index.html#services" data-copy="services">Services</a>
+      <a href="index.html#about" data-copy="about">About</a>
+    </nav>
+    <div class="header-actions">
+      <a class="saved-nav-link" href="saved.html" aria-current="page">
+        <span class="saved-nav-heart">♥</span><span class="saved-nav-label" data-copy="saved">Saved</span><span class="saved-count" id="savedCount">0</span>
+      </a>
+      <button class="ghost-btn compact" id="languageToggle" type="button" aria-label="Change language">EN</button>
+      <button class="ghost-btn compact" id="currencyToggle" type="button" aria-label="Change currency">USD</button>
+      <a class="primary-btn header-cta" href="index.html#contact" data-copy="talk">Talk to us</a>
+    </div>
+  </header>
+
+  <main class="saved-main">
+    <div class="saved-shell">
+      <div class="saved-heading">
+        <div>
+          <p class="eyebrow dark" data-copy="eyebrow">Your shortlist</p>
+          <h1 data-copy="title">Properties worth another look.</h1>
+        </div>
+        <div>
+          <p data-copy="intro">Keep the properties you like in one place while you compare areas, prices, and possibilities.</p>
+          <span class="saved-device-note" data-copy="deviceNote">Saved on this browser only — no account required.</span>
+        </div>
+      </div>
+
+      <div class="saved-grid" id="savedGrid" aria-live="polite"></div>
+      <div class="saved-empty" id="savedEmpty" hidden>
+        <div class="empty-heart">♡</div>
+        <h2 data-copy="emptyTitle">Nothing saved yet.</h2>
+        <p data-copy="emptyText">Tap the heart on any property and it will appear here instantly.</p>
+        <a href="index.html#properties" data-copy="browse">Browse properties</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="shell footer-bottom"><span>© 2026 Agung Ubud Property</span><span data-copy="preview">Concept preview · Built by CADERA</span></div>
+  </footer>
+  <div class="saved-toast" id="savedToast" role="status" aria-live="polite"></div>
+  <script src="nav-enhancements.js"></script>
+  <script src="saved.js"></script>
+</body>
+</html>
