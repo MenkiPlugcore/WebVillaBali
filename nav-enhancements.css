@@ -3,6 +3,10 @@
   --nav-bg: rgba(12, 23, 19, .94);
   --nav-line: rgba(255,255,255,.11);
   will-change: transform, background, box-shadow, backdrop-filter;
+  grid-template-columns: minmax(190px,1fr) auto minmax(330px,1fr);
+  column-gap: clamp(18px,2.2vw,34px);
+  padding-left: clamp(24px,4.2vw,72px);
+  padding-right: clamp(24px,4.2vw,72px);
 }
 
 .site-header.nav-mounted { animation: navEnter .62s cubic-bezier(.22,1,.36,1) both; }
@@ -64,12 +68,36 @@
 .site-header .brand:hover { transform: translateY(-1px); }
 .site-header .brand:hover .brand-mark { transform: rotate(-7deg) scale(1.04); }
 .site-header .brand-mark { transition: transform .35s cubic-bezier(.22,1,.36,1); }
+.site-header .desktop-nav {
+  gap: clamp(18px,2vw,30px);
+  white-space: nowrap;
+}
 .site-header .desktop-nav a:hover { transform: translateY(-2px); opacity: 1; }
-
+.site-header .header-actions {
+  gap: 6px;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+.site-header .header-actions > * { flex: 0 0 auto; }
+.site-header .header-actions .compact,
+.site-header .saved-nav-link,
+.site-header .compare-nav-link {
+  min-height: 40px;
+  height: 40px;
+}
+.site-header .header-actions .compact {
+  min-width: 48px;
+  padding: 0 11px;
+}
 .site-header .header-actions .ghost-btn:hover {
   background: rgba(255,255,255,.1);
   border-color: rgba(255,255,255,.58);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.site-header .header-cta {
+  min-height: 40px;
+  padding: 0 17px;
+  white-space: nowrap;
 }
 .site-header .header-cta:hover {
   transform: translateY(-2px);
@@ -92,6 +120,49 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* Medium desktop: keep utilities compact so the navigation breathes. */
+@media (max-width: 1500px) {
+  .site-header {
+    grid-template-columns: minmax(180px,1fr) auto minmax(285px,1fr);
+    column-gap: 18px;
+  }
+  .site-header .desktop-nav { gap: 21px; }
+  .site-header .saved-nav-label,
+  .site-header .compare-nav-label { display: none !important; }
+  .site-header .saved-nav-link,
+  .site-header .compare-nav-link {
+    width: 43px;
+    padding: 0 7px;
+    justify-content: center;
+    gap: 4px;
+  }
+  .site-header .saved-nav-heart,
+  .site-header .compare-nav-icon { font-size: 14px; }
+  .site-header .saved-count,
+  .site-header .compare-count {
+    min-width: 17px;
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 1220px) {
+  .site-header {
+    padding-left: 24px;
+    padding-right: 24px;
+    grid-template-columns: minmax(170px,1fr) auto minmax(250px,1fr);
+  }
+  .site-header .desktop-nav { gap: 16px; }
+  .site-header .desktop-nav a { font-size: 12px; }
+  .site-header .header-cta { display: none; }
+}
+
+@media (max-width: 1000px) {
+  .site-header { grid-template-columns: 1fr auto; }
+}
+
 @media (max-width: 760px) {
   .property-page .site-header {
     height: 70px;
@@ -101,11 +172,19 @@
   }
   .property-page .desktop-nav,
   .property-page .header-cta { display: none !important; }
-  .property-page .header-actions { gap: 7px; }
+  .property-page .header-actions { gap: 6px; }
   .property-page .header-actions .compact {
-    min-width: 54px;
-    min-height: 40px;
-    padding: 0 12px;
+    min-width: 48px;
+    min-height: 38px;
+    height: 38px;
+    padding: 0 10px;
+  }
+  .property-page .saved-nav-link,
+  .property-page .compare-nav-link {
+    width: 38px;
+    min-height: 38px;
+    height: 38px;
+    padding: 0 5px;
   }
   .property-page .brand { min-width: 0; }
   .property-page .brand strong { font-size: 15px; }
@@ -113,14 +192,22 @@
 }
 
 @media (max-width: 430px) {
-  .property-page .site-header { padding: 0 14px; }
+  .property-page .site-header { padding: 0 12px; }
   .property-page .brand > span:last-child { display: none; }
-  .property-page .brand-mark { width: 38px; height: 38px; }
+  .property-page .brand-mark { width: 36px; height: 36px; }
+  .property-page .header-actions { gap: 4px; }
   .property-page .header-actions .compact {
-    min-width: 50px;
-    min-height: 38px;
-    padding: 0 10px;
-    font-size: 12px;
+    min-width: 44px;
+    min-height: 36px;
+    height: 36px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+  .property-page .saved-nav-link,
+  .property-page .compare-nav-link {
+    width: 36px;
+    min-height: 36px;
+    height: 36px;
   }
 }
 
