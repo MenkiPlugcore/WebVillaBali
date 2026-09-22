@@ -1,5 +1,6 @@
 const WISHLIST_KEY="aup-saved-properties-v1";
 (function ensureWishlistStyles(){if(document.querySelector('link[href="../wishlist.css"]'))return;const link=document.createElement("link");link.rel="stylesheet";link.href="../wishlist.css";document.head.appendChild(link);})();
+(function ensureCompareScript(){if(document.querySelector('script[data-compare-loader]'))return;const script=document.createElement("script");script.src="../compare.js";script.dataset.compareLoader="true";document.head.appendChild(script);})();
 
 const body=document.body;
 const usd=Number(body.dataset.usd||0);
