@@ -31,6 +31,32 @@
 .save-property-btn.is-saved .heart-empty { display:none; }
 .save-property-btn:not(.is-saved) .heart-filled { display:none; }
 
+/* Beat `.property-card button { width:100% }` from the base stylesheet. */
+.property-grid .property-card > .save-property-btn {
+  width:42px !important;
+  height:42px !important;
+  min-height:42px !important;
+  margin:0 !important;
+  padding:0 !important;
+  position:absolute !important;
+  top:14px !important;
+  right:14px !important;
+  left:auto !important;
+  display:grid !important;
+  place-items:center !important;
+  text-align:center !important;
+  background:rgba(251,250,247,.92) !important;
+  color:#10221b !important;
+  border:1px solid rgba(255,255,255,.68) !important;
+  border-radius:999px !important;
+  box-shadow:0 8px 24px rgba(7,20,14,.14) !important;
+}
+.property-grid .property-card > .save-property-btn.is-saved {
+  background:#10221b !important;
+  color:#fff !important;
+  border-color:#10221b !important;
+}
+
 .saved-nav-link {
   min-height: 40px;
   display: inline-flex;
@@ -174,6 +200,7 @@
 @media(max-width:760px){
   .saved-nav-label{display:none}.saved-nav-link{padding:0 9px;gap:5px}.saved-main{padding:38px 0 72px}.saved-shell{width:calc(100% - 28px)}
   .detail-actions .detail-save-btn{width:100%}
+  .property-grid .property-card > .save-property-btn{right:12px!important;top:12px!important}
 }
 @media(max-width:560px){
   .saved-grid{grid-template-columns:1fr}.saved-card-media{height:auto;aspect-ratio:16/10}.saved-heading h1{font-size:44px}.saved-shell{width:calc(100% - 20px)}
