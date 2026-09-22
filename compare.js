@@ -30,7 +30,6 @@
   function property(slug){ return catalog.find(p=>p.slug===slug); }
   function hrefFor(slug){ return `${base}properties/${slug}.html`; }
   function compareHref(){ return `${base}compare.html`; }
-  function savedHref(){ return `${base}saved.html`; }
   function money(p){ return currency()==="USD"?`$${p.usd.toLocaleString("en-US")}`:`Rp ${p.idr.toLocaleString("id-ID")}`; }
   function suffix(p){ const c=t(); return p.priceSuffix==="month"?c.month:p.priceSuffix==="freehold"?c.freehold:c.leasehold; }
   function tenure(p){ const c=t(); return p.tenure==="freehold"?c.freehold:p.tenure==="leasehold"?c.leasehold:c.rental; }
@@ -75,7 +74,10 @@
   function makeToggle(slug, detail=false){
     const btn=document.createElement("button"); btn.type="button"; btn.className="compare-toggle-btn"; btn.dataset.compareSlug=slug;
     if(detail) btn.classList.add("detail-compare-btn");
-    btn.innerHTML='<span class="compare-check"></span><span class="compare-button-label"></span>';
+    const active=selected(slug);
+    btn.classList.toggle("is-comparing",active);
+    btn.setAttribute("aria-pressed",String(active));
+    btn.innerHTML=`<span class="compare-check"></span><span class="compare-button-label">${active?t().added:t().add}</span>`;
     btn.addEventListener("click",event=>{ event.preventDefault(); event.stopPropagation(); toggle(slug); });
     return btn;
   }
@@ -95,14 +97,18 @@
   function updateButtons(){
     const c=t();
     document.querySelectorAll("[data-compare-slug]").forEach(btn=>{
-      const active=selected(btn.dataset.compareSlug); btn.classList.toggle("is-comparing",active); btn.setAttribute("aria-pressed",String(active));
-      const label=btn.querySelector(".compare-button-label"); if(label) label.textContent=active?c.added:c.add;
+      const active=selected(btn.dataset.compareSlug);
+      if(btn.classList.contains("is-comparing")!==active) btn.classList.toggle("is-comparing",active);
+      if(btn.getAttribute("aria-pressed")!==String(active)) btn.setAttribute("aria-pressed",String(active));
+      const label=btn.querySelector(".compare-button-label");
+      const next=active?c.added:c.add;
+      if(label && label.textContent!==next) label.textContent=next;
     });
   }
   function updateNav(){
     const c=t(), count=read().length;
-    document.querySelectorAll(".compare-count").forEach(el=>el.textContent=count);
-    document.querySelectorAll(".compare-nav-label,.mobile-compare-link").forEach(el=>el.textContent=c.compare);
+    document.querySelectorAll(".compare-count").forEach(el=>{if(el.textContent!==String(count))el.textContent=count;});
+    document.querySelectorAll(".compare-nav-label,.mobile-compare-link").forEach(el=>{if(el.textContent!==c.compare)el.textContent=c.compare;});
   }
 
   function renderDock(){
@@ -115,9 +121,14 @@
       dock.querySelector(".compare-dock-action").addEventListener("click",()=>location.href=compareHref());
     }
     const items=read().map(property).filter(Boolean); const list=dock.querySelector(".compare-dock-items");
-    list.innerHTML=items.map(p=>`<div class="compare-dock-item"><span class="compare-dock-thumb" style="background-image:url('${p.image}')"></span><span class="compare-dock-name">${p.title}</span><button class="compare-dock-remove" type="button" data-remove-compare="${p.slug}" aria-label="${t().remove} ${p.title}">×</button></div>`).join("");
-    list.querySelectorAll("[data-remove-compare]").forEach(btn=>btn.addEventListener("click",()=>remove(btn.dataset.removeCompare)));
-    dock.querySelector(".compare-dock-action").textContent=`${t().compareNow} (${items.length}/${MAX})`;
+    const nextHtml=items.map(p=>`<div class="compare-dock-item"><span class="compare-dock-thumb" style="background-image:url('${p.image}')"></span><span class="compare-dock-name">${p.title}</span><button class="compare-dock-remove" type="button" data-remove-compare="${p.slug}" aria-label="${t().remove} ${p.title}">×</button></div>`).join("");
+    if(list.innerHTML!==nextHtml){
+      list.innerHTML=nextHtml;
+      list.querySelectorAll("[data-remove-compare]").forEach(btn=>btn.addEventListener("click",()=>remove(btn.dataset.removeCompare)));
+    }
+    const action=dock.querySelector(".compare-dock-action");
+    const actionText=`${t().compareNow} (${items.length}/${MAX})`;
+    if(action.textContent!==actionText) action.textContent=actionText;
     dock.classList.toggle("show",items.length>0);
   }
 
@@ -125,30 +136,33 @@
     if(!document.body.classList.contains("compare-page")) return;
     const c=t(), items=read().map(property).filter(Boolean), table=document.getElementById("compareTable"), empty=document.getElementById("compareEmpty"), status=document.getElementById("compareStatus"), clear=document.getElementById("compareClear");
     document.documentElement.lang=language();
-    document.querySelectorAll("[data-compare-copy]").forEach(el=>{const key=el.dataset.compareCopy;if(c[key] && typeof c[key]!=="function")el.textContent=c[key];});
+    document.querySelectorAll("[data-compare-copy]").forEach(el=>{const key=el.dataset.compareCopy;if(c[key] && typeof c[key]!=="function" && el.textContent!==c[key])el.textContent=c[key];});
     const langBtn=document.getElementById("languageToggle"); if(langBtn)langBtn.textContent=language().toUpperCase();
     const curBtn=document.getElementById("currencyToggle"); if(curBtn)curBtn.textContent=currency();
     if(status) status.textContent=items.length===1?c.statusOne:c.statusMany(items.length);
     if(clear) clear.disabled=items.length===0;
     if(empty) empty.hidden=items.length!==0;
     if(table) table.hidden=items.length===0;
-    if(!table||!items.length) return;
+    if(!table||!items.length){ if(table) table.innerHTML=""; return; }
     table.style.setProperty("--compare-columns",items.length);
     const head=`<div class="compare-row"><div class="compare-cell compare-label">${c.compare}</div>${items.map(p=>`<div class="compare-cell compare-property-head"><div class="compare-head-image" style="background-image:url('${p.image}')"></div><div class="compare-head-body"><div class="compare-head-meta">${p.location} · ${p.type}</div><div class="compare-head-title">${p.title}</div><div class="compare-head-price">${money(p)} <small>${suffix(p)}</small></div><div class="compare-head-actions"><a href="properties/${p.slug}.html">${c.view}</a><button type="button" data-remove-page="${p.slug}">${c.remove}</button></div></div></div>`).join("")}</div>`;
     const row=(label,fn)=>`<div class="compare-row"><div class="compare-cell compare-label">${label}</div>${items.map(p=>`<div class="compare-cell compare-value">${fn(p)??c.none}</div>`).join("")}</div>`;
-    table.innerHTML=head+
-      row(c.price,p=>`<strong>${money(p)}</strong>&nbsp; ${suffix(p)}`)+
-      row(c.location,p=>p.location)+row(c.type,p=>p.type)+row(c.purpose,p=>purpose(p))+
-      row(c.beds,p=>p.beds??c.none)+row(c.baths,p=>p.baths??c.none)+row(c.area,p=>p.area)+row(c.tenure,p=>tenure(p))+row(c.reference,p=>p.ref);
-    table.querySelectorAll("[data-remove-page]").forEach(btn=>btn.addEventListener("click",()=>remove(btn.dataset.removePage)));
+    const html=head+row(c.price,p=>`<strong>${money(p)}</strong>&nbsp; ${suffix(p)}`)+row(c.location,p=>p.location)+row(c.type,p=>p.type)+row(c.purpose,p=>purpose(p))+row(c.beds,p=>p.beds??c.none)+row(c.baths,p=>p.baths??c.none)+row(c.area,p=>p.area)+row(c.tenure,p=>tenure(p))+row(c.reference,p=>p.ref);
+    if(table.innerHTML!==html){
+      table.innerHTML=html;
+      table.querySelectorAll("[data-remove-page]").forEach(btn=>btn.addEventListener("click",()=>remove(btn.dataset.removePage)));
+    }
   }
 
   function refresh(){ injectNav(); decorateCards(); decorateDetail(); updateButtons(); updateNav(); renderDock(); renderComparePage(); }
 
   ensureStyle();
   injectNav();
-  const observer=new MutationObserver(()=>{ decorateCards(); decorateDetail(); updateButtons(); });
-  observer.observe(document.documentElement,{childList:true,subtree:true});
+  // Only decorate newly rendered cards/details. Do not rewrite labels from inside
+  // the observer: changing textContent itself creates childList mutations and can
+  // cause a self-triggering MutationObserver loop in Firefox.
+  const observer=new MutationObserver(()=>{ decorateCards(); decorateDetail(); });
+  observer.observe(document.body,{childList:true,subtree:true});
   document.getElementById("languageToggle")?.addEventListener("click",()=>setTimeout(refresh,0));
   document.getElementById("currencyToggle")?.addEventListener("click",()=>setTimeout(refresh,0));
   document.getElementById("compareClear")?.addEventListener("click",()=>{write([]);refresh();});
