@@ -1,4 +1,4 @@
-/* Long-stay & mobility expansion — kos/boarding house + motorbike rental */
+/* Long-stay & mobility expansion — kos/boarding house + dedicated motor rental teaser */
 .living-mobility-section{padding:104px 0;background:#f3f0e9;position:relative;overflow:hidden}
 .living-mobility-section::before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-140px;top:-150px;background:radial-gradient(circle,rgba(189,155,99,.18),transparent 68%);pointer-events:none}
 .lm-heading{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:end;margin-bottom:34px}
@@ -12,8 +12,8 @@
 .lm-panel-head h3{margin:6px 0 0;font-family:"Playfair Display",serif;font-size:30px;line-height:1.05;font-weight:600}
 .lm-panel-head p{margin:0;max-width:250px;color:#6e7b73;font-size:11px;line-height:1.6;text-align:right}
 .lm-card-list{display:grid;gap:12px}
-.stay-card,.bike-card{display:grid;grid-template-columns:145px 1fr;gap:16px;border:1px solid rgba(16,34,27,.09);border-radius:16px;padding:10px;background:#fbfaf7;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
-.stay-card:hover,.bike-card:hover{transform:translateY(-2px);border-color:rgba(16,34,27,.18);box-shadow:0 12px 28px rgba(20,34,28,.08)}
+.stay-card{display:grid;grid-template-columns:145px 1fr;gap:16px;border:1px solid rgba(16,34,27,.09);border-radius:16px;padding:10px;background:#fbfaf7;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.stay-card:hover{transform:translateY(-2px);border-color:rgba(16,34,27,.18);box-shadow:0 12px 28px rgba(20,34,28,.08)}
 .lm-card-image{min-height:122px;border-radius:12px;background-size:cover;background-position:center;background-color:#e6e8e4}
 .lm-card-body{display:flex;flex-direction:column;min-width:0;padding:4px 4px 3px 0}
 .lm-card-meta{font-size:8px;text-transform:uppercase;letter-spacing:.13em;color:#7d8982;font-weight:800}
@@ -23,13 +23,25 @@
 .lm-price strong{display:block;font-size:13px}.lm-price small{display:block;margin-top:2px;color:#849087;font-size:8px}
 .lm-action{border:0;border-radius:999px;background:#10221b;color:#fff;min-height:34px;padding:0 12px;font-size:9px;font-weight:800;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center}
 .lm-action:hover{transform:translateY(-1px)}
-.bike-card{grid-template-columns:122px 1fr}
-.bike-card .lm-card-image{min-height:110px;background-size:cover}
-.bike-specs{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
-.bike-specs span{font-size:8px;padding:4px 7px;border-radius:999px;background:#eef0ec;color:#5f6d65}
 .lm-panel-footer{margin-top:14px;padding-top:14px;border-top:1px solid rgba(16,34,27,.08);display:flex;justify-content:space-between;gap:16px;align-items:center;color:#738078;font-size:9px;line-height:1.5}
 .lm-panel-footer button{border:0;background:none;padding:0;font:inherit;font-weight:800;color:#10221b;white-space:nowrap;cursor:pointer}
-@media(max-width:980px){.lm-heading{grid-template-columns:1fr;gap:18px}.lm-grid{grid-template-columns:1fr}.lm-panel-head p{max-width:330px}}
-@media(max-width:620px){.living-mobility-section{padding:78px 0}.lm-panel{padding:15px;border-radius:18px}.lm-panel-head{display:block}.lm-panel-head p{text-align:left;margin-top:7px;max-width:none}.stay-card,.bike-card{grid-template-columns:108px 1fr;padding:8px;gap:12px}.lm-card-image,.bike-card .lm-card-image{min-height:105px}.lm-card-title{font-size:18px}.lm-price-row{align-items:flex-start;flex-direction:column}.lm-action{width:100%;min-height:36px}.lm-panel-footer{align-items:flex-start;flex-direction:column}}
-@media(max-width:390px){.stay-card,.bike-card{grid-template-columns:1fr}.lm-card-image,.bike-card .lm-card-image{aspect-ratio:16/9;min-height:0}.lm-heading h2{font-size:39px}}
-@media(prefers-reduced-motion:reduce){.stay-card,.bike-card,.lm-action{transition:none!important}}
+
+.motor-teaser-panel{position:relative;overflow:hidden;min-height:520px;padding:0;color:#fff;background:#101b17;isolation:isolate}
+.motor-teaser-media{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1500&q=86') center/cover no-repeat;transform:scale(1.02);transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.motor-teaser-panel:hover .motor-teaser-media{transform:scale(1.055)}
+.motor-teaser-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,16,12,.92) 0%,rgba(7,16,12,.48) 56%,rgba(7,16,12,.16) 100%),linear-gradient(90deg,rgba(7,16,12,.35),transparent 68%)}
+.motor-teaser-content{position:relative;z-index:2;min-height:520px;padding:32px;display:flex;flex-direction:column;justify-content:flex-end}
+.motor-teaser-label{font-size:9px;text-transform:uppercase;letter-spacing:.15em;font-weight:800;color:rgba(255,255,255,.7)}
+.motor-teaser-content h3{margin:8px 0 10px;font-family:"Playfair Display",serif;font-size:clamp(34px,3.1vw,48px);line-height:.98;font-weight:600}
+.motor-teaser-content>p{margin:0;max-width:560px;color:rgba(255,255,255,.78);font-size:12px;line-height:1.7}
+.motor-teaser-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.motor-teaser-features span{display:inline-flex;align-items:center;min-height:29px;padding:0 10px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);font-size:8px;font-weight:700;color:rgba(255,255,255,.9)}
+.motor-teaser-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)}
+.motor-teaser-footer small{font-size:8px;text-transform:uppercase;letter-spacing:.11em;color:rgba(255,255,255,.55)}
+.motor-teaser-cta{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 15px;border-radius:999px;background:#fff;color:#10221b;font-size:10px;font-weight:800;white-space:nowrap;transition:transform .2s ease,box-shadow .2s ease}
+.motor-teaser-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.18)}
+
+@media(max-width:980px){.lm-heading{grid-template-columns:1fr;gap:18px}.lm-grid{grid-template-columns:1fr}.lm-panel-head p{max-width:330px}.motor-teaser-panel,.motor-teaser-content{min-height:470px}}
+@media(max-width:620px){.living-mobility-section{padding:78px 0}.lm-panel{padding:15px;border-radius:18px}.lm-panel-head{display:block}.lm-panel-head p{text-align:left;margin-top:7px;max-width:none}.stay-card{grid-template-columns:108px 1fr;padding:8px;gap:12px}.lm-card-image{min-height:105px}.lm-card-title{font-size:18px}.lm-price-row{align-items:flex-start;flex-direction:column}.lm-action{width:100%;min-height:36px}.lm-panel-footer{align-items:flex-start;flex-direction:column}.motor-teaser-panel{padding:0}.motor-teaser-content{min-height:440px;padding:24px}.motor-teaser-footer{align-items:flex-start;flex-direction:column}.motor-teaser-cta{width:100%}}
+@media(max-width:390px){.stay-card{grid-template-columns:1fr}.lm-card-image{aspect-ratio:16/9;min-height:0}.lm-heading h2{font-size:39px}.motor-teaser-content{min-height:420px;padding:20px}.motor-teaser-features span{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.stay-card,.lm-action,.motor-teaser-media,.motor-teaser-cta{transition:none!important}}
