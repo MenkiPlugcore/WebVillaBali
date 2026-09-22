@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Compare Bali properties side by side — Agung Ubud Property." />
+  <meta name="theme-color" content="#0c1713" />
+  <title>Compare Properties — Agung Ubud Property</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="nav-enhancements.css" />
+  <link rel="stylesheet" href="wishlist.css" />
+  <link rel="stylesheet" href="compare.css" />
+</head>
+<body class="compare-page">
+  <header class="site-header nav-mounted">
+    <a class="brand" href="index.html" aria-label="Agung Ubud Property home">
+      <span class="brand-mark">A</span>
+      <span><strong>Agung Ubud</strong><small>PROPERTY</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="index.html#properties" data-compare-copy="properties">Properties</a>
+      <a href="index.html#locations" data-compare-copy="locations">Locations</a>
+      <a href="index.html#services" data-compare-copy="services">Services</a>
+      <a href="index.html#about" data-compare-copy="about">About</a>
+    </nav>
+    <div class="header-actions">
+      <a class="saved-nav-link" href="saved.html">
+        <span class="saved-nav-heart">♡</span><span class="saved-nav-label" data-compare-copy="saved">Saved</span>
+      </a>
+      <button class="ghost-btn compact" id="languageToggle" type="button" aria-label="Change language">EN</button>
+      <button class="ghost-btn compact" id="currencyToggle" type="button" aria-label="Change currency">USD</button>
+      <a class="primary-btn header-cta" href="index.html#contact" data-compare-copy="talk">Talk to us</a>
+    </div>
+  </header>
+
+  <main class="compare-main">
+    <div class="compare-shell">
+      <div class="compare-heading">
+        <div>
+          <p class="eyebrow dark" data-compare-copy="eyebrow">Property comparison</p>
+          <h1 data-compare-copy="title">Compare the details that matter.</h1>
+        </div>
+        <div>
+          <p data-compare-copy="intro">Put up to three properties side by side to compare price, location, size, tenure, and key specifications.</p>
+          <span class="compare-device-note" data-compare-copy="device">Comparison is saved on this browser — no account required.</span>
+        </div>
+      </div>
+
+      <div class="compare-toolbar">
+        <span class="compare-status" id="compareStatus">0 properties selected</span>
+        <button class="compare-clear" id="compareClear" type="button" data-compare-copy="clear">Clear comparison</button>
+      </div>
+
+      <div class="compare-empty" id="compareEmpty" hidden>
+        <div class="compare-empty-icon">⇄</div>
+        <h2 data-compare-copy="emptyTitle">Choose properties to compare.</h2>
+        <p data-compare-copy="emptyText">Add up to three listings from the property cards, saved properties, or a property detail page.</p>
+        <a href="index.html#properties" data-compare-copy="browse">Browse properties</a>
+      </div>
+
+      <div class="compare-table-wrap">
+        <div class="compare-table" id="compareTable" hidden></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="shell footer-bottom"><span>© 2026 Agung Ubud Property</span><span data-compare-copy="preview">Concept preview · Built by CADERA</span></div>
+  </footer>
+
+  <script src="nav-enhancements.js"></script>
+  <script src="compare.js"></script>
+  <script>
+    document.getElementById('languageToggle')?.addEventListener('click',()=>{
+      const next=(localStorage.getItem('aup-language')||'en')==='en'?'id':'en';
+      localStorage.setItem('aup-language',next);
+    });
+    document.getElementById('currencyToggle')?.addEventListener('click',()=>{
+      const next=(localStorage.getItem('aup-currency')||'USD')==='USD'?'IDR':'USD';
+      localStorage.setItem('aup-currency',next);
+    });
+  </script>
+</body>
+</html>
