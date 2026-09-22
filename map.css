@@ -109,6 +109,7 @@
   background:#eef0ed;
   color:#536259;
 }
+.map-loading,.map-error{grid-column:1/-1}
 .map-loading-inner,.map-error-inner,.map-empty-inner{max-width:420px}
 .map-loader{
   width:35px;height:35px;margin:0 auto 15px;border-radius:50%;
