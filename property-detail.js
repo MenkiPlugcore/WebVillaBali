@@ -1,3 +1,6 @@
+const WISHLIST_KEY="aup-saved-properties-v1";
+(function ensureWishlistStyles(){if(document.querySelector('link[href="../wishlist.css"]'))return;const link=document.createElement("link");link.rel="stylesheet";link.href="../wishlist.css";document.head.appendChild(link);})();
+
 const body=document.body;
 const usd=Number(body.dataset.usd||0);
 const idr=Number(body.dataset.idr||0);
@@ -7,8 +10,8 @@ let currency=localStorage.getItem("aup-currency")||"USD";
 const slug=location.pathname.split("/").pop().replace(/\.html$/i,"");
 
 const copy={
-  en:{back:"Back to properties",inquire:"Inquire about this property",paypal:"PayPal payment info",overview:"Property overview",about:"About this property",highlights:"Highlights",location:"Location",name:"Name",email:"Email",message:"Message",send:"Send inquiry",note:"Demo only — no personal data is transmitted.",sent:"Demo inquiry received — no data was sent.",beds:"Bedrooms",baths:"Bathrooms",area:"Building / land area",status:"Status",sale:"For sale",rent:"For rent",freehold:"Freehold",leasehold:"Leasehold",month:"/ month",contactTitle:"Interested in this property?",contactText:"Share your details and the team can continue the conversation through the production inquiry flow.",navProperties:"Properties",navLocations:"Locations",navServices:"Services",navAbout:"About",talk:"Talk to us",home:"Home",properties:"Properties",privateInquiry:"Private inquiry",preview:"Concept preview · Built by CADERA",tenure:"Tenure",type:"Type",commercial:"Commercial",developmentLand:"Development land"},
-  id:{back:"Kembali ke properti",inquire:"Tanyakan properti ini",paypal:"Info pembayaran PayPal",overview:"Ringkasan properti",about:"Tentang properti ini",highlights:"Keunggulan",location:"Lokasi",name:"Nama",email:"Email",message:"Pesan",send:"Kirim inquiry",note:"Hanya demo — tidak ada data pribadi yang dikirim.",sent:"Inquiry demo diterima — tidak ada data yang dikirim.",beds:"Kamar tidur",baths:"Kamar mandi",area:"Luas bangunan / tanah",status:"Status",sale:"Dijual",rent:"Disewa",freehold:"Hak milik",leasehold:"Leasehold",month:"/ bulan",contactTitle:"Tertarik dengan properti ini?",contactText:"Kirim detail Anda dan tim dapat melanjutkan percakapan melalui alur inquiry versi produksi.",navProperties:"Properti",navLocations:"Lokasi",navServices:"Layanan",navAbout:"Tentang",talk:"Hubungi kami",home:"Beranda",properties:"Properti",privateInquiry:"Inquiry privat",preview:"Pratinjau konsep · Dibuat oleh CADERA",tenure:"Masa hak",type:"Jenis",commercial:"Komersial",developmentLand:"Tanah pengembangan"}
+  en:{back:"Back to properties",inquire:"Inquire about this property",paypal:"PayPal payment info",overview:"Property overview",about:"About this property",highlights:"Highlights",location:"Location",name:"Name",email:"Email",message:"Message",send:"Send inquiry",note:"Demo only — no personal data is transmitted.",sent:"Demo inquiry received — no data was sent.",beds:"Bedrooms",baths:"Bathrooms",area:"Building / land area",status:"Status",sale:"For sale",rent:"For rent",freehold:"Freehold",leasehold:"Leasehold",month:"/ month",contactTitle:"Interested in this property?",contactText:"Share your details and the team can continue the conversation through the production inquiry flow.",navProperties:"Properties",navLocations:"Locations",navServices:"Services",navAbout:"About",talk:"Talk to us",home:"Home",properties:"Properties",privateInquiry:"Private inquiry",preview:"Concept preview · Built by CADERA",tenure:"Tenure",type:"Type",commercial:"Commercial",developmentLand:"Development land",saved:"Saved",save:"Save property",savedNow:"Property saved to your shortlist.",removedSaved:"Property removed from your shortlist."},
+  id:{back:"Kembali ke properti",inquire:"Tanyakan properti ini",paypal:"Info pembayaran PayPal",overview:"Ringkasan properti",about:"Tentang properti ini",highlights:"Keunggulan",location:"Lokasi",name:"Nama",email:"Email",message:"Pesan",send:"Kirim inquiry",note:"Hanya demo — tidak ada data pribadi yang dikirim.",sent:"Inquiry demo diterima — tidak ada data yang dikirim.",beds:"Kamar tidur",baths:"Kamar mandi",area:"Luas bangunan / tanah",status:"Status",sale:"Dijual",rent:"Disewa",freehold:"Hak milik",leasehold:"Leasehold",month:"/ bulan",contactTitle:"Tertarik dengan properti ini?",contactText:"Kirim detail Anda dan tim dapat melanjutkan percakapan melalui alur inquiry versi produksi.",navProperties:"Properti",navLocations:"Lokasi",navServices:"Layanan",navAbout:"Tentang",talk:"Hubungi kami",home:"Beranda",properties:"Properti",privateInquiry:"Inquiry privat",preview:"Pratinjau konsep · Dibuat oleh CADERA",tenure:"Masa hak",type:"Jenis",commercial:"Komersial",developmentLand:"Tanah pengembangan",saved:"Tersimpan",save:"Simpan properti",savedNow:"Properti disimpan ke daftar pilihanmu.",removedSaved:"Properti dihapus dari daftar pilihanmu."}
 };
 
 const pageCopy={
@@ -38,53 +41,78 @@ const pageCopy={
   }
 };
 
-function formatPrice(){
-  const el=document.getElementById("detailPrice");
-  const suffix=document.getElementById("detailPriceSuffix");
-  if(el)el.textContent=currency==="USD"?`$${usd.toLocaleString("en-US")}`:`Rp ${idr.toLocaleString("id-ID")}`;
-  if(suffix){const t=copy[language];suffix.textContent=suffixType==="month"?t.month:suffixType==="leasehold"?t.leasehold:t.freehold;}
+const detailPropertyMeta={
+  "jungle-residence-ubud":{slug:"jungle-residence-ubud",title:"Jungle Residence Ubud",location:"Ubud",type:"Villa",purpose:"sale",usd:485000,idr:7625000000,priceSuffix:"freehold",beds:4,baths:4,area:"420 m²",image:"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1400&q=88"},
+  "canggu-courtyard-villa":{slug:"canggu-courtyard-villa",title:"Canggu Courtyard Villa",location:"Canggu",type:"Villa",purpose:"rent",usd:3200,idr:50300000,priceSuffix:"month",beds:3,baths:3,area:"280 m²",image:"https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1400&q=88"},
+  "uluwatu-ocean-land":{slug:"uluwatu-ocean-land",title:"Uluwatu Ocean Land",location:"Uluwatu",type:"Land",purpose:"sale",usd:295000,idr:4640000000,priceSuffix:"leasehold",beds:null,baths:null,area:"1,200 m²",image:"https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1400&q=88"},
+  "sanur-garden-house":{slug:"sanur-garden-house",title:"Sanur Garden House",location:"Sanur",type:"House",purpose:"sale",usd:355000,idr:5580000000,priceSuffix:"freehold",beds:3,baths:3,area:"310 m²",image:"https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=88"},
+  "seminyak-long-stay-loft":{slug:"seminyak-long-stay-loft",title:"Seminyak Long-Stay Loft",location:"Seminyak",type:"Rental",purpose:"rent",usd:1800,idr:28300000,priceSuffix:"month",beds:2,baths:2,area:"150 m²",image:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=88"},
+  "ubud-creative-compound":{slug:"ubud-creative-compound",title:"Ubud Creative Compound",location:"Ubud",type:"Commercial",purpose:"sale",usd:610000,idr:9590000000,priceSuffix:"leasehold",beds:null,baths:4,area:"680 m²",image:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=88"}
+};
+
+function readSaved(){try{const parsed=JSON.parse(localStorage.getItem(WISHLIST_KEY)||"[]");return Array.isArray(parsed)?parsed:[]}catch{return[]}}
+function writeSaved(items){localStorage.setItem(WISHLIST_KEY,JSON.stringify(items))}
+function isSaved(){return readSaved().some(item=>item.slug===slug)}
+function injectSavedNav(){
+  const actions=document.querySelector(".header-actions");
+  if(actions&&!actions.querySelector(".saved-nav-link")){
+    const a=document.createElement("a");a.className="saved-nav-link";a.href="../saved.html";a.innerHTML='<span class="saved-nav-heart">♡</span><span class="saved-nav-label"></span><span class="saved-count">0</span>';
+    actions.insertBefore(a,actions.querySelector("#languageToggle")||actions.firstChild);
+  }
+  updateSavedUi();
+}
+function ensureDetailSaveButton(){
+  const actions=document.querySelector(".detail-actions");
+  if(!actions||actions.querySelector(".detail-save-btn"))return;
+  const btn=document.createElement("button");btn.type="button";btn.className="detail-save-btn";btn.id="detailSave";btn.innerHTML='<span class="save-heart">♡</span><span class="save-label"></span>';
+  actions.appendChild(btn);
+  btn.addEventListener("click",toggleSaved);
+}
+function updateSavedUi(){
+  const t=copy[language];const saved=isSaved();const count=readSaved().length;
+  document.querySelectorAll(".saved-count").forEach(el=>el.textContent=count);
+  document.querySelectorAll(".saved-nav-label").forEach(el=>el.textContent=t.saved);
+  const btn=document.getElementById("detailSave");
+  if(btn){btn.classList.toggle("is-saved",saved);btn.setAttribute("aria-pressed",String(saved));const heart=btn.querySelector(".save-heart");const label=btn.querySelector(".save-label");if(heart)heart.textContent=saved?"♥":"♡";if(label)label.textContent=saved?t.saved:t.save;}
+}
+function toggleSaved(){
+  const property=detailPropertyMeta[slug];if(!property)return;
+  const items=readSaved();const index=items.findIndex(item=>item.slug===slug);let nowSaved=false;
+  if(index>=0)items.splice(index,1);else{items.push({...property});nowSaved=true;}
+  writeSaved(items);updateSavedUi();showToast(copy[language][nowSaved?"savedNow":"removedSaved"]);
 }
 
-function setText(selector,text){const el=document.querySelector(selector);if(el&&text!=null)el.textContent=text;}
-
+function formatPrice(){const el=document.getElementById("detailPrice");const suffix=document.getElementById("detailPriceSuffix");if(el)el.textContent=currency==="USD"?`$${usd.toLocaleString("en-US")}`:`Rp ${idr.toLocaleString("id-ID")}`;if(suffix){const t=copy[language];suffix.textContent=suffixType==="month"?t.month:suffixType==="leasehold"?t.leasehold:t.freehold;}}
+function setText(selector,text){const el=document.querySelector(selector);if(el&&text!=null)el.textContent=text}
+function setTextIn(root,selector,text){const el=root.querySelector(selector);if(el&&text!=null)el.textContent=text}
 function applyPageSpecificLanguage(){
-  const data=pageCopy[slug]?.[language];
-  if(!data)return;
-  setText(".detail-summary>.detail-kicker",data.kicker);
-  setText(".detail-lead",data.lead);
-  document.querySelectorAll(".detail-specs span").forEach((el,i)=>{if(data.specs[i])el.textContent=data.specs[i];});
+  const data=pageCopy[slug]?.[language];if(!data)return;
+  setText(".detail-summary>.detail-kicker",data.kicker);setText(".detail-lead",data.lead);
+  document.querySelectorAll(".detail-specs span").forEach((el,i)=>{if(data.specs[i])el.textContent=data.specs[i]});
   const sections=document.querySelectorAll(".detail-content>section");
   if(sections[0]){setTextIn(sections[0],"h2",data.aboutTitle);const p=sections[0].querySelector("p:not(.detail-kicker)");if(p)p.textContent=data.aboutText;}
-  const list=document.querySelectorAll(".feature-list li");list.forEach((el,i)=>{if(data.highlights[i])el.textContent=data.highlights[i];});
+  document.querySelectorAll(".feature-list li").forEach((el,i)=>{if(data.highlights[i])el.textContent=data.highlights[i]});
   if(sections[3]){setTextIn(sections[3],"h2",data.locationTitle);const p=sections[3].querySelector("p:not(.detail-kicker)");if(p)p.textContent=data.locationText;}
   const textarea=document.querySelector("#inquiryForm textarea");if(textarea)textarea.placeholder=data.placeholder;
 }
-function setTextIn(root,selector,text){const el=root.querySelector(selector);if(el&&text!=null)el.textContent=text;}
-
 function applyLanguage(){
-  const t=copy[language];
-  document.documentElement.lang=language;
-  document.querySelectorAll("[data-copy]").forEach(el=>{if(t[el.dataset.copy])el.textContent=t[el.dataset.copy];});
-  const nav=document.querySelectorAll(".desktop-nav a");
-  [t.navProperties,t.navLocations,t.navServices,t.navAbout].forEach((text,i)=>{if(nav[i])nav[i].textContent=text;});
+  const t=copy[language];document.documentElement.lang=language;
+  document.querySelectorAll("[data-copy]").forEach(el=>{if(t[el.dataset.copy])el.textContent=t[el.dataset.copy]});
+  const nav=document.querySelectorAll(".desktop-nav a");[t.navProperties,t.navLocations,t.navServices,t.navAbout].forEach((text,i)=>{if(nav[i])nav[i].textContent=text});
   setText(".header-cta",t.talk);
   const crumbs=document.querySelectorAll(".property-breadcrumb a");if(crumbs[0])crumbs[0].textContent=t.home;if(crumbs[1])crumbs[1].textContent=t.properties;
   setText(".inquiry-card>.detail-kicker",t.privateInquiry);
   const footerSpans=document.querySelectorAll("footer .footer-bottom span");if(footerSpans[1])footerSpans[1].textContent=t.preview;
-  document.querySelectorAll(".overview-item small").forEach(el=>{const raw=(el.dataset.originalText||el.textContent).trim();if(!el.dataset.originalText)el.dataset.originalText=raw;if(raw==="Tenure")el.textContent=t.tenure;else if(raw==="Type")el.textContent=t.type;});
-  document.querySelectorAll(".overview-item strong").forEach(el=>{const raw=(el.dataset.originalText||el.textContent).trim();if(!el.dataset.originalText)el.dataset.originalText=raw;if(raw==="Commercial")el.textContent=t.commercial;else if(raw==="Development land")el.textContent=t.developmentLand;});
-  applyPageSpecificLanguage();
-  const languageToggle=document.getElementById("languageToggle");if(languageToggle)languageToggle.textContent=language.toUpperCase();
-  formatPrice();
+  document.querySelectorAll(".overview-item small").forEach(el=>{const raw=(el.dataset.originalText||el.textContent).trim();if(!el.dataset.originalText)el.dataset.originalText=raw;if(raw==="Tenure")el.textContent=t.tenure;else if(raw==="Type")el.textContent=t.type});
+  document.querySelectorAll(".overview-item strong").forEach(el=>{const raw=(el.dataset.originalText||el.textContent).trim();if(!el.dataset.originalText)el.dataset.originalText=raw;if(raw==="Commercial")el.textContent=t.commercial;else if(raw==="Development land")el.textContent=t.developmentLand});
+  applyPageSpecificLanguage();const languageToggle=document.getElementById("languageToggle");if(languageToggle)languageToggle.textContent=language.toUpperCase();formatPrice();updateSavedUi();
 }
-
 function showToast(msg){const toast=document.getElementById("propertyToast");if(!toast)return;toast.textContent=msg;toast.classList.add("show");clearTimeout(window.__propertyToast);window.__propertyToast=setTimeout(()=>toast.classList.remove("show"),2600)}
 
+injectSavedNav();ensureDetailSaveButton();
 document.getElementById("languageToggle")?.addEventListener("click",()=>{language=language==="en"?"id":"en";localStorage.setItem("aup-language",language);applyLanguage()});
 document.getElementById("currencyToggle")?.addEventListener("click",()=>{currency=currency==="USD"?"IDR":"USD";localStorage.setItem("aup-currency",currency);document.getElementById("currencyToggle").textContent=currency;formatPrice()});
 document.getElementById("paypalInfo")?.addEventListener("click",()=>showToast(language==="en"?"PayPal will use a manual admin-confirmed flow in production.":"PayPal akan menggunakan alur manual dengan konfirmasi admin pada versi produksi."));
 document.getElementById("detailInquiry")?.addEventListener("click",()=>document.getElementById("inquiryForm")?.scrollIntoView({behavior:"smooth",block:"center"}));
 document.getElementById("inquiryForm")?.addEventListener("submit",event=>{event.preventDefault();showToast(copy[language].sent);event.currentTarget.reset()});
-
-const currencyToggle=document.getElementById("currencyToggle");if(currencyToggle)currencyToggle.textContent=currency;
-applyLanguage();
+const currencyToggle=document.getElementById("currencyToggle");if(currencyToggle)currencyToggle.textContent=currency;applyLanguage();window.addEventListener("storage",updateSavedUi);
