@@ -25,10 +25,11 @@ jobs:
           from pathlib import Path
 
           skip_dirs = {'.git', 'node_modules', '.next', 'dist', 'build'}
+          workflow_path = Path('.github/workflows/cleanup-em-dash.yml')
           changed = []
 
           for path in Path('.').rglob('*'):
-              if not path.is_file() or any(part in skip_dirs for part in path.parts):
+              if not path.is_file() or path == workflow_path or any(part in skip_dirs for part in path.parts):
                   continue
               try:
                   raw = path.read_bytes()
@@ -39,9 +40,7 @@ jobs:
               if '—' not in text:
                   continue
 
-              # Prefer normal sentence punctuation for spaced em dashes.
               cleaned = text.replace(' — ', '. ')
-              # Any remaining em dash is replaced with a regular hyphen.
               cleaned = cleaned.replace('—', '-')
 
               if cleaned != text:
