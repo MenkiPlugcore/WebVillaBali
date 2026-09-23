@@ -35,6 +35,11 @@
   function tenure(p){ const c=t(); return p.tenure==="freehold"?c.freehold:p.tenure==="leasehold"?c.leasehold:c.rental; }
   function purpose(p){ return p.purpose==="sale"?t().forSale:t().forRent; }
 
+  function ensureCatalogFeatures(){
+    if(!(inProperties || document.getElementById("propertyGrid"))) return;
+    if(document.querySelector("script[data-catalog-features-loader]")) return;
+    const script=document.createElement("script");script.src=`${base}catalog-features.js`;script.dataset.catalogFeaturesLoader="true";script.async=false;document.head.appendChild(script);
+  }
   function ensureStyle(){
     if(document.querySelector('link[data-compare-style]')) return;
     const link=document.createElement("link"); link.rel="stylesheet"; link.href=`${base}compare.css`; link.dataset.compareStyle="true"; document.head.appendChild(link);
@@ -156,6 +161,7 @@
 
   function refresh(){ injectNav(); decorateCards(); decorateDetail(); updateButtons(); updateNav(); renderDock(); renderComparePage(); }
 
+  ensureCatalogFeatures();
   ensureStyle();
   injectNav();
   // Only decorate newly rendered cards/details. Do not rewrite labels from inside
