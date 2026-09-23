@@ -1,0 +1,65 @@
+/* Catalog conversion tools: advanced filters, direct inquiry, recently viewed */
+.catalog-filter-wrap{margin:4px 0 26px;border:1px solid rgba(16,34,27,.11);border-radius:18px;background:#fff;box-shadow:0 10px 30px rgba(18,35,28,.05);overflow:hidden}
+.catalog-filter-toolbar{min-height:54px;padding:9px 12px 9px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(16,34,27,.08)}
+.catalog-filter-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;color:#10221b;white-space:nowrap}
+.catalog-filter-title svg{width:15px;height:15px}
+.catalog-filter-count{margin-left:auto;color:#75827a;font-size:10px;white-space:nowrap}
+.catalog-filter-reset,.catalog-filter-toggle{border:0!important;width:auto!important;margin:0!important;border-radius:999px!important;min-height:34px!important;padding:0 12px!important;background:#f1f2ee!important;color:#405047!important;font-size:10px!important;font-weight:800!important;text-align:center!important}
+.catalog-filter-toggle{display:none!important;background:#10221b!important;color:#fff!important}
+.catalog-filter-panel{padding:13px 14px 15px;display:grid;grid-template-columns:1.05fr .85fr 1fr 1fr .8fr;gap:10px;background:#fbfaf7}
+.catalog-filter-field{display:block;min-width:0}
+.catalog-filter-field>span{display:block;margin:0 0 6px 2px;color:#7b8780;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.catalog-filter-control{height:42px;width:100%;border:1px solid rgba(16,34,27,.12);border-radius:11px;background:#fff;color:#10221b;padding:0 11px;outline:none;font-size:11px;transition:border-color .2s ease,box-shadow .2s ease}
+.catalog-filter-control:focus{border-color:rgba(16,34,27,.38);box-shadow:0 0 0 3px rgba(16,34,27,.06)}
+.catalog-price-input{position:relative}
+.catalog-price-input .catalog-currency-tag{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:8px;font-weight:800;color:#89938e;pointer-events:none}
+.catalog-price-input input{padding-right:42px}
+
+.property-card .catalog-card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.property-card .catalog-card-actions>button{width:100%!important;margin:0!important;min-height:39px!important;border-radius:999px!important;padding:0 12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;font-size:10px!important;font-weight:800!important;transition:.2s ease!important}
+.property-card .catalog-view-action{border:1px solid rgba(16,34,27,.14)!important;background:#fff!important;color:#10221b!important}
+.property-card .catalog-direct-inquiry{border:1px solid #10221b!important;background:#10221b!important;color:#fff!important}
+.property-card .catalog-card-actions>button:hover{transform:translateY(-1px)!important}
+.property-card .catalog-direct-inquiry svg{width:13px;height:13px;margin-right:6px;flex:0 0 auto}
+
+.catalog-form-highlight{animation:catalogFormPulse 1.15s ease}
+@keyframes catalogFormPulse{0%,100%{box-shadow:0 0 0 0 rgba(189,155,99,0)}35%{box-shadow:0 0 0 6px rgba(189,155,99,.16)}}
+
+.recently-viewed-section{padding:10px 0 96px}
+.recently-viewed-section[hidden]{display:none!important}
+.recent-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.recent-heading p{margin:0 0 8px;color:#77847c;font-size:9px;text-transform:uppercase;letter-spacing:.14em;font-weight:800}
+.recent-heading h2{margin:0;font-family:"Playfair Display",serif;font-size:clamp(32px,4vw,48px);line-height:1.02;font-weight:500}
+.recent-clear{border:1px solid rgba(16,34,27,.14);background:transparent;color:#5d6b63;border-radius:999px;min-height:36px;padding:0 13px;font-size:9px;font-weight:800;white-space:nowrap}
+.recent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.recent-card{background:#fff;border:1px solid rgba(16,34,27,.09);border-radius:15px;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+.recent-card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(20,34,28,.08)}
+.recent-image{display:block;aspect-ratio:1.45/1;background-size:cover;background-position:center;background-color:#e8e9e6}
+.recent-body{padding:13px}
+.recent-meta{display:block;color:#7b8780;font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.recent-title{display:block;margin:5px 0 9px;font-family:"Playfair Display",serif;font-size:17px;line-height:1.05;font-weight:600}
+.recent-bottom{display:flex;align-items:end;justify-content:space-between;gap:8px}
+.recent-price strong{display:block;font-size:10px}.recent-price small{display:block;margin-top:2px;color:#87928c;font-size:7px}
+.recent-actions{display:flex;gap:5px}
+.recent-actions a,.recent-actions button{min-height:30px;border-radius:999px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;white-space:nowrap}
+.recent-actions a{background:#10221b;color:#fff}
+.recent-actions button{border:1px solid rgba(16,34,27,.14);background:#fff;color:#10221b}
+
+@media(max-width:980px){.catalog-filter-panel{grid-template-columns:repeat(3,1fr)}.recent-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){
+  .catalog-filter-wrap{margin-bottom:22px;border-radius:15px}
+  .catalog-filter-toolbar{padding:8px 10px 8px 13px}
+  .catalog-filter-toggle{display:inline-flex!important;align-items:center;justify-content:center}
+  .catalog-filter-panel{display:none;grid-template-columns:1fr 1fr;padding:12px}
+  .catalog-filter-wrap.is-open .catalog-filter-panel{display:grid}
+  .catalog-filter-count{margin-left:0;flex:1;text-align:right}
+  .catalog-filter-title{display:none}
+  .property-card .catalog-card-actions{grid-template-columns:1fr 1fr}
+  .recently-viewed-section{padding-bottom:74px;overflow:hidden}
+  .recent-heading{align-items:flex-start}
+  .recent-grid{display:flex;gap:11px;overflow-x:auto;margin-right:-15px;padding-right:15px;scroll-snap-type:x proximity;scrollbar-width:none}
+  .recent-grid::-webkit-scrollbar{display:none}
+  .recent-card{flex:0 0 min(78vw,280px);scroll-snap-align:start}
+}
+@media(max-width:430px){.catalog-filter-panel{grid-template-columns:1fr}.catalog-filter-reset{padding:0 9px!important}.property-card .catalog-card-actions{grid-template-columns:1fr}.recent-heading h2{font-size:34px}.recent-clear{padding:0 10px}}
+@media(prefers-reduced-motion:reduce){.property-card .catalog-card-actions>button,.recent-card,.catalog-filter-control{transition:none!important}.catalog-form-highlight{animation:none!important}}
