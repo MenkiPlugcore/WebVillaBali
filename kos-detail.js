@@ -4,6 +4,7 @@ let kostLang=localStorage.getItem("aup-language")||"en";
 let kostCurrency=localStorage.getItem("aup-currency")||"USD";
 
 (function ensureWishlistStyles(){if(document.querySelector('link[href="../wishlist.css"]'))return;const l=document.createElement("link");l.rel="stylesheet";l.href="../wishlist.css";document.head.appendChild(l)})();
+(function ensureCatalogFeatures(){if(document.querySelector('script[data-catalog-features-loader]'))return;const s=document.createElement("script");s.src="../catalog-features.js";s.dataset.catalogFeaturesLoader="true";s.async=false;document.head.appendChild(s)})();
 
 function readKostSaved(){try{const parsed=JSON.parse(localStorage.getItem(KOST_WISHLIST_KEY)||"[]");return Array.isArray(parsed)?parsed:[]}catch{return[]}}
 function writeKostSaved(items){localStorage.setItem(KOST_WISHLIST_KEY,JSON.stringify(items))}
