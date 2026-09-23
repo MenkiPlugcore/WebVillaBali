@@ -1,4 +1,4 @@
-/* Guest Moments — documentation preview + gallery */
+/* Guest Moments. documentation preview + gallery */
 .guest-moments-section{padding:100px 0 92px;background:#0f1d18;color:#fff;overflow:hidden;position:relative}
 .guest-moments-section::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 18%,rgba(194,157,93,.13),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.025),transparent 35%);pointer-events:none}
 .guest-moments-head{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:end;margin-bottom:34px;position:relative;z-index:1}

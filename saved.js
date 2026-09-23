@@ -6,13 +6,13 @@ const copy = {
   en: {
     properties:"Properties", locations:"Locations", services:"Services", about:"About", talk:"Talk to us", saved:"Saved",
     eyebrow:"Your shortlist", title:"Properties worth another look.", intro:"Keep the properties you like in one place while you compare areas, prices, and possibilities.",
-    deviceNote:"Saved on this browser only — no account required.", emptyTitle:"Nothing saved yet.", emptyText:"Tap the heart on any property and it will appear here instantly.", browse:"Browse properties", preview:"Concept preview · Built by CADERA",
+    deviceNote:"Saved on this browser only. no account required.", emptyTitle:"Nothing saved yet.", emptyText:"Tap the heart on any property and it will appear here instantly.", browse:"Browse properties", preview:"Concept preview · Built by CADERA",
     forSale:"For sale", forRent:"For rent", beds:"beds", baths:"baths", month:"/ month", freehold:"Freehold", leasehold:"Leasehold", view:"View property →", removed:"Removed from saved properties."
   },
   id: {
     properties:"Properti", locations:"Lokasi", services:"Layanan", about:"Tentang", talk:"Hubungi kami", saved:"Tersimpan",
     eyebrow:"Daftar pilihanmu", title:"Properti yang layak dilihat lagi.", intro:"Simpan properti yang menarik agar lebih mudah membandingkan lokasi, harga, dan pilihannya.",
-    deviceNote:"Tersimpan hanya di browser ini — tanpa perlu akun.", emptyTitle:"Belum ada properti tersimpan.", emptyText:"Tekan ikon hati pada properti mana pun dan properti itu akan langsung muncul di sini.", browse:"Lihat properti", preview:"Pratinjau konsep · Dibuat oleh CADERA",
+    deviceNote:"Tersimpan hanya di browser ini. tanpa perlu akun.", emptyTitle:"Belum ada properti tersimpan.", emptyText:"Tekan ikon hati pada properti mana pun dan properti itu akan langsung muncul di sini.", browse:"Lihat properti", preview:"Pratinjau konsep · Dibuat oleh CADERA",
     forSale:"Dijual", forRent:"Disewa", beds:"kamar", baths:"km mandi", month:"/ bulan", freehold:"Hak milik", leasehold:"Leasehold", view:"Lihat properti →", removed:"Properti dihapus dari daftar tersimpan."
   }
 };

@@ -1,4 +1,4 @@
-/* Long-stay & mobility expansion — kos/boarding house + dedicated motor rental teaser */
+/* Long-stay & mobility expansion. kos/boarding house + dedicated motor rental teaser */
 .living-mobility-section{padding:104px 0;background:#f3f0e9;position:relative;overflow:hidden}
 .living-mobility-section::before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-140px;top:-150px;background:radial-gradient(circle,rgba(189,155,99,.18),transparent 68%);pointer-events:none}
 .lm-heading{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:end;margin-bottom:34px}

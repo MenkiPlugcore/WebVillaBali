@@ -1,4 +1,4 @@
-# Agung Ubud Property — Concept Preview
+# Agung Ubud Property. Concept Preview
 
 Premium property marketplace concept for the working domain `AgungUbudProperty.com`.
 

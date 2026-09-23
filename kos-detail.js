@@ -21,5 +21,5 @@ document.getElementById("languageToggle")?.addEventListener("click",()=>{kostLan
 document.getElementById("currencyToggle")?.addEventListener("click",()=>{kostCurrency=kostCurrency==="USD"?"IDR":"USD";localStorage.setItem("aup-currency",kostCurrency);updateKostPrice()});
 document.getElementById("detailInquiry")?.addEventListener("click",()=>document.getElementById("inquiryForm")?.scrollIntoView({behavior:"smooth",block:"center"}));
 document.getElementById("paypalInfo")?.addEventListener("click",()=>showKostToast(kostLang==="id"?"Pembayaran versi produksi akan dikonfirmasi manual oleh admin.":"Production payment details will be confirmed manually by admin."));
-document.getElementById("inquiryForm")?.addEventListener("submit",e=>{e.preventDefault();showKostToast(kostLang==="id"?"Inquiry demo diterima — tidak ada data yang dikirim.":"Demo inquiry received — no data was sent.");e.currentTarget.reset()});
+document.getElementById("inquiryForm")?.addEventListener("submit",e=>{e.preventDefault();showKostToast(kostLang==="id"?"Inquiry demo diterima. tidak ada data yang dikirim.":"Demo inquiry received. no data was sent.");e.currentTarget.reset()});
 window.addEventListener("storage",updateKostSavedUi);
