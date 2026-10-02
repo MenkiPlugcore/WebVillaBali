@@ -31,6 +31,23 @@
     }
   }
 
+  function loadBuildServices(){
+    if(!document.getElementById('services')) return;
+    if(!document.querySelector('link[data-build-services-style]')){
+      const style=document.createElement('link');
+      style.rel='stylesheet';
+      style.href='build-services.css';
+      style.dataset.buildServicesStyle='true';
+      document.head.appendChild(style);
+    }
+    if(!document.querySelector('script[data-build-services-script]')){
+      const script=document.createElement('script');
+      script.src='build-services.js';
+      script.dataset.buildServicesScript='true';
+      document.body.appendChild(script);
+    }
+  }
+
   // Load the latest client requested homepage refinements after the core page
   // scripts have finished parsing. This keeps location filtering connected to
   // the existing catalog state without duplicating the catalog engine.
@@ -43,10 +60,14 @@
       document.head.appendChild(style);
     }
     window.addEventListener('DOMContentLoaded', () => {
-      if (document.querySelector('script[data-client-feedback-script]')) return;
+      if (document.querySelector('script[data-client-feedback-script]')) {
+        loadBuildServices();
+        return;
+      }
       const script = document.createElement('script');
       script.src = 'client-feedback.js';
       script.dataset.clientFeedbackScript = 'true';
+      script.addEventListener('load', loadBuildServices, { once: true });
       document.body.appendChild(script);
     }, { once: true });
   }
