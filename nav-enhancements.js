@@ -18,6 +18,15 @@
     document.head.appendChild(style);
   };
 
+  const ensureFinalBrandLogoStyle = () => {
+    if (document.querySelector('link[data-final-brand-logo]')) return;
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = document.body.classList.contains('property-page') ? '../final-brand-logo.css' : 'final-brand-logo.css';
+    style.dataset.finalBrandLogo = 'true';
+    document.head.appendChild(style);
+  };
+
   const syncCompactUtilities = () => {
     const languageButton = header.querySelector('#languageToggle');
     const currencyButton = header.querySelector('#currencyToggle');
@@ -47,6 +56,7 @@
   const scheduleUtilitySync = () => requestAnimationFrame(syncCompactUtilities);
 
   ensureHeaderPolishStyle();
+  ensureFinalBrandLogoStyle();
   syncHeader();
   window.addEventListener('scroll', syncHeader, { passive: true });
   window.addEventListener('storage', scheduleUtilitySync);
