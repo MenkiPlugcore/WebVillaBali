@@ -9,8 +9,51 @@
     header.classList.toggle('nav-scrolled', scrolled);
   };
 
+  const ensureHeaderPolishStyle = () => {
+    if (document.querySelector('link[data-mobile-header-polish]')) return;
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css' : 'mobile-header-polish.css';
+    style.dataset.mobileHeaderPolish = 'true';
+    document.head.appendChild(style);
+  };
+
+  const syncCompactUtilities = () => {
+    const languageButton = header.querySelector('#languageToggle');
+    const currencyButton = header.querySelector('#currencyToggle');
+    const language = (localStorage.getItem('aup-language') || 'en').toUpperCase();
+    const currency = (localStorage.getItem('aup-currency') || 'USD').toUpperCase();
+
+    if (languageButton) {
+      languageButton.dataset.navShort = language;
+      languageButton.setAttribute('translate', 'no');
+      languageButton.classList.add('notranslate');
+      languageButton.setAttribute('aria-label', language === 'ID' ? 'Ganti bahasa' : 'Change language');
+    }
+
+    if (currencyButton) {
+      currencyButton.dataset.navShort = currency;
+      currencyButton.setAttribute('translate', 'no');
+      currencyButton.classList.add('notranslate');
+      currencyButton.setAttribute('aria-label', language === 'ID' ? 'Ganti mata uang' : 'Change currency');
+    }
+
+    header.querySelectorAll('.saved-nav-link,.compare-nav-link,.saved-count,.compare-count,.saved-nav-heart,.compare-nav-icon').forEach(el => {
+      el.setAttribute('translate', 'no');
+      el.classList.add('notranslate');
+    });
+  };
+
+  const scheduleUtilitySync = () => requestAnimationFrame(syncCompactUtilities);
+
+  ensureHeaderPolishStyle();
   syncHeader();
   window.addEventListener('scroll', syncHeader, { passive: true });
+  window.addEventListener('storage', scheduleUtilitySync);
+
+  header.addEventListener('click', event => {
+    if (event.target.closest('#languageToggle,#currencyToggle')) setTimeout(syncCompactUtilities, 0);
+  });
 
   // Homepage guest documentation concept preview. The dedicated gallery page
   // already loads these assets directly, so only inject them on the homepage.
@@ -60,6 +103,7 @@
       document.head.appendChild(style);
     }
     window.addEventListener('DOMContentLoaded', () => {
+      scheduleUtilitySync();
       if (document.querySelector('script[data-client-feedback-script]')) {
         loadBuildServices();
         return;
@@ -67,8 +111,15 @@
       const script = document.createElement('script');
       script.src = 'client-feedback.js';
       script.dataset.clientFeedbackScript = 'true';
-      script.addEventListener('load', loadBuildServices, { once: true });
+      script.addEventListener('load', () => {
+        scheduleUtilitySync();
+        loadBuildServices();
+      }, { once: true });
       document.body.appendChild(script);
     }, { once: true });
+  } else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleUtilitySync, { once: true });
+  } else {
+    scheduleUtilitySync();
   }
 })();
