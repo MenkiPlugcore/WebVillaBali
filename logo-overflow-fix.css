@@ -1,0 +1,87 @@
+/* Keep the transparent brand logo fully contained inside the header. */
+.site-header .brand.client-brand-visual {
+  align-self: center !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.site-header .brand.client-brand-visual > .client-brand-logo-shell,
+.site-header .client-brand-logo-shell,
+.site-header.nav-scrolled .client-brand-logo-shell,
+.site-header.scrolled .client-brand-logo-shell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: 138px !important;
+  height: 58px !important;
+  max-height: calc(100% - 8px) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.site-header .client-brand-logo {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+  margin: 0 !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.18));
+}
+
+@media (max-width: 1000px) {
+  .site-header .brand.client-brand-visual {
+    max-width: 122px !important;
+  }
+
+  .site-header .brand.client-brand-visual > .client-brand-logo-shell,
+  .site-header .client-brand-logo-shell,
+  .site-header.nav-scrolled .client-brand-logo-shell,
+  .site-header.scrolled .client-brand-logo-shell {
+    width: 116px !important;
+    height: 52px !important;
+    max-height: calc(100% - 10px) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .site-header .brand.client-brand-visual {
+    max-width: 112px !important;
+  }
+
+  .site-header .brand.client-brand-visual > .client-brand-logo-shell,
+  .site-header .client-brand-logo-shell,
+  .site-header.nav-scrolled .client-brand-logo-shell,
+  .site-header.scrolled .client-brand-logo-shell {
+    width: 108px !important;
+    height: 48px !important;
+    max-height: 48px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .site-header .brand.client-brand-visual {
+    max-width: 102px !important;
+  }
+
+  .site-header .brand.client-brand-visual > .client-brand-logo-shell,
+  .site-header .client-brand-logo-shell,
+  .site-header.nav-scrolled .client-brand-logo-shell,
+  .site-header.scrolled .client-brand-logo-shell {
+    width: 98px !important;
+    height: 44px !important;
+    max-height: 44px !important;
+  }
+}
