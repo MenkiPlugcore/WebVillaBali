@@ -27,6 +27,15 @@
     document.head.appendChild(style);
   };
 
+  const ensureLogoOverflowFixStyle = () => {
+    if (document.querySelector('link[data-logo-overflow-fix]')) return;
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = document.body.classList.contains('property-page') ? '../logo-overflow-fix.css' : 'logo-overflow-fix.css';
+    style.dataset.logoOverflowFix = 'true';
+    document.head.appendChild(style);
+  };
+
   const syncCompactUtilities = () => {
     const languageButton = header.querySelector('#languageToggle');
     const currencyButton = header.querySelector('#currencyToggle');
@@ -57,6 +66,7 @@
 
   ensureHeaderPolishStyle();
   ensureFinalBrandLogoStyle();
+  ensureLogoOverflowFixStyle();
   syncHeader();
   window.addEventListener('scroll', syncHeader, { passive: true });
   window.addEventListener('storage', scheduleUtilitySync);
