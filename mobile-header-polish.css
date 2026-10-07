@@ -448,3 +448,50 @@
 #owners, #guestMoments, #reviews, #properties, #locations, #services, #about, #contact {
   scroll-margin-top:90px;
 }
+
+/* Six main choices; native expandable groups reveal the detailed shortcuts. */
+@media(max-width:1000px) {
+  .site-header .mobile-menu.accordion-menu {
+    grid-template-columns:1fr;
+    gap:2px !important;
+    max-height:calc(100dvh - 90px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    padding:12px !important;
+  }
+  .accordion-menu .nav-group { border-bottom:1px solid rgba(255,255,255,.07); }
+  .accordion-menu .nav-group summary {
+    min-height:46px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:0 13px;
+    color:rgba(255,255,255,.9);
+    font-size:12px;
+    list-style:none;
+    cursor:pointer;
+    border-radius:10px;
+  }
+  .accordion-menu .nav-group summary::-webkit-details-marker { display:none; }
+  .accordion-menu .nav-group summary::after {
+    content:"";
+    width:7px;
+    height:7px;
+    border-right:1.5px solid #d5c39f;
+    border-bottom:1.5px solid #d5c39f;
+    transform:rotate(45deg);
+    margin-right:4px;
+  }
+  .accordion-menu .nav-group[open] summary::after { transform:rotate(225deg); }
+  .accordion-menu .nav-group[open] summary { color:#e7d5ad; }
+  .accordion-menu .nav-group summary:hover { background:rgba(255,255,255,.06); }
+  .accordion-menu .nav-group summary:focus-visible { outline:1px solid #d5c39f; }
+  .accordion-menu .nav-submenu { padding:0 0 6px 13px; border-left:1px solid rgba(213,195,159,.22); margin:0 13px 8px; }
+  .site-header .accordion-menu .nav-submenu a {
+    font-size:11px;
+    min-height:44px;
+    color:rgba(255,255,255,.74);
+    border-bottom:0 !important;
+  }
+}

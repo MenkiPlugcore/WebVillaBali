@@ -18,6 +18,7 @@ const properties = [
 
 const translations = {
   en: {
+    quickAbout:"About us", quickServiceOverview:"All services",
     quickHome:"Home", quickSearch:"Search property", quickTypes:"Property types", quickKost:"Kost / monthly rooms", quickMotor:"Motorbike rental", quickArchitect:"Architecture & design", quickBuild:"Construction", quickPermit:"Permits / PBG / SLF", quickSupport:"Project support", quickOwners:"For property owners", quickGuests:"Guest moments", quickReviews:"Reviews", quickCompare:"Compare", quickMenuTitle:"Explore the website",
     navProperties:"Properties", navLocations:"Locations", navServices:"Services", navAbout:"About", talkToUs:"Talk to us",
     heroEyebrow:"Bali property, curated with purpose", heroTitle:"Find your place<br>in Bali.", heroCopy:"Discover selected villas, homes, and land in Bali for living and investment.",
@@ -42,6 +43,7 @@ const translations = {
     saved:"Saved", save:"Save", savedNow:"Property saved to your shortlist.", removedSaved:"Property removed from your shortlist."
   },
   id: {
+    quickAbout:"Tentang kami", quickServiceOverview:"Semua layanan",
     quickHome:"Beranda", quickSearch:"Cari properti", quickTypes:"Jenis properti", quickKost:"Kost / kamar bulanan", quickMotor:"Rental motor", quickArchitect:"Arsitektur & desain", quickBuild:"Kontraktor", quickPermit:"Perizinan / PBG / SLF", quickSupport:"Pendampingan proyek", quickOwners:"Untuk pemilik", quickGuests:"Dokumentasi tamu", quickReviews:"Ulasan", quickCompare:"Bandingkan", quickMenuTitle:"Jelajahi website",
     navProperties:"Properti", navLocations:"Lokasi", navServices:"Layanan", navAbout:"Tentang", talkToUs:"Hubungi kami",
     heroEyebrow:"Properti Bali, dikurasi dengan tujuan", heroTitle:"Temukan tempatmu<br>di Bali.", heroCopy:"Temukan vila, hunian, dan tanah pilihan di Bali untuk tinggal maupun investasi.",
@@ -107,7 +109,7 @@ function injectSavedNav(){
     actions.insertBefore(a,languageButton||actions.firstChild);
   }
   const mobile=document.getElementById("mobileMenu");
-  if(mobile && !mobile.querySelector('[href="saved.html"]')){
+  if(mobile && !mobile.classList.contains("accordion-menu") && !mobile.querySelector('[href="saved.html"]')){
     const a=document.createElement("a"); a.href="saved.html"; a.className="mobile-saved-link";
     mobile.appendChild(a);
   }
@@ -196,6 +198,9 @@ document.querySelectorAll(".filter-chip").forEach(chip=>chip.addEventListener("c
 document.getElementById("heroSearch")?.addEventListener("submit",event=>{event.preventDefault();searchFilters={location:document.getElementById("locationFilter").value,type:document.getElementById("typeFilter").value,purpose:document.getElementById("purposeFilter").value};activeType="all";document.querySelectorAll(".filter-chip").forEach(c=>c.classList.toggle("active",c.dataset.filter==="all"));if(initializing)finishInitialLoad();else renderProperties();document.getElementById("properties")?.scrollIntoView({behavior:"smooth"});});
 const menuButton=document.getElementById("menuButton"); const mobileMenu=document.getElementById("mobileMenu");
 menuButton?.addEventListener("click",()=>{const open=menuButton.getAttribute("aria-expanded")==="true";menuButton.setAttribute("aria-expanded",String(!open));mobileMenu?.classList.toggle("open",!open);});
+mobileMenu?.querySelectorAll('.nav-group').forEach(group=>group.addEventListener('toggle',()=>{
+  if(group.open) mobileMenu.querySelectorAll('.nav-group').forEach(other=>{if(other!==group)other.open=false;});
+}));
 mobileMenu?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");}));
 mobileMenu?.addEventListener("keydown",event=>{if(event.key==="Escape"){mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");menuButton?.focus();}});
 document.getElementById("contactForm")?.addEventListener("submit",event=>{event.preventDefault();showToast(translations[language].inquiryToast);event.currentTarget.reset();});

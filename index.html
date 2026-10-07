@@ -32,27 +32,38 @@
       <button class="menu-btn" id="menuButton" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">☰</button>
     </div>
 
-    <div class="mobile-menu quick-menu" id="mobileMenu" aria-label="Quick navigation">
-      <p class="quick-menu-title" data-i18n="quickMenuTitle">Explore the website</p>
-      <a href="#top" data-i18n="quickHome">Home</a>
-      <a href="#heroSearch" data-i18n="quickSearch">Search property</a>
-      <a href="#properties" data-i18n="navProperties">Properties</a>
-      <a href="#propertyTypes" data-i18n="quickTypes">Property types</a>
-      <a href="#locations" data-i18n="navLocations">Locations</a>
-      <a href="#kostLiving" data-i18n="quickKost">Kost / monthly rooms</a>
+    <div class="mobile-menu accordion-menu" id="mobileMenu" aria-label="Quick navigation">
+      <details class="nav-group">
+        <summary data-i18n="navProperties">Properties</summary>
+        <div class="nav-submenu">
+          <a href="#heroSearch" data-i18n="quickSearch">Search property</a>
+          <a href="#properties" data-i18n="navProperties">Properties</a>
+          <a href="#propertyTypes" data-i18n="quickTypes">Property types</a>
+          <a href="#locations" data-i18n="navLocations">Locations</a>
+          <a href="#kostLiving" data-i18n="quickKost">Kost / monthly rooms</a>
+        </div>
+      </details>
       <a href="motor-rental.html" data-i18n="quickMotor">Motorbike rental</a>
-      <a href="#services" data-i18n="navServices">Services</a>
-      <a href="#architectureService" data-i18n="quickArchitect">Architecture & design</a>
-      <a href="#constructionService" data-i18n="quickBuild">Construction</a>
-      <a href="#permitAssistance" data-i18n="quickPermit">Permits / PBG / SLF</a>
-      <a href="#projectSupport" data-i18n="quickSupport">Project support</a>
+      <details class="nav-group">
+        <summary data-i18n="navServices">Services</summary>
+        <div class="nav-submenu">
+          <a href="#services" data-i18n="quickServiceOverview">All services</a>
+          <a href="#architectureService" data-i18n="quickArchitect">Architecture &amp; design</a>
+          <a href="#constructionService" data-i18n="quickBuild">Construction</a>
+          <a href="#permitAssistance" data-i18n="quickPermit">Permits / PBG / SLF</a>
+          <a href="#projectSupport" data-i18n="quickSupport">Project support</a>
+        </div>
+      </details>
       <a href="#owners" data-i18n="quickOwners">For property owners</a>
-      <a href="#guestMoments" data-i18n="quickGuests">Guest moments</a>
-      <a href="#reviews" data-i18n="quickReviews">Reviews</a>
-      <a href="#about" data-i18n="navAbout">About</a>
+      <details class="nav-group">
+        <summary data-i18n="quickAbout">About us</summary>
+        <div class="nav-submenu">
+          <a href="#about" data-i18n="navAbout">About</a>
+          <a href="#guestMoments" data-i18n="quickGuests">Guest moments</a>
+          <a href="#reviews" data-i18n="quickReviews">Reviews</a>
+        </div>
+      </details>
       <a href="#contact" data-i18n="talkToUs">Talk to us</a>
-      <a href="saved.html" class="mobile-saved-link" data-i18n="saved">Saved</a>
-      <a href="compare.html" class="mobile-compare-link" data-i18n="quickCompare">Compare</a>
     </div>
   </header>
 
@@ -225,9 +236,9 @@
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="nav-enhancements.js?v=20261007-quick-menu-5"></script>
-  <script src="script.js?v=20261007-quick-menu-5"></script>
+  <script src="nav-enhancements.js?v=20261007-accordion-menu-6"></script>
+  <script src="script.js?v=20261007-accordion-menu-6"></script>
   <script src="catalog-expansion.js?v=20261007-quick-menu-5"></script>
-  <script src="compare.js"></script>
+  <script src="compare.js?v=20261007-accordion-menu-6"></script>
 </body>
 </html>

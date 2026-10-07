@@ -66,7 +66,7 @@
       if(document.body.classList.contains("compare-page")) a.setAttribute("aria-current","page");
     }
     const mobile=document.getElementById("mobileMenu");
-    if(mobile && !mobile.querySelector(".mobile-compare-link")){
+    if(mobile && !mobile.classList.contains("accordion-menu") && !mobile.querySelector(".mobile-compare-link")){
       const a=document.createElement("a"); a.href=compareHref(); a.className="mobile-compare-link"; mobile.appendChild(a);
     }
   }
