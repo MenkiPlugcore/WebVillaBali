@@ -13,7 +13,7 @@
     if (document.querySelector('link[data-mobile-header-polish]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-navwordmark-1' : 'mobile-header-polish.css?v=20261007-navwordmark-1';
+    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-mobile-room-1' : 'mobile-header-polish.css?v=20261007-mobile-room-1';
     style.dataset.mobileHeaderPolish = 'true';
     document.head.appendChild(style);
   };
@@ -36,16 +36,13 @@
     document.head.appendChild(style);
   };
 
-  const ensureNavWordmark = () => {
-    if (header.querySelector('.nav-wordmark')) return;
-    const homeHref = document.body.classList.contains('property-page') ? '../index.html' : 'index.html';
-    const wordmark = document.createElement('a');
-    wordmark.className = 'nav-wordmark';
-    wordmark.href = document.getElementById('top') ? '#top' : homeHref;
-    wordmark.setAttribute('aria-label', 'Agung Ubud Property home');
-    wordmark.innerHTML = '<strong>AGUNG UBUD</strong><span>PROPERTY</span>';
-    header.insertBefore(wordmark, header.firstChild);
+  const syncEmptyBadges = () => {
+    header.querySelectorAll('.saved-count,.compare-count').forEach(badge => {
+      badge.hidden = Number(badge.textContent.trim()) === 0;
+    });
   };
+  new MutationObserver(syncEmptyBadges).observe(header, { childList: true, subtree: true, characterData: true });
+  syncEmptyBadges();
 
   const syncCompactUtilities = () => {
     const languageButton = header.querySelector('#languageToggle');
@@ -76,7 +73,6 @@
   const scheduleUtilitySync = () => requestAnimationFrame(syncCompactUtilities);
 
   ensureHeaderPolishStyle();
-  ensureNavWordmark();
   ensureFinalBrandLogoStyle();
   ensureLogoOverflowFixStyle();
   syncHeader();
@@ -141,7 +137,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = 'client-feedback.js';
+      script.src = 'client-feedback.js?v=20261007-mobile-room-1';
       script.dataset.clientFeedbackScript = 'true';
       script.addEventListener('load', () => {
         scheduleUtilitySync();

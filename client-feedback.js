@@ -21,7 +21,7 @@
       permitNote:"Service scope and document requirements are confirmed after the property documents are reviewed.",
       permitInterest:"Building Permit / SIMBG",
       permitMessage:"Hello, I would like information about building permit and SIMBG assistance for my property.",
-      heroCopy:"From private villas and long-term rentals to land and commercial opportunities. Discover properties selected for living, investing and building your next chapter.",
+      heroCopy:"Discover selected villas, homes, and land in Bali for living and investment.",
       trustCopy:"Premium presentation, direct inquiries, and international-ready communication help every listing feel represented with care. This includes villas, homes, land, rentals, and commercial spaces.",
       demoNote:"Demo only. No personal data is transmitted."
     },
@@ -44,7 +44,7 @@
       permitNote:"Ruang lingkup layanan dan kebutuhan dokumen dikonfirmasi setelah dokumen properti ditinjau.",
       permitInterest:"Izin Bangunan / SIMBG",
       permitMessage:"Halo, saya ingin informasi tentang bantuan pengurusan izin bangunan dan SIMBG untuk properti saya.",
-      heroCopy:"Mulai dari vila privat dan sewa jangka panjang hingga tanah serta properti komersial. Temukan pilihan untuk hunian, investasi, dan rencana berikutnya.",
+      heroCopy:"Temukan vila, hunian, dan tanah pilihan di Bali untuk tinggal maupun investasi.",
       trustCopy:"Presentasi premium, inquiry langsung, dan komunikasi yang siap untuk pasar internasional membuat setiap listing tampil lebih terawat. Layanan mencakup vila, rumah, tanah, sewa, dan properti komersial.",
       demoNote:"Hanya demo. Tidak ada data pribadi yang dikirim."
     }
@@ -245,6 +245,36 @@
       });
     }
     updateWhatsAppCopy();
+    // Keep the floating contact button clear of the mobile search controls.
+    const search = document.getElementById('heroSearch');
+    if (search) {
+      let scheduled = false;
+      const positionContact = () => {
+        scheduled = false;
+        link.style.bottom = '';
+        link.style.visibility = '';
+        if (!window.matchMedia('(max-width:720px)').matches) return;
+        const panel = search.getBoundingClientRect();
+        const button = link.getBoundingClientRect();
+        if (button.top < panel.bottom + 12 && button.bottom > panel.top - 12) {
+          const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom || 60;
+          if (panel.top - button.height - 12 > headerBottom + 12) {
+            link.style.bottom = `${window.innerHeight - panel.top + 12}px`;
+          } else if (panel.bottom + button.height + 26 < window.innerHeight) {
+            link.style.bottom = `${window.innerHeight - panel.bottom - button.height - 12}px`;
+          } else {
+            link.style.visibility = 'hidden';
+          }
+        }
+      };
+      const schedulePosition = () => {
+        if (!scheduled) { scheduled = true; requestAnimationFrame(positionContact); }
+      };
+      window.addEventListener('scroll', schedulePosition, { passive:true });
+      window.addEventListener('resize', schedulePosition);
+      new ResizeObserver(schedulePosition).observe(search);
+      schedulePosition();
+    }
   }
   function updateWhatsAppCopy(){
     const link=document.querySelector(".floating-whatsapp");

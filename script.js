@@ -19,7 +19,7 @@ const properties = [
 const translations = {
   en: {
     navProperties:"Properties", navLocations:"Locations", navServices:"Services", navAbout:"About", talkToUs:"Talk to us",
-    heroEyebrow:"Bali property, curated with purpose", heroTitle:"Find your place<br>in Bali.", heroCopy:"From private villas and long-term rentals to land and commercial opportunities. discover properties selected for living, investing and building your next chapter.",
+    heroEyebrow:"Bali property, curated with purpose", heroTitle:"Find your place<br>in Bali.", heroCopy:"Discover selected villas, homes, and land in Bali for living and investment.",
     searchLocationLabel:"Location", allBali:"All Bali", searchTypeLabel:"Property type", allTypes:"All types", searchPurposeLabel:"Purpose", saleAndRent:"Sale & Rent", forSale:"For sale", forRent:"For rent", searchButton:"Search properties",
     trustOne:"Local market knowledge", trustTwo:"International-ready service", trustThree:"Transparent inquiry process",
     selectedProperties:"Selected properties", curatedForYou:"Curated for the way you want to live.", propertyIntro:"Browse a growing collection of villas, homes, land and investment opportunities across Bali.", filterAll:"All",
@@ -42,7 +42,7 @@ const translations = {
   },
   id: {
     navProperties:"Properti", navLocations:"Lokasi", navServices:"Layanan", navAbout:"Tentang", talkToUs:"Hubungi kami",
-    heroEyebrow:"Properti Bali, dikurasi dengan tujuan", heroTitle:"Temukan tempatmu<br>di Bali.", heroCopy:"Mulai dari vila privat dan sewa jangka panjang hingga tanah serta properti komersial. temukan pilihan untuk hunian, investasi, dan rencana berikutnya.",
+    heroEyebrow:"Properti Bali, dikurasi dengan tujuan", heroTitle:"Temukan tempatmu<br>di Bali.", heroCopy:"Temukan vila, hunian, dan tanah pilihan di Bali untuk tinggal maupun investasi.",
     searchLocationLabel:"Lokasi", allBali:"Seluruh Bali", searchTypeLabel:"Jenis properti", allTypes:"Semua jenis", searchPurposeLabel:"Tujuan", saleAndRent:"Jual & Sewa", forSale:"Dijual", forRent:"Disewa", searchButton:"Cari properti",
     trustOne:"Wawasan pasar lokal", trustTwo:"Layanan siap internasional", trustThree:"Proses inquiry transparan",
     selectedProperties:"Properti pilihan", curatedForYou:"Dikurasi untuk cara hidup yang kamu inginkan.", propertyIntro:"Jelajahi koleksi vila, rumah, tanah, dan peluang investasi di berbagai area Bali.", filterAll:"Semua",
