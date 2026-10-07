@@ -20,6 +20,7 @@ export async function handle(req, env) {
     return res.json();
   }
   try {
+    if(url.searchParams.get('kind')==='service'){const page=url.searchParams.get('page')||'0';if(!/^\d{1,6}$/.test(page))return reply({error:'Halaman tidak valid.'},400);const rows=await read('services',{publication_status:'eq.published',select:'id,slug,title_id,title_en,description_id,description_en,sort_order',order:'sort_order.asc,id.asc',limit:'100',offset:String(Number(page)*100)});return reply({services:rows,hasMore:rows.length===100});}
     if(url.searchParams.get('kind')==='settings'){const rows=await read('site_settings',{key:'in.(contact,social_links)',select:'key,value',order:'key.asc'});return reply({settings:publicSettings(rows)});}
     if (url.searchParams.get('image')) {
       const id = url.searchParams.get('image');

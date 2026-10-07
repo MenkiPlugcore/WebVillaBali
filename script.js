@@ -212,7 +212,7 @@ mobileMenu?.querySelectorAll('.nav-group').forEach(group=>group.addEventListener
 }));
 mobileMenu?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");}));
 mobileMenu?.addEventListener("keydown",event=>{if(event.key==="Escape"){mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");menuButton?.focus();}});
-AUPInquiry.bind(document.getElementById('contactForm'),fields=>({interest:String(fields.get('interest')||'')}));
+AUPInquiry.bind(document.getElementById('contactForm'),fields=>{const value=String(fields.get('interest')||'');return value.startsWith('service:')?{inquiry_type:'service',service_id:value.slice(8)}:{interest:value};});
 
 renderSkeletons(); applyLanguage({render:false}); if(currencyToggle)currencyToggle.textContent=currency; initRevealObserver(); loadPublicProperties();
 window.addEventListener("storage",()=>{updateSavedCount();updateWishlistButtons();});

@@ -25,7 +25,7 @@ Manage properties (including kos), motorbikes, locations, services, testimonials
 ## Remaining integration steps
 
 1. Transfer admin access to the owner's verified account when supplied; revoke the temporary admin role and existing sessions when appropriate.
-2. Connect services, testimonials and guest moments to published database records.
+2. Connect testimonials and guest moments to published database records.
 
 Keep API secrets out of browser code, git and public settings. Supabase Edge Functions use server environment secrets. Store only public business contact information in `site_settings`.
 
@@ -56,3 +56,7 @@ The private quota/request tables intentionally enable RLS without client policie
 ## Public business contact settings
 
 The homepage and rental footer read `public-catalog?kind=settings` using anonymous RLS. The endpoint filters contact/social keys and returns only validated email, phone, WhatsApp, address and official HTTPS social links. Admin normalizes Indonesian 08 numbers to 628 and rejects invalid contacts/links before saving. The homepage floating button updates after settings load, so it cannot remain stuck in the ticket fallback due to response timing. Blank/invalid settings and outages use the inquiry ticket form instead of an invented business number or email. Reloading a public page reads fresh settings; no realtime subscription is required. Brand and homepage copy settings are still pending integration.
+
+## Published services and service tickets
+
+`public-catalog?kind=service` uses anonymous published-only reads with stable sort/id ordering and pages of 100. Live service cards replace sample construction/permit cards, populate the mobile menu and contact-form choices, and preserve typed customer messages when changing language. Empty and failed catalogs show explicit states without sample fallback. The inquiry endpoint verifies the published service, prefixes the database title, and records the service_id. The service-only reference check also runs atomically in the service-role-only intake RPC; draft or archived services return 404. `supabase/tests/service_inquiry.sql` verifies anonymous visibility, published ticket references, retry ticket stability and draft/archive rejection, with fixtures rolled back.

@@ -253,7 +253,7 @@
   function refreshCopy(){
     polishHomepageCopy();
     updateLocationCards();
-    renderPermitService();
+
     updateWhatsAppCopy();
   }
 
@@ -262,7 +262,7 @@
   polishHomepageCopy();
   addHeroSlideshow();
   bindLocationCards();
-  renderPermitService();
+
   addWhatsAppButton();
   document.getElementById("languageToggle")?.addEventListener("click",()=>setTimeout(refreshCopy,0));
 })();

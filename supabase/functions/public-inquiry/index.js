@@ -10,13 +10,14 @@ export function validate(body,now=Date.now()){
  if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Error('INPUT');
  if(phone&&(!/^[+\d\s().-]+$/.test(phone)||phone.replace(/\D/g,'').length<7||phone.replace(/\D/g,'').length>15))throw Error('INPUT');
  const data={name,email,phone:phone?phone.replace(/[\s().-]/g,''):null,message,language:body.language==='id'?'id':'en',inquiry_type:'general'};
+ if(body.inquiry_type==='service'){if(!uuid.test(body.service_id||''))throw Error('INPUT');data.inquiry_type='service';data.service_id=body.service_id;}
  if(body.inquiry_type==='property'){if(!uuid.test(body.property_id||''))throw Error('INPUT');data.inquiry_type='property';data.property_id=body.property_id;}
  if(body.inquiry_type==='motorbike'){
   if(!uuid.test(body.motorbike_id||'')||!['daily','monthly'].includes(body.plan)||!Number.isInteger(body.duration)||body.duration<1||body.duration>(body.plan==='daily'?365:24))throw Error('INPUT');
   const start=text(body.start,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(start)||new Date(start+'T00:00:00Z').toISOString().slice(0,10)!==start||start<new Date(now+8*3600000).toISOString().slice(0,10))throw Error('INPUT');
   data.inquiry_type='motorbike';data.motorbike_id=body.motorbike_id;return {data,booking:{plan:body.plan,duration:body.duration,start,area:text(body.area??'',180)}};
  }
- if(body.interest)data.message='Interest: '+text(body.interest,150)+'\n'+message;
+ if(body.interest&&data.inquiry_type==='general')data.message='Interest: '+text(body.interest,150)+'\n'+message;
  return {data};
 }
 async function boundedJSON(req){const reader=req.body?.getReader();if(!reader)throw Error('INPUT');const chunks=[];let size=0;for(;;){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>16384){await reader.cancel();throw Error('SIZE');}chunks.push(value);}const all=new Uint8Array(size);let offset=0;for(const part of chunks){all.set(part,offset);offset+=part.length;}return JSON.parse(new TextDecoder().decode(all));}
@@ -31,6 +32,7 @@ export async function handle(req,env){
   const body=await boundedJSON(req),{data,booking}=validate(body);
   const anon={apikey:env.anon,Authorization:'Bearer '+env.anon};
   async function record(table,id,fields){const res=await fetch(env.url+'/rest/v1/'+table+'?'+new URLSearchParams({id:'eq.'+id,publication_status:'eq.published',select:fields,limit:'1'}),{headers:anon});if(!res.ok)throw Error('SERVER');return (await res.json())[0];}
+  if(data.inquiry_type==='service'){const service=await record('services',data.service_id,'title_id,title_en');if(!service)return reply(404,'Layanan tidak tersedia.');data.message='Service: '+(service['title_'+data.language]||service.title_en)+'\n'+data.message;}
   if(data.inquiry_type==='property'){const property=await record('properties',data.property_id,'title_id,title_en');if(!property)return reply(404,'Properti tidak tersedia.');data.message='Property: '+(property['title_'+data.language]||property.title_en)+'\n'+data.message;}
   if(booking){const bike=await record('motorbikes',data.motorbike_id,'name,daily_price,monthly_price,currency,availability');if(!bike||bike.availability!=='available')return reply(404,'Motor tidak tersedia.');const rate=booking.plan==='daily'?bike.daily_price:bike.monthly_price;const estimate=rate==null?'Confirm with team':new Intl.NumberFormat(bike.currency==='IDR'?'id-ID':'en-US',{style:'currency',currency:bike.currency}).format(Number(rate)*booking.duration);data.message=`Motorbike: ${bike.name}\nPlan: ${booking.plan} · ${booking.duration}\nStart: ${booking.start}\nPickup / delivery: ${booking.area||'-'}\nEstimated total: ${estimate} (subject to team confirmation)\n\n${data.message}`;}
   const secret=await crypto.subtle.importKey('raw',new TextEncoder().encode(env.key),{name:'HMAC',hash:'SHA-256'},false,['sign']);

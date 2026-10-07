@@ -108,13 +108,13 @@
     if(!document.querySelector('link[data-build-services-style]')){
       const style=document.createElement('link');
       style.rel='stylesheet';
-      style.href='build-services.css';
+      style.href='build-services.css?v=20261007-services';
       style.dataset.buildServicesStyle='true';
       document.head.appendChild(style);
     }
     if(!document.querySelector('script[data-build-services-script]')){
       const script=document.createElement('script');
-      script.src='build-services.js?v=20261007-accordion-menu-6';
+      script.src='build-services.js?v=20261007-services';
       script.dataset.buildServicesScript='true';
       document.body.appendChild(script);
     }
@@ -138,7 +138,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = 'client-feedback.js?v=20261007-settings';
+      script.src = 'client-feedback.js?v=20261007-services';
       script.dataset.clientFeedbackScript = 'true';
       script.addEventListener('load', () => {
         scheduleUtilitySync();

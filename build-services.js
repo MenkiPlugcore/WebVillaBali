@@ -1,96 +1,20 @@
 (() => {
-  const language=()=>localStorage.getItem("aup-language")||"en";
-  const copy={
-    en:{
-      eyebrow:"Build & property services",
-      title:"From land to a finished property.",
-      intro:"Architecture, construction, permit assistance, and property support can be coordinated in one service flow. Each project is reviewed based on its site, documents, scope, and budget.",
-      architectTag:"Architecture & planning",architectTitle:"Architecture & design",architectText:"Plan the property from concept to a clearer build direction, including space planning, design coordination, and project preparation.",architectMeta:["Concept planning","Space planning","Design coordination"],architectCta:"Discuss architecture",
-      contractorTag:"Construction",contractorTitle:"Contractor & construction",contractorText:"Coordinate the build process from prepared land to a completed property, with scope and execution adjusted to the agreed project requirements.",contractorMeta:["Villa & home","Kost & rental","Commercial"],contractorCta:"Discuss construction",
-      permitTag:"Building compliance",permitTitle:"PBG & SLF assistance",permitText:"Support the administrative preparation for Persetujuan Bangunan Gedung and Sertifikat Laik Fungsi, including document coordination and the applicable submission process.",permitMeta:["PBG","SLF","Document coordination"],permitCta:"Ask about PBG & SLF",
-      supportTag:"Integrated support",supportTitle:"Property project support",supportText:"Keep discovery, project preparation, permit coordination, and construction conversations connected in one property service ecosystem.",supportMeta:["Project coordination","Property support","One service flow"],supportCta:"Discuss my project",
-      processTitle:"A clearer project journey.",processText:"The exact scope can vary by project, but the service flow can be presented in five simple stages.",steps:["Plan","Design","Permit","Build","Ready"],
-      note:"Permit issuance and project outcomes depend on the property documents, technical requirements, applicable regulations, and the final agreed scope. This frontend is a concept preview only.",
-      interests:{architect:"Architecture & Design",contractor:"Contractor & Construction",permit:"PBG & SLF Assistance",support:"Property Project Support"},
-      messages:{architect:"Hello, I would like to discuss architecture and design services for my property project.",contractor:"Hello, I would like to discuss contractor and construction services for my property project.",permit:"Hello, I would like information about PBG and SLF assistance for my property.",support:"Hello, I would like to discuss integrated support for my property project."}
-    },
-    id:{
-      eyebrow:"Layanan pembangunan & properti",
-      title:"Dari tanah sampai properti siap digunakan.",
-      intro:"Arsitektur, konstruksi, bantuan perizinan, dan dukungan properti dapat dikoordinasikan dalam satu alur layanan. Setiap proyek ditinjau berdasarkan lokasi, dokumen, ruang lingkup, dan anggaran.",
-      architectTag:"Arsitektur & perencanaan",architectTitle:"Arsitektur & desain",architectText:"Rencanakan properti dari tahap konsep sampai arah pembangunan yang lebih jelas, termasuk tata ruang, koordinasi desain, dan persiapan proyek.",architectMeta:["Konsep bangunan","Tata ruang","Koordinasi desain"],architectCta:"Konsultasi arsitektur",
-      contractorTag:"Konstruksi",contractorTitle:"Kontraktor & pembangunan",contractorText:"Koordinasikan proses pembangunan dari lahan yang sudah siap sampai properti selesai, dengan ruang lingkup pekerjaan mengikuti kebutuhan proyek yang disepakati.",contractorMeta:["Villa & rumah","Kos & rental","Komersial"],contractorCta:"Konsultasi pembangunan",
-      permitTag:"Perizinan bangunan",permitTitle:"Pendampingan PBG & SLF",permitText:"Bantuan persiapan administrasi Persetujuan Bangunan Gedung dan Sertifikat Laik Fungsi, termasuk koordinasi dokumen serta proses pengajuan yang berlaku.",permitMeta:["PBG","SLF","Koordinasi dokumen"],permitCta:"Tanya PBG & SLF",
-      supportTag:"Dukungan terintegrasi",supportTitle:"Pendampingan proyek properti",supportText:"Satukan pencarian properti, persiapan proyek, koordinasi perizinan, dan pembahasan pembangunan dalam satu ekosistem layanan properti.",supportMeta:["Koordinasi proyek","Dukungan properti","Satu alur layanan"],supportCta:"Konsultasikan proyek",
-      processTitle:"Alur proyek yang lebih jelas.",processText:"Ruang lingkup setiap proyek bisa berbeda, tetapi alur layanan dapat dijelaskan melalui lima tahap sederhana.",steps:["Rencana","Desain","Perizinan","Bangun","Siap"],
-      note:"Penerbitan izin dan hasil proyek bergantung pada dokumen properti, persyaratan teknis, peraturan yang berlaku, dan ruang lingkup final yang disepakati. Tampilan ini masih berupa pratinjau konsep frontend.",
-      interests:{architect:"Arsitektur & Desain",contractor:"Kontraktor & Pembangunan",permit:"Pendampingan PBG & SLF",support:"Pendampingan Proyek Properti"},
-      messages:{architect:"Halo, saya ingin berkonsultasi mengenai layanan arsitektur dan desain untuk proyek properti saya.",contractor:"Halo, saya ingin berkonsultasi mengenai jasa kontraktor dan pembangunan untuk proyek properti saya.",permit:"Halo, saya ingin informasi mengenai pendampingan PBG dan SLF untuk properti saya.",support:"Halo, saya ingin berkonsultasi mengenai pendampingan terintegrasi untuk proyek properti saya."}
-    }
-  };
-  const t=()=>copy[language()]||copy.en;
-
-  function ensureInterestOptions(){
-    const select=document.querySelector('#contactForm select[name="interest"]');
-    if(!select)return;
-    const c=t();
-    Object.entries(c.interests).forEach(([key,label])=>{
-      let option=[...select.options].find(o=>o.dataset.buildService===key);
-      if(!option){option=document.createElement("option");option.dataset.buildService=key;select.appendChild(option)}
-      option.value=label;option.textContent=label;
-    });
-  }
-
-  function fillInquiry(key){
-    ensureInterestOptions();
-    const c=t(),form=document.getElementById("contactForm");
-    const select=form?.querySelector('select[name="interest"]');
-    const message=form?.querySelector('textarea[name="message"]');
-    if(select){const option=[...select.options].find(o=>o.dataset.buildService===key);if(option)select.value=option.value}
-    if(message)message.value=c.messages[key]||"";
-    document.getElementById("contact")?.scrollIntoView({behavior:"smooth",block:"start"});
-    setTimeout(()=>form?.querySelector('input[name="name"]')?.focus({preventScroll:true}),450);
-  }
-
-  function meta(items){return items.map(item=>`<span>${item}</span>`).join("")}
-
-  function render(){
-    const services=document.getElementById("services");if(!services)return;
-    const c=t();
-    let section=document.getElementById("permitService");
-    if(!section){section=document.createElement("section");section.id="permitService";services.insertAdjacentElement("afterend",section)}
-    section.className="build-services-section reveal-item";
-    section.innerHTML=`
-      <div class="build-services-shell">
-        <div class="build-services-head">
-          <div><p class="build-services-kicker">${c.eyebrow}</p><h2>${c.title}</h2></div>
-          <div class="build-services-head-copy"><p>${c.intro}</p></div>
-        </div>
-        <div class="build-services-grid">
-          <article id="architectureService" class="build-service-card visual" style="--service-image:url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=86')">
-            <span class="build-service-index">01</span><span class="build-service-tag">${c.architectTag}</span><h3>${c.architectTitle}</h3><p>${c.architectText}</p><div class="build-service-meta">${meta(c.architectMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="architect">${c.architectCta}</button>
-          </article>
-          <article id="constructionService" class="build-service-card visual" style="--service-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=86')">
-            <span class="build-service-index">02</span><span class="build-service-tag">${c.contractorTag}</span><h3>${c.contractorTitle}</h3><p>${c.contractorText}</p><div class="build-service-meta">${meta(c.contractorMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="contractor">${c.contractorCta}</button>
-          </article>
-          <article id="permitAssistance" class="build-service-card dark">
-            <span class="build-service-index">03</span><span class="build-service-tag">${c.permitTag}</span><h3>${c.permitTitle}</h3><p>${c.permitText}</p><div class="build-service-meta">${meta(c.permitMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="permit">${c.permitCta}</button>
-          </article>
-          <article id="projectSupport" class="build-service-card soft">
-            <span class="build-service-index">04</span><span class="build-service-tag">${c.supportTag}</span><h3>${c.supportTitle}</h3><p>${c.supportText}</p><div class="build-service-meta">${meta(c.supportMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="support">${c.supportCta}</button>
-          </article>
-        </div>
-        <div class="build-service-process">
-          <div class="build-service-process-top"><h3>${c.processTitle}</h3><p>${c.processText}</p></div>
-          <div class="build-service-steps">${c.steps.map((step,i)=>`<div class="build-service-step"><small>0${i+1}</small><strong>${step}</strong></div>`).join("")}</div>
-          <p class="build-service-note">${c.note}</p>
-        </div>
-      </div>`;
-    section.querySelectorAll("[data-build-inquiry]").forEach(btn=>btn.addEventListener("click",()=>fillInquiry(btn.dataset.buildInquiry)));
-    ensureInterestOptions();
-    if(typeof observeReveals==="function")observeReveals(section);
-  }
-
-  render();
-  document.getElementById("languageToggle")?.addEventListener("click",()=>setTimeout(render,0));
+ const endpoint='https://tvcmwkzwemrwwewphfgh.supabase.co/functions/v1/public-catalog?kind=service';
+ const escape=AUPCatalog.escape,lang=()=>localStorage.getItem('aup-language')==='id'?'id':'en';
+ const title=s=>s['title_'+lang()]||s.title_en||s.title_id;
+ const description=s=>s['description_'+lang()]||s.description_en||s.description_id||'';
+ let rows=[],loading=true,failed=false;
+ function choose(service){const form=document.getElementById('contactForm');const select=form?.querySelector('[name=interest]');if(!select)return;select.value='service:'+service.id;const message=form.querySelector('[name=message]');if(message&&!message.value)message.value=lang()==='id'?'Saya ingin berkonsultasi tentang '+title(service)+'.':'I would like to discuss '+title(service)+'.';document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'});select.focus({preventScroll:true});}
+ function render(){
+  const parent=document.getElementById('services');if(!parent)return;
+  const id=lang()==='id';const c={eyebrow:id?'Layanan properti':'Property services',title:id?'Dukungan untuk rencana propertimu.':'Support for your property plans.',intro:id?'Pilih layanan yang kamu butuhkan. Tim akan menindaklanjuti lewat tiket dan membahas ruang lingkupnya.':'Choose the service you need. Our team will follow up through your ticket and discuss the scope.',cta:id?'Tanya layanan ini':'Ask about this service',empty:loading?(id?'Memuat layanan…':'Loading services…'):failed?(id?'Layanan belum bisa dimuat.':'Unable to load services.'):(id?'Layanan segera hadir.':'Services coming soon.')};
+  let section=document.getElementById('permitService');if(!section){section=document.createElement('section');section.id='permitService';parent.insertAdjacentElement('afterend',section);}section.className='build-services-section';section.setAttribute('aria-busy',String(loading));
+  section.innerHTML=`<div class="build-services-shell"><div class="build-services-head"><div><p class="build-services-kicker">${c.eyebrow}</p><h2>${c.title}</h2></div><div class="build-services-head-copy"><p>${c.intro}</p></div></div><div class="build-services-grid">${rows.length?rows.map((s,i)=>`<article id="service-${s.id}" class="build-service-card ${i%2?'soft':'dark'}"><span class="build-service-index">${String(i+1).padStart(2,'0')}</span><h3>${escape(title(s))}</h3><p>${escape(description(s))}</p><button type="button" class="build-service-cta" data-live-service="${s.id}">${c.cta}</button></article>`).join(''):`<div class="build-service-card soft service-empty" role="status"><h3>${c.empty}</h3>${failed?`<button type="button" id="retryServices">${id?'Coba lagi':'Try again'}</button>`:''}</div>`}</div></div>`;
+  section.querySelectorAll('[data-live-service]').forEach(b=>b.onclick=()=>choose(rows.find(s=>s.id===b.dataset.liveService)));document.getElementById('retryServices')?.addEventListener('click',load);
+  const list=parent.querySelector('.service-list');if(list)list.innerHTML=rows.length?rows.map((s,i)=>`<article><span>${String(i+1).padStart(2,'0')}</span><div><h3>${escape(title(s))}</h3><a href="#service-${s.id}">${id?'Lihat layanan':'View service'} →</a></div></article>`).join(''):`<p role="status">${c.empty}</p>`;
+  const select=document.querySelector('#contactForm [name=interest]');if(select){const selected=select.value;select.querySelectorAll('[data-live-service-option]').forEach(o=>o.remove());for(const s of rows){const o=document.createElement('option');o.value='service:'+s.id;o.dataset.liveServiceOption='true';o.textContent=title(s);select.appendChild(o);}if(rows.some(s=>'service:'+s.id===selected))select.value=selected;}
+  const menu=document.querySelector('.mobile-menu a[data-i18n=quickServiceOverview]')?.parentElement;if(menu){menu.querySelectorAll('[data-live-service-menu]').forEach(a=>a.remove());for(const s of rows){const a=document.createElement('a');a.href='#service-'+s.id;a.textContent=title(s);a.dataset.liveServiceMenu='true';a.onclick=()=>{document.getElementById('mobileMenu')?.classList.remove('open');document.getElementById('menuButton')?.setAttribute('aria-expanded','false');};menu.appendChild(a);}}
+ }
+ async function load(){if(loading&&rows.length)return;loading=true;failed=false;render();try{const all=[];for(let page=0;;page++){const res=await fetch(endpoint+'&page='+page,{cache:'no-store',signal:AbortSignal.timeout(20000)});if(!res.ok)throw Error('LOAD_FAILED');const data=await res.json();all.push(...data.services);if(!data.hasMore)break;}rows=all;}catch{failed=true;rows=[];}finally{loading=false;render();}}
+ document.getElementById('languageToggle')?.addEventListener('click',()=>setTimeout(render,0));load();
 })();
