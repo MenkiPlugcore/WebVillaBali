@@ -256,3 +256,35 @@ footer a, footer p { display: block; margin: 0 0 11px; font-size: 12px; }
   .modal-body h2 { font-size: 37px; }
   .modal-backdrop { padding: 14px; }
 }
+
+
+
+/* Brand direction: the visual logo is hero-only. */
+.site-header > .brand{
+  display:none !important;
+}
+.site-header{
+  grid-template-columns:1fr auto 1fr !important;
+}
+.site-header > .desktop-nav{
+  grid-column:2 !important;
+  justify-self:center !important;
+}
+.site-header > .header-actions{
+  grid-column:3 !important;
+  justify-self:end !important;
+}
+.footer-logo .brand-mark{
+  display:none !important;
+}
+.footer-logo{
+  gap:0 !important;
+}
+@media(max-width:1000px){
+  .site-header{
+    grid-template-columns:1fr auto !important;
+  }
+  .site-header > .header-actions{
+    grid-column:2 !important;
+  }
+}
