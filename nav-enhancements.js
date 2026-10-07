@@ -13,7 +13,7 @@
     if (document.querySelector('link[data-mobile-header-polish]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css' : 'mobile-header-polish.css';
+    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-navwordmark-1' : 'mobile-header-polish.css?v=20261007-navwordmark-1';
     style.dataset.mobileHeaderPolish = 'true';
     document.head.appendChild(style);
   };
@@ -34,6 +34,17 @@
     style.href = document.body.classList.contains('property-page') ? '../logo-overflow-fix.css' : 'logo-overflow-fix.css';
     style.dataset.logoOverflowFix = 'true';
     document.head.appendChild(style);
+  };
+
+  const ensureNavWordmark = () => {
+    if (header.querySelector('.nav-wordmark')) return;
+    const homeHref = document.body.classList.contains('property-page') ? '../index.html' : 'index.html';
+    const wordmark = document.createElement('a');
+    wordmark.className = 'nav-wordmark';
+    wordmark.href = document.getElementById('top') ? '#top' : homeHref;
+    wordmark.setAttribute('aria-label', 'Agung Ubud Property home');
+    wordmark.innerHTML = '<strong>AGUNG UBUD</strong><span>PROPERTY</span>';
+    header.insertBefore(wordmark, header.firstChild);
   };
 
   const syncCompactUtilities = () => {
@@ -65,6 +76,7 @@
   const scheduleUtilitySync = () => requestAnimationFrame(syncCompactUtilities);
 
   ensureHeaderPolishStyle();
+  ensureNavWordmark();
   ensureFinalBrandLogoStyle();
   ensureLogoOverflowFixStyle();
   syncHeader();
