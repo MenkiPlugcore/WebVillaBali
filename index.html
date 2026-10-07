@@ -17,12 +17,7 @@
   <style>.property-image{display:block}</style>
 </head>
 <body>
-  <header class="site-header" id="top">
-    <a class="brand" href="#top" aria-label="Agung Ubud Property home">
-      <span class="brand-mark">A</span>
-      <span><strong>Agung Ubud</strong><small>PROPERTY</small></span>
-    </a>
-
+  <header class="site-header brandless-header" id="top">
     <nav class="desktop-nav" aria-label="Main navigation">
       <a href="#properties" data-i18n="navProperties">Properties</a>
       <a href="#locations" data-i18n="navLocations">Locations</a>
@@ -52,7 +47,13 @@
       <div class="hero-overlay"></div>
       <div class="hero-content shell">
         <div class="hero-brand-lockup" aria-label="Agung Ubud Property">
-          <img class="hero-brand-logo" src="https://res.cloudinary.com/dvds41ivm/image/upload/v1790170630/agung-ubud-property-logo-nav.webp" alt="Agung Ubud Property" width="240" height="150" decoding="async" fetchpriority="high">
+          <div class="hero-brand-icon-frame" aria-hidden="true">
+            <img class="hero-brand-logo" src="https://res.cloudinary.com/dvds41ivm/image/upload/v1790170630/agung-ubud-property-logo-nav.webp" alt="" decoding="async" fetchpriority="high">
+          </div>
+          <div class="hero-brand-wordmark" aria-hidden="true">
+            <strong>AGUNG UBUD</strong>
+            <span>PROPERTY</span>
+          </div>
         </div>
         <p class="eyebrow" data-i18n="heroEyebrow">Bali property, curated with purpose</p>
         <h1 data-i18n="heroTitle">Find your place<br>in Bali.</h1>
@@ -200,7 +201,7 @@
 
   <footer>
     <div class="shell footer-grid">
-      <div class="footer-brand"><a class="brand footer-logo" href="#top"><span class="brand-mark">A</span><span><strong>Agung Ubud</strong><small>PROPERTY</small></span></a><p data-i18n="footerTagline">Premium Bali property for living, renting and investing.</p></div>
+      <div class="footer-brand"><a class="footer-text-brand" href="#top">Agung Ubud Property</a><p data-i18n="footerTagline">Premium Bali property for living, renting and investing.</p></div>
       <div><h4 data-i18n="footerExplore">Explore</h4><a href="#properties" data-i18n="navProperties">Properties</a><a href="#locations" data-i18n="navLocations">Locations</a><a href="#services" data-i18n="navServices">Services</a></div>
       <div><h4 data-i18n="footerCompany">Company</h4><a href="#about" data-i18n="navAbout">About</a><a href="#contact" data-i18n="contactLink">Contact</a><a href="#" data-i18n="privacyLink">Privacy</a></div>
       <div><h4 data-i18n="footerContact">Contact</h4><p>Ubud, Bali, Indonesia</p><p>hello@agungubudproperty.com</p><p>+62 XXX XXXX XXXX</p></div>
