@@ -17,10 +17,11 @@
 .hero-brand-icon-frame{
   position:relative;
   width:270px;
-  height:145px;
+  aspect-ratio:1254 / 730;
+  height:auto;
   overflow:hidden;
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:center;
   isolation:isolate;
 }
@@ -41,13 +42,15 @@
 }
 
 .hero-brand-logo{
+  position:absolute;
+  inset:0;
   display:block;
   width:100% !important;
-  height:auto !important;
+  height:100% !important;
   max-width:none !important;
   flex:none;
-  object-fit:contain !important;
-  object-position:center top !important;
+  object-fit:cover !important;
+  object-position:center 55% !important;
   filter:
     drop-shadow(0 8px 13px rgba(0,0,0,.56))
     drop-shadow(0 2px 3px rgba(0,0,0,.35)) !important;
@@ -121,7 +124,7 @@
 
   .hero-brand-icon-frame{
     width:min(58vw,220px);
-    height:118px;
+    height:auto;
   }
 
   .hero-brand-icon-frame::before{
@@ -173,7 +176,7 @@
 
 @media(max-width:390px){
   .hero-content{padding-top:96px !important;}
-  .hero-brand-icon-frame{width:min(60vw,205px);height:110px;}
+  .hero-brand-icon-frame{width:min(60vw,205px);height:auto;}
   .hero-brand-wordmark strong{font-size:28px;}
   .hero-brand-wordmark span{font-size:8px;}
   .hero h1{font-size:clamp(45px,13vw,57px) !important;}
