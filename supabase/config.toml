@@ -1,0 +1,7 @@
+[functions.public-catalog]
+verify_jwt = false
+entrypoint = "./functions/public-catalog/index.js"
+
+[functions.admin-media]
+verify_jwt = true
+entrypoint = "./functions/admin-media/index.ts"

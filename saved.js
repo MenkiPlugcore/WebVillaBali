@@ -24,15 +24,9 @@ function readSaved(){
   } catch { return []; }
 }
 function writeSaved(items){ localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
-function suffix(p){
-  const t = copy[language];
-  if (p.priceSuffix === "month") return t.month;
-  if (p.priceSuffix === "freehold") return t.freehold;
-  return t.leasehold;
-}
-function money(p){
-  return currency === "USD" ? `$${Number(p.usd||0).toLocaleString("en-US")}` : `Rp ${Number(p.idr||0).toLocaleString("id-ID")}`;
-}
+function suffix(p){return AUPCatalog.suffix(p)}
+function money(p){return AUPCatalog.money(p)}
+
 function showToast(message){
   const toast = document.getElementById("savedToast");
   if (!toast) return;
@@ -49,12 +43,12 @@ function applyLanguage(){
   if(toggle) toggle.textContent = language.toUpperCase();
 }
 function updateCount(){
-  const count = readSaved().length;
+  const count = AUPCatalog.items.filter(p=>readSaved().some(x=>x.slug===p.slug)).length;
   const el = document.getElementById("savedCount");
   if(el) el.textContent = count;
 }
 function renderSaved(){
-  const items = readSaved();
+  const items = AUPCatalog.items.filter(p=>readSaved().some(x=>x.slug===p.slug)).map(AUPCatalog.view);
   const grid = document.getElementById("savedGrid");
   const empty = document.getElementById("savedEmpty");
   const t = copy[language];
@@ -64,7 +58,7 @@ function renderSaved(){
   grid.hidden = items.length === 0;
   grid.innerHTML = items.map(p=>`
     <article class="saved-card">
-      <a class="saved-card-media" href="properties/${p.slug}.html" style="background-image:url('${p.image}')" aria-label="${p.title}">
+      <a class="saved-card-media" href="${AUPCatalog.href(p.slug)}" style="background-image:url('${p.image}')" aria-label="${p.title}">
         <button class="saved-card-remove" type="button" data-remove-slug="${p.slug}" aria-label="Remove ${p.title} from saved properties">♥</button>
       </a>
       <div class="saved-card-body">
@@ -78,7 +72,7 @@ function renderSaved(){
           ${p.baths ? `<span>${p.baths} ${t.baths}</span>` : ""}
           ${p.area ? `<span>${p.area}</span>` : ""}
         </div>
-        <a class="saved-card-view" href="properties/${p.slug}.html">${t.view}</a>
+        <a class="saved-card-view" href="${AUPCatalog.href(p.slug)}">${t.view}</a>
       </div>
     </article>`).join("");
 
@@ -109,5 +103,5 @@ document.getElementById("currencyToggle")?.addEventListener("click",()=>{
 
 applyLanguage();
 document.getElementById("currencyToggle").textContent = currency;
-renderSaved();
+AUPCatalog.load().then(renderSaved).catch(()=>{const empty=document.getElementById('savedEmpty');empty.hidden=false;empty.querySelector('h2,h3').textContent=language==='id'?'Katalog belum bisa dimuat. Muat ulang untuk mencoba lagi.':'Unable to load properties. Reload to try again.';});
 window.addEventListener("storage",renderSaved);

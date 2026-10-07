@@ -8,8 +8,6 @@
     document.head.appendChild(css);
   }
 
-  const kostProperty={id:7,slug:"ubud-green-kost",title:"Ubud Green Kost",location:"Ubud",type:"Kost",purpose:"rent",usd:230,idr:3600000,priceSuffix:"month",beds:1,baths:1,area:"24 m²",featured:false,image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=88"};
-  if(!properties.some(p=>p.slug===kostProperty.slug)) properties.push(kostProperty);
 
   const copy={
     en:{
@@ -79,20 +77,13 @@
       <div class="shell">
         <div class="lm-heading">
           <div><p class="eyebrow dark">${c.eyebrow}</p><h2>${c.title}</h2></div>
-          <p>${c.intro}<span class="lm-demo-note">${c.sample}</span></p>
+          <p>${c.intro}<span class="lm-demo-note"></span></p>
         </div>
         <div class="lm-grid">
           <article class="lm-panel" id="kostLiving">
             <div class="lm-panel-head"><div><span>${c.kostLabel}</span><h3>${c.kostTitle}</h3></div><p>${c.kostDesc}</p></div>
             <div class="lm-card-list">
-              <div class="stay-card">
-                <div class="lm-card-image" style="background-image:url('${kostProperty.image}')"></div>
-                <div class="lm-card-body"><span class="lm-card-meta">Ubud · Kost · ${language==="id"?"Bulanan":"Monthly"}</span><h4 class="lm-card-title">${kostProperty.title}</h4><p class="lm-card-copy">${c.kostCopy}</p><div class="lm-price-row"><span class="lm-price"><strong>${formatMoney(kostProperty.usd,kostProperty.idr)}</strong><small>${c.perMonth}</small></span><a class="lm-action" href="properties/ubud-green-kost.html">${c.view}</a></div></div>
-              </div>
-              <div class="stay-card">
-                <div class="lm-card-image" style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=84')"></div>
-                <div class="lm-card-body"><span class="lm-card-meta">Canggu · Kost · ${language==="id"?"Bulanan":"Monthly"}</span><h4 class="lm-card-title">${c.kostSecond}</h4><p class="lm-card-copy">${c.kostSecondCopy}</p><div class="lm-price-row"><span class="lm-price"><strong>${formatMoney(305,4800000)}</strong><small>${c.perMonth}</small></span><button class="lm-action" type="button" data-lm-kost-contact>${c.ask}</button></div></div>
-              </div>
+              ${properties.filter(p=>p.type==='Kost').slice(0,2).map(AUPCatalog.view).map(p=>`<div class="stay-card"><div class="lm-card-image" style="background-image:url('${p.image}')"></div><div class="lm-card-body"><span class="lm-card-meta">${p.location} · Kost</span><h4 class="lm-card-title">${p.title}</h4><div class="lm-price-row"><span class="lm-price"><strong>${money(p)}</strong><small>${suffix(p)}</small></span><a class="lm-action" href="${AUPCatalog.href(p.slug)}">${c.view}</a></div></div></div>`).join('')||`<p class="lm-card-copy">${language==='id'?'Pilihan kamar bulanan sedang disiapkan.':'Monthly room listings are being prepared.'}</p>`}
             </div>
             <div class="lm-panel-footer"><span>${c.footerKost}</span><button type="button" id="showKostListings">${c.seeKost} →</button></div>
           </article>
@@ -118,6 +109,7 @@
 
   injectFilters();
   renderSection();
+  document.addEventListener("aup:properties-rendered",renderSection);
   languageToggle?.addEventListener("click",()=>setTimeout(renderSection,0));
   currencyToggle?.addEventListener("click",()=>setTimeout(renderSection,0));
 })();

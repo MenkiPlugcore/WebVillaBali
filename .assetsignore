@@ -17,3 +17,5 @@ package-lock.json
 wrangler.jsonc
 *.md
 *.log
+
+public-tests/

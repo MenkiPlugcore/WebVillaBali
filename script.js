@@ -7,14 +7,10 @@ const WISHLIST_KEY = "aup-saved-properties-v1";
   document.head.appendChild(link);
 })();
 
-const properties = [
-  {id:1,slug:"jungle-residence-ubud",title:"Jungle Residence Ubud",location:"Ubud",type:"Villa",purpose:"sale",usd:485000,idr:7625000000,priceSuffix:"freehold",beds:4,baths:4,area:"420 m²",featured:true,image:"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1400&q=88"},
-  {id:2,slug:"canggu-courtyard-villa",title:"Canggu Courtyard Villa",location:"Canggu",type:"Villa",purpose:"rent",usd:3200,idr:50300000,priceSuffix:"month",beds:3,baths:3,area:"280 m²",featured:true,image:"https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1400&q=88"},
-  {id:3,slug:"uluwatu-ocean-land",title:"Uluwatu Ocean Land",location:"Uluwatu",type:"Land",purpose:"sale",usd:295000,idr:4640000000,priceSuffix:"leasehold",beds:null,baths:null,area:"1,200 m²",featured:false,image:"https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1400&q=88"},
-  {id:4,slug:"sanur-garden-house",title:"Sanur Garden House",location:"Sanur",type:"House",purpose:"sale",usd:355000,idr:5580000000,priceSuffix:"freehold",beds:3,baths:3,area:"310 m²",featured:false,image:"https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=88"},
-  {id:5,slug:"seminyak-long-stay-loft",title:"Seminyak Long-Stay Loft",location:"Seminyak",type:"Rental",purpose:"rent",usd:1800,idr:28300000,priceSuffix:"month",beds:2,baths:2,area:"150 m²",featured:false,image:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=88"},
-  {id:6,slug:"ubud-creative-compound",title:"Ubud Creative Compound",location:"Ubud",type:"Commercial",purpose:"sale",usd:610000,idr:9590000000,priceSuffix:"leasehold",beds:null,baths:4,area:"680 m²",featured:false,image:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=88"}
-];
+const properties = [];
+let catalogError=false;
+const catalogEscape=value=>AUPCatalog.escape(value);
+
 
 const translations = {
   en: {
@@ -69,7 +65,7 @@ const translations = {
   }
 };
 
-let language = localStorage.getItem("aup-language") || "en";
+let language = localStorage.getItem("aup-language") === "id" ? "id" : "en";
 let currency = localStorage.getItem("aup-currency") || "USD";
 let activeType = "all";
 let searchFilters = {location:"all", type:"all", purpose:"all"};
@@ -129,8 +125,8 @@ function updateWishlistButtons(){
   });
 }
 
-function money(p) { return currency === "USD" ? `$${p.usd.toLocaleString("en-US")}` : `Rp ${p.idr.toLocaleString("id-ID")}`; }
-function suffix(p) { const t=translations[language]; if(p.priceSuffix==="month")return t.month; if(p.priceSuffix==="freehold")return t.freehold; return t.leasehold; }
+function money(p) { return AUPCatalog.money(p); }
+function suffix(p) { return AUPCatalog.suffix(p); }
 function isVisible(p) {
   return (activeType === "all" || p.type === activeType) &&
     (searchFilters.location === "all" || p.location === searchFilters.location) &&
@@ -143,25 +139,31 @@ function renderSkeletons(count = 6) {
   propertyGrid.innerHTML = Array.from({length:count}, () => `
     <article class="skeleton-card" aria-hidden="true"><div class="skeleton-media"></div><div class="skeleton-body"><div class="skeleton-line sm"></div><div class="skeleton-line lg"></div><div class="skeleton-line md"></div></div></article>`).join("");
 }
+let cardImageObserver=null;
 function hydrateCardImages() {
-  propertyGrid?.querySelectorAll(".property-image[data-bg]").forEach(el => {
-    const image = new Image();
-    const done = () => el.classList.remove("image-loading");
-    image.onload = () => { el.style.backgroundImage = `url('${el.dataset.bg}')`; done(); };
-    image.onerror = done; image.src = el.dataset.bg;
-  });
+  cardImageObserver?.disconnect();
+  function load(el){const image=new Image();const done=()=>el.classList.remove('image-loading');image.onload=()=>{el.style.backgroundImage=`url("${el.dataset.bg}")`;done();};image.onerror=()=>{el.style.backgroundImage=`url("${AUPCatalog.placeholder}")`;done();};image.src=el.dataset.bg;}
+  const cards=propertyGrid?.querySelectorAll('.property-image[data-bg]')||[];
+  if('IntersectionObserver' in window){cardImageObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){load(entry.target);cardImageObserver.unobserve(entry.target);}}),{rootMargin:'300px'});cards.forEach(el=>cardImageObserver.observe(el));}else cards.forEach(load);
 }
+
 function renderProperties() {
   if (!propertyGrid) return;
   const t=translations[language];
-  const visible=properties.filter(isVisible);
+  const visible=properties.filter(isVisible).map(AUPCatalog.view);
   propertyGrid.innerHTML=visible.map(p=>`
     <article class="property-card reveal-item">
       <button class="save-property-btn${isSaved(p.slug)?" is-saved":""}" type="button" data-save-slug="${p.slug}" data-save-title="${p.title}" aria-pressed="${isSaved(p.slug)}" aria-label="${isSaved(p.slug)?t.saved:t.save}: ${p.title}"><span class="heart-empty">♡</span><span class="heart-filled">♥</span></button>
-      <a class="property-image image-loading" href="properties/${p.slug}.html" data-bg="${p.image}" aria-label="${p.title}"><div class="property-badges">${p.featured?`<span class="property-badge featured">${t.featured}</span>`:""}<span class="property-badge">${p.purpose==="sale"?t.forSale:t.forRent}</span></div></a>
-      <div class="property-body"><span class="property-location">${p.location} · ${p.type}</span><div class="property-title-row"><h3>${p.title}</h3><div class="property-price">${money(p)}<small>${suffix(p)}</small></div></div><div class="property-specs">${p.beds?`<span>${p.beds} ${t.bedrooms}</span>`:""}${p.baths?`<span>${p.baths} ${t.bathrooms}</span>`:""}<span>${p.area}</span></div><button type="button" data-property-url="properties/${p.slug}.html">${t.viewDetails}</button></div>
+      <a class="property-image image-loading" href="${AUPCatalog.href(p.slug)}" data-bg="${p.image}" aria-label="${p.title}"><div class="property-badges">${p.featured?`<span class="property-badge featured">${t.featured}</span>`:""}<span class="property-badge">${p.purpose==="sale"?t.forSale:t.forRent}</span></div></a>
+      <div class="property-body"><span class="property-location">${p.location} · ${p.type}</span><div class="property-title-row"><h3>${p.title}</h3><div class="property-price">${money(p)}<small>${suffix(p)}</small></div></div><div class="property-specs">${p.beds?`<span>${p.beds} ${t.bedrooms}</span>`:""}${p.baths?`<span>${p.baths} ${t.bathrooms}</span>`:""}<span>${p.area}</span></div><button type="button" data-property-url="${AUPCatalog.href(p.slug)}">${t.viewDetails}</button></div>
     </article>`).join("");
   emptyState.hidden=visible.length!==0;
+  emptyState.querySelectorAll('button').forEach(button=>button.remove());
+  if(!visible.length){
+    emptyState.querySelector('h3').textContent=catalogError?(language==='id'?'Katalog belum bisa dimuat.':'Unable to load properties.'):(properties.length?t.noResultsTitle:(language==='id'?'Properti segera hadir.':'Properties coming soon.'));
+    emptyState.querySelector('p').textContent=catalogError?(language==='id'?'Periksa koneksi lalu coba lagi.':'Check your connection and try again.'):(properties.length?t.noResultsCopy:(language==='id'?'Tim kami sedang menyiapkan pilihan properti untukmu.':'Our team is preparing a selection of properties for you.'));
+    if(catalogError){const retry=document.createElement('button');retry.type='button';retry.textContent=language==='id'?'Coba lagi':'Try again';retry.addEventListener('click',loadPublicProperties);emptyState.appendChild(retry);}
+  }
   propertyGrid.querySelectorAll("[data-property-url]").forEach(btn=>btn.addEventListener("click",()=>window.location.href=btn.dataset.propertyUrl));
   propertyGrid.querySelectorAll("[data-save-slug]").forEach(btn=>btn.addEventListener("click",event=>{
     event.preventDefault(); event.stopPropagation();
@@ -189,7 +191,14 @@ function observeReveals(root){
   const candidates=[]; if(root?.matches?.(".reveal-item"))candidates.push(root); root?.querySelectorAll?.(".reveal-item").forEach(el=>candidates.push(el));
   candidates.forEach(el=>{if(el.dataset.revealBound)return;el.dataset.revealBound="true";if(revealObserver)revealObserver.observe(el);else el.classList.add("reveal-visible");});
 }
-function finishInitialLoad(){ if(!initializing)return; initializing=false; clearTimeout(window.__propertySkeletonTimer); renderProperties(); }
+function finishInitialLoad(){ if(!AUPCatalog.loaded&&!catalogError)return; initializing=false; renderProperties(); }
+async function loadPublicProperties(){
+  catalogError=false;initializing=true;emptyState.hidden=true;renderSkeletons();propertyGrid.setAttribute('aria-busy','true');
+  try{const items=await AUPCatalog.load();properties.splice(0,properties.length,...items);
+    const select=document.getElementById('locationFilter');const chosen=select.value;select.innerHTML='<option value="all" data-i18n="allBali">'+translations[language].allBali+'</option>'+[...new Set(items.map(p=>p.location))].sort().map(name=>`<option value="${catalogEscape(name)}">${catalogEscape(name)}</option>`).join('');select.value=chosen||'all';if(!select.value)select.value='all';
+    document.dispatchEvent(new CustomEvent('aup:properties-rendered'));
+  }catch{catalogError=true;}finally{propertyGrid.setAttribute('aria-busy','false');finishInitialLoad();}
+}
 
 injectSavedNav();
 languageToggle?.addEventListener("click",()=>{language=language==="en"?"id":"en";localStorage.setItem("aup-language",language);applyLanguage({render:!initializing});});
@@ -205,5 +214,5 @@ mobileMenu?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mob
 mobileMenu?.addEventListener("keydown",event=>{if(event.key==="Escape"){mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");menuButton?.focus();}});
 document.getElementById("contactForm")?.addEventListener("submit",event=>{event.preventDefault();showToast(translations[language].inquiryToast);event.currentTarget.reset();});
 
-renderSkeletons(); applyLanguage({render:false}); if(currencyToggle)currencyToggle.textContent=currency; initRevealObserver(); window.__propertySkeletonTimer=setTimeout(finishInitialLoad,520);
+renderSkeletons(); applyLanguage({render:false}); if(currencyToggle)currencyToggle.textContent=currency; initRevealObserver(); loadPublicProperties();
 window.addEventListener("storage",()=>{updateSavedCount();updateWishlistButtons();});

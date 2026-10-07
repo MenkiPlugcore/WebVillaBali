@@ -13,7 +13,7 @@
     if (document.querySelector('link[data-mobile-header-polish]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-bold-icons-8' : 'mobile-header-polish.css?v=20261007-bold-icons-8';
+    style.href = location.pathname.includes('/properties/') ? '../mobile-header-polish.css?v=20261007-bold-icons-8' : 'mobile-header-polish.css?v=20261007-bold-icons-8';
     style.dataset.mobileHeaderPolish = 'true';
     document.head.appendChild(style);
   };
@@ -22,7 +22,7 @@
     if (document.querySelector('link[data-final-brand-logo]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = document.body.classList.contains('property-page') ? '../final-brand-logo.css' : 'final-brand-logo.css';
+    style.href = location.pathname.includes('/properties/') ? '../final-brand-logo.css' : 'final-brand-logo.css';
     style.dataset.finalBrandLogo = 'true';
     document.head.appendChild(style);
   };
@@ -31,7 +31,7 @@
     if (document.querySelector('link[data-logo-overflow-fix]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = document.body.classList.contains('property-page') ? '../logo-overflow-fix.css' : 'logo-overflow-fix.css';
+    style.href = location.pathname.includes('/properties/') ? '../logo-overflow-fix.css' : 'logo-overflow-fix.css';
     style.dataset.logoOverflowFix = 'true';
     document.head.appendChild(style);
   };
