@@ -25,7 +25,7 @@ Manage properties (including kos), motorbikes, locations, services, testimonials
 ## Remaining integration steps
 
 1. Transfer admin access to the owner's verified account when supplied; revoke the temporary admin role and existing sessions when appropriate.
-2. Connect services, testimonials, guest moments and public business settings to published database records.
+2. Connect services, testimonials and guest moments to published database records.
 
 Keep API secrets out of browser code, git and public settings. Supabase Edge Functions use server environment secrets. Store only public business contact information in `site_settings`.
 
@@ -52,3 +52,7 @@ Cloudflare canonicalizes `.html` URLs to extensionless paths. The slug parser su
 `public-inquiry` validates bounded JSON and published references, uses a honeypot and durable contact/global quotas, and calls a service-role-only SECURITY INVOKER RPC. Anonymous and ordinary authenticated users cannot read or insert inquiries directly. Customer contact hashes are server HMACs; raw IPs are not retained. Identical retries reuse the same ticket for two days, with conflicting payloads rejected. Client success appears only after database commit; network failures preserve the form. Status and internal notes are never accepted from public payloads. SQL fixtures roll back.
 
 The private quota/request tables intentionally enable RLS without client policies and grant access only to service_role; the advisor reports this as informational.
+
+## Public business contact settings
+
+The homepage and rental footer read `public-catalog?kind=settings` using anonymous RLS. The endpoint filters contact/social keys and returns only validated email, phone, WhatsApp, address and official HTTPS social links. Admin normalizes Indonesian 08 numbers to 628 and rejects invalid contacts/links before saving. The homepage floating button updates after settings load, so it cannot remain stuck in the ticket fallback due to response timing. Blank/invalid settings and outages use the inquiry ticket form instead of an invented business number or email. Reloading a public page reads fresh settings; no realtime subscription is required. Brand and homepage copy settings are still pending integration.

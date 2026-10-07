@@ -23,7 +23,7 @@
       permitMessage:"Hello, I would like information about building permit and SIMBG assistance for my property.",
       heroCopy:"Discover selected villas, homes, and land in Bali for living and investment.",
       trustCopy:"Premium presentation, direct inquiries, and international-ready communication help every listing feel represented with care. This includes villas, homes, land, rentals, and commercial spaces.",
-      demoNote:"Demo only. No personal data is transmitted."
+      demoNote:"You will receive a ticket number after sending. Save it for follow-up with our team."
     },
     id:{
       locationAction:n=>`${n} properti`,
@@ -46,7 +46,7 @@
       permitMessage:"Halo, saya ingin informasi tentang bantuan pengurusan izin bangunan dan SIMBG untuk properti saya.",
       heroCopy:"Temukan vila, hunian, dan tanah pilihan di Bali untuk tinggal maupun investasi.",
       trustCopy:"Presentasi premium, inquiry langsung, dan komunikasi yang siap untuk pasar internasional membuat setiap listing tampil lebih terawat. Layanan mencakup vila, rumah, tanah, sewa, dan properti komersial.",
-      demoNote:"Hanya demo. Tidak ada data pribadi yang dikirim."
+      demoNote:"Nomor tiket muncul setelah dikirim. Simpan nomornya untuk tindak lanjut dengan tim."
     }
   };
   const t=()=>copy[language()]||copy.en;
@@ -212,7 +212,7 @@
 
   function configuredWhatsApp(){
     const candidate=window.AUP_PUBLIC_SETTINGS?.whatsapp||document.body.dataset.whatsapp||window.AUP_WHATSAPP_NUMBER||"";
-    return String(candidate).replace(/\D/g,"");
+    const number=String(candidate).replace(/\D/g,"");return /^[1-9]\d{6,14}$/.test(number)?number:"";
   }
   function showFallbackToast(){
     const toast=document.getElementById("toast");
@@ -230,26 +230,22 @@
     link.setAttribute("aria-label",t().waLabel);
     link.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.02 4.8A11.14 11.14 0 0 0 6.5 21.7L5 27.2l5.62-1.47A11.17 11.17 0 1 0 16.02 4.8Zm0 20.3a9.23 9.23 0 0 1-4.7-1.28l-.34-.2-3.34.88.9-3.25-.22-.34a9.25 9.25 0 1 1 7.7 4.19Zm5.08-6.92c-.28-.14-1.65-.81-1.9-.9-.26-.1-.45-.14-.64.14-.19.28-.73.9-.9 1.09-.16.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.39a8.43 8.43 0 0 1-1.55-1.93c-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.16.19-.28.28-.47.1-.19.05-.35-.02-.5-.07-.14-.64-1.54-.88-2.11-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.35-.26.28-1 1-1 2.43s1.03 2.81 1.17 3c.14.19 2.02 3.09 4.9 4.33.68.3 1.22.47 1.64.6.69.22 1.31.19 1.8.12.55-.08 1.65-.68 1.88-1.33.23-.66.23-1.22.16-1.34-.07-.12-.26-.19-.54-.33Z"/></svg><span class="client-wa-label"></span>';
     document.body.appendChild(link);
-    if(raw){
-      link.href=`https://wa.me/${raw}?text=${encodeURIComponent(t().waMessage)}`;
-      link.target="_blank";
-      link.rel="noopener noreferrer";
-    }else{
-      link.href="#contact";
-      link.addEventListener("click",e=>{
-        e.preventDefault();
-        const textarea=document.querySelector('#contactForm textarea[name="message"]');
-        if(textarea&&!textarea.value)textarea.value=t().waMessage;
-        document.getElementById("contact")?.scrollIntoView({behavior:"smooth",block:"start"});
-        showFallbackToast();
-      });
-    }
+    link.addEventListener("click",e=>{
+      if(configuredWhatsApp())return;
+      e.preventDefault();
+      const textarea=document.querySelector('#contactForm textarea[name="message"]');
+      if(textarea&&!textarea.value)textarea.value=t().waMessage;
+      document.getElementById("contact")?.scrollIntoView({behavior:"smooth",block:"start"});
+    });
     updateWhatsAppCopy();
   }
   function updateWhatsAppCopy(){
     const link=document.querySelector(".floating-whatsapp");
     if(!link)return;
-    link.setAttribute("aria-label",t().waLabel);
+    const raw=configuredWhatsApp();
+    link.href=raw?`https://wa.me/${raw}?text=${encodeURIComponent(t().waMessage)}`:'#contact';
+    if(raw){link.target='_blank';link.rel='noopener noreferrer';}else{link.removeAttribute('target');link.removeAttribute('rel');}
+    link.setAttribute("aria-label",raw?t().waLabel:(language()==='id'?'Buat tiket':'Create ticket'));
     const label=link.querySelector(".client-wa-label");
     if(label)label.textContent=t().waLabel;
   }
@@ -261,6 +257,7 @@
     updateWhatsAppCopy();
   }
 
+  document.addEventListener('aup:settings-loaded',updateWhatsAppCopy);
   upgradeBrandLogo();
   polishHomepageCopy();
   addHeroSlideshow();

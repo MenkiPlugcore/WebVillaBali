@@ -137,7 +137,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = 'client-feedback.js?v=20261007-accordion-menu-6';
+      script.src = 'client-feedback.js?v=20261007-settings';
       script.dataset.clientFeedbackScript = 'true';
       script.addEventListener('load', () => {
         scheduleUtilitySync();

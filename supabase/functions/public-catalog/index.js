@@ -1,3 +1,4 @@
+import {publicSettings} from './settings.js';
 const origins = ['https://webvillabali.menkiestes.workers.dev', 'https://agungubudproperty.com', 'https://www.agungubudproperty.com'];
 const fields = 'id,slug,title_id,title_en,description_id,description_en,property_type,purpose,price,currency,price_period,tenure,bedrooms,bathrooms,land_area_m2,building_area_m2,facilities,address_public,availability,is_featured,locations(name),property_images(id,alt_id,alt_en,is_cover,sort_order)';
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -19,6 +20,7 @@ export async function handle(req, env) {
     return res.json();
   }
   try {
+    if(url.searchParams.get('kind')==='settings'){const rows=await read('site_settings',{key:'in.(contact,social_links)',select:'key,value',order:'key.asc'});return reply({settings:publicSettings(rows)});}
     if (url.searchParams.get('image')) {
       const id = url.searchParams.get('image');
       if (!uuid.test(id)) return reply({error:'Foto tidak ditemukan.'},404);
