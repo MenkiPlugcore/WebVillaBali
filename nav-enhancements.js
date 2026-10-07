@@ -13,7 +13,7 @@
     if (document.querySelector('link[data-mobile-header-polish]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-premium-controls-2' : 'mobile-header-polish.css?v=20261007-premium-controls-2';
+    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-transparent-nav-4' : 'mobile-header-polish.css?v=20261007-transparent-nav-4';
     style.dataset.mobileHeaderPolish = 'true';
     document.head.appendChild(style);
   };
@@ -126,7 +126,7 @@
     if (!document.querySelector('link[data-client-feedback-style]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'client-feedback.css?v=20261007-premium-controls-2';
+      style.href = 'client-feedback.css?v=20261007-transparent-nav-4';
       style.dataset.clientFeedbackStyle = 'true';
       document.head.appendChild(style);
     }
@@ -137,7 +137,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = 'client-feedback.js?v=20261007-premium-controls-2';
+      script.src = 'client-feedback.js?v=20261007-transparent-nav-4';
       script.dataset.clientFeedbackScript = 'true';
       script.addEventListener('load', () => {
         scheduleUtilitySync();
