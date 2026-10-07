@@ -82,7 +82,7 @@
           <p>${c.intro}<span class="lm-demo-note">${c.sample}</span></p>
         </div>
         <div class="lm-grid">
-          <article class="lm-panel">
+          <article class="lm-panel" id="kostLiving">
             <div class="lm-panel-head"><div><span>${c.kostLabel}</span><h3>${c.kostTitle}</h3></div><p>${c.kostDesc}</p></div>
             <div class="lm-card-list">
               <div class="stay-card">

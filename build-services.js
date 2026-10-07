@@ -67,16 +67,16 @@
           <div class="build-services-head-copy"><p>${c.intro}</p></div>
         </div>
         <div class="build-services-grid">
-          <article class="build-service-card visual" style="--service-image:url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=86')">
+          <article id="architectureService" class="build-service-card visual" style="--service-image:url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=86')">
             <span class="build-service-index">01</span><span class="build-service-tag">${c.architectTag}</span><h3>${c.architectTitle}</h3><p>${c.architectText}</p><div class="build-service-meta">${meta(c.architectMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="architect">${c.architectCta}</button>
           </article>
-          <article class="build-service-card visual" style="--service-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=86')">
+          <article id="constructionService" class="build-service-card visual" style="--service-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=86')">
             <span class="build-service-index">02</span><span class="build-service-tag">${c.contractorTag}</span><h3>${c.contractorTitle}</h3><p>${c.contractorText}</p><div class="build-service-meta">${meta(c.contractorMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="contractor">${c.contractorCta}</button>
           </article>
-          <article class="build-service-card dark">
+          <article id="permitAssistance" class="build-service-card dark">
             <span class="build-service-index">03</span><span class="build-service-tag">${c.permitTag}</span><h3>${c.permitTitle}</h3><p>${c.permitText}</p><div class="build-service-meta">${meta(c.permitMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="permit">${c.permitCta}</button>
           </article>
-          <article class="build-service-card soft">
+          <article id="projectSupport" class="build-service-card soft">
             <span class="build-service-index">04</span><span class="build-service-tag">${c.supportTag}</span><h3>${c.supportTitle}</h3><p>${c.supportText}</p><div class="build-service-meta">${meta(c.supportMeta)}</div><button class="build-service-cta" type="button" data-build-inquiry="support">${c.supportCta}</button>
           </article>
         </div>

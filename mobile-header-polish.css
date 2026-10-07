@@ -408,3 +408,43 @@
 .site-header.brandless-header:not(.scrolled):not(.nav-scrolled)::after {
   opacity:0 !important;
 }
+
+/* All homepage destinations, arranged for quick access on a phone. */
+@media(max-width:1000px) {
+  .site-header .mobile-menu.quick-menu {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:4px 8px !important;
+    max-height:calc(100dvh - 90px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    padding:12px !important;
+  }
+  .quick-menu-title {
+    grid-column:1 / -1;
+    margin:4px 12px 8px;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#d5c39f;
+  }
+  .site-header .mobile-menu.quick-menu a {
+    min-height:44px;
+    padding:8px 11px !important;
+    line-height:1.4;
+    font-size:11px;
+    border:1px solid rgba(255,255,255,.08) !important;
+    background:rgba(255,255,255,.025);
+  }
+  .site-header .mobile-menu.quick-menu a:hover,
+  .site-header .mobile-menu.quick-menu a:focus-visible {
+    background:rgba(231,213,173,.08);
+    outline:1px solid #d5c39f;
+    outline-offset:-1px;
+  }
+}
+#heroSearch, #propertyTypes, #kostLiving,
+#architectureService, #constructionService, #permitAssistance, #projectSupport,
+#owners, #guestMoments, #reviews, #properties, #locations, #services, #about, #contact {
+  scroll-margin-top:90px;
+}

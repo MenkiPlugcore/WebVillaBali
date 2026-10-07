@@ -18,6 +18,7 @@ const properties = [
 
 const translations = {
   en: {
+    quickHome:"Home", quickSearch:"Search property", quickTypes:"Property types", quickKost:"Kost / monthly rooms", quickMotor:"Motorbike rental", quickArchitect:"Architecture & design", quickBuild:"Construction", quickPermit:"Permits / PBG / SLF", quickSupport:"Project support", quickOwners:"For property owners", quickGuests:"Guest moments", quickReviews:"Reviews", quickCompare:"Compare", quickMenuTitle:"Explore the website",
     navProperties:"Properties", navLocations:"Locations", navServices:"Services", navAbout:"About", talkToUs:"Talk to us",
     heroEyebrow:"Bali property, curated with purpose", heroTitle:"Find your place<br>in Bali.", heroCopy:"Discover selected villas, homes, and land in Bali for living and investment.",
     searchLocationLabel:"Location", allBali:"All Bali", searchTypeLabel:"Property type", allTypes:"All types", searchPurposeLabel:"Purpose", saleAndRent:"Sale & Rent", forSale:"For sale", forRent:"For rent", searchButton:"Search properties",
@@ -41,6 +42,7 @@ const translations = {
     saved:"Saved", save:"Save", savedNow:"Property saved to your shortlist.", removedSaved:"Property removed from your shortlist."
   },
   id: {
+    quickHome:"Beranda", quickSearch:"Cari properti", quickTypes:"Jenis properti", quickKost:"Kost / kamar bulanan", quickMotor:"Rental motor", quickArchitect:"Arsitektur & desain", quickBuild:"Kontraktor", quickPermit:"Perizinan / PBG / SLF", quickSupport:"Pendampingan proyek", quickOwners:"Untuk pemilik", quickGuests:"Dokumentasi tamu", quickReviews:"Ulasan", quickCompare:"Bandingkan", quickMenuTitle:"Jelajahi website",
     navProperties:"Properti", navLocations:"Lokasi", navServices:"Layanan", navAbout:"Tentang", talkToUs:"Hubungi kami",
     heroEyebrow:"Properti Bali, dikurasi dengan tujuan", heroTitle:"Temukan tempatmu<br>di Bali.", heroCopy:"Temukan vila, hunian, dan tanah pilihan di Bali untuk tinggal maupun investasi.",
     searchLocationLabel:"Lokasi", allBali:"Seluruh Bali", searchTypeLabel:"Jenis properti", allTypes:"Semua jenis", searchPurposeLabel:"Tujuan", saleAndRent:"Jual & Sewa", forSale:"Dijual", forRent:"Disewa", searchButton:"Cari properti",
@@ -195,6 +197,7 @@ document.getElementById("heroSearch")?.addEventListener("submit",event=>{event.p
 const menuButton=document.getElementById("menuButton"); const mobileMenu=document.getElementById("mobileMenu");
 menuButton?.addEventListener("click",()=>{const open=menuButton.getAttribute("aria-expanded")==="true";menuButton.setAttribute("aria-expanded",String(!open));mobileMenu?.classList.toggle("open",!open);});
 mobileMenu?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");}));
+mobileMenu?.addEventListener("keydown",event=>{if(event.key==="Escape"){mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");menuButton?.focus();}});
 document.getElementById("contactForm")?.addEventListener("submit",event=>{event.preventDefault();showToast(translations[language].inquiryToast);event.currentTarget.reset();});
 
 renderSkeletons(); applyLanguage({render:false}); if(currencyToggle)currencyToggle.textContent=currency; initRevealObserver(); window.__propertySkeletonTimer=setTimeout(finishInitialLoad,520);

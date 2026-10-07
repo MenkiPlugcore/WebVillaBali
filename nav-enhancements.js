@@ -13,7 +13,7 @@
     if (document.querySelector('link[data-mobile-header-polish]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-transparent-nav-4' : 'mobile-header-polish.css?v=20261007-transparent-nav-4';
+    style.href = document.body.classList.contains('property-page') ? '../mobile-header-polish.css?v=20261007-quick-menu-5' : 'mobile-header-polish.css?v=20261007-quick-menu-5';
     style.dataset.mobileHeaderPolish = 'true';
     document.head.appendChild(style);
   };
@@ -113,7 +113,7 @@
     }
     if(!document.querySelector('script[data-build-services-script]')){
       const script=document.createElement('script');
-      script.src='build-services.js';
+      script.src='build-services.js?v=20261007-quick-menu-5';
       script.dataset.buildServicesScript='true';
       document.body.appendChild(script);
     }
@@ -126,7 +126,7 @@
     if (!document.querySelector('link[data-client-feedback-style]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'client-feedback.css?v=20261007-transparent-nav-4';
+      style.href = 'client-feedback.css?v=20261007-quick-menu-5';
       style.dataset.clientFeedbackStyle = 'true';
       document.head.appendChild(style);
     }
@@ -137,7 +137,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = 'client-feedback.js?v=20261007-transparent-nav-4';
+      script.src = 'client-feedback.js?v=20261007-quick-menu-5';
       script.dataset.clientFeedbackScript = 'true';
       script.addEventListener('load', () => {
         scheduleUtilitySync();
