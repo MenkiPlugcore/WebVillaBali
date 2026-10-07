@@ -17,7 +17,7 @@
 .hero-brand-icon-frame{
   position:relative;
   width:270px;
-  height:116px;
+  height:145px;
   overflow:hidden;
   display:flex;
   align-items:flex-start;
@@ -51,7 +51,7 @@
   filter:
     drop-shadow(0 8px 13px rgba(0,0,0,.56))
     drop-shadow(0 2px 3px rgba(0,0,0,.35)) !important;
-  transform:translateY(-5px) scale(1.03) !important;
+  transform:none !important;
   transform-origin:center top;
 }
 
@@ -121,7 +121,7 @@
 
   .hero-brand-icon-frame{
     width:min(58vw,220px);
-    height:94px;
+    height:118px;
   }
 
   .hero-brand-icon-frame::before{
@@ -131,7 +131,7 @@
   }
 
   .hero-brand-logo{
-    transform:translateY(-4px) scale(1.035) !important;
+    transform:none !important;
     filter:
       drop-shadow(0 7px 12px rgba(0,0,0,.62))
       drop-shadow(0 2px 3px rgba(0,0,0,.42)) !important;
@@ -173,7 +173,7 @@
 
 @media(max-width:390px){
   .hero-content{padding-top:96px !important;}
-  .hero-brand-icon-frame{width:min(60vw,205px);height:88px;}
+  .hero-brand-icon-frame{width:min(60vw,205px);height:110px;}
   .hero-brand-wordmark strong{font-size:28px;}
   .hero-brand-wordmark span{font-size:8px;}
   .hero h1{font-size:clamp(45px,13vw,57px) !important;}
