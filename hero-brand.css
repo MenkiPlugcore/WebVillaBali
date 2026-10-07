@@ -1,98 +1,164 @@
-/* Brand-first hero composition requested by the owner.
-   The large lockup lives in the hero; the mobile navbar stays compact. */
+/* Hero-only branding.
+   The navigation intentionally has no logo. The hero is the single visual brand focus. */
 
 .hero-brand-lockup{
   position:relative;
   z-index:3;
-  width:clamp(176px,17vw,236px);
-  min-height:112px;
+  width:max-content;
   display:flex;
+  flex-direction:column;
   align-items:center;
-  justify-content:flex-start;
-  margin:0 0 24px;
+  justify-content:center;
+  margin:0 0 28px;
   isolation:isolate;
   animation:heroBrandIn .62s .08s cubic-bezier(.22,1,.36,1) both;
 }
 
-.hero-brand-lockup::before{
+.hero-brand-icon-frame{
+  position:relative;
+  width:270px;
+  height:116px;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  isolation:isolate;
+}
+
+.hero-brand-icon-frame::before{
   content:"";
   position:absolute;
-  inset:-22px -34px;
   z-index:-1;
+  left:50%;
+  top:55%;
+  width:92%;
+  height:88%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.48) 0%,rgba(0,0,0,.28) 42%,rgba(0,0,0,0) 76%);
+  filter:blur(13px);
   pointer-events:none;
-  background:radial-gradient(ellipse at center,rgba(4,13,10,.42) 0%,rgba(4,13,10,.18) 44%,rgba(4,13,10,0) 74%);
-  filter:blur(5px);
 }
 
 .hero-brand-logo{
   display:block;
   width:100% !important;
-  height:124px !important;
-  max-height:124px !important;
+  height:auto !important;
+  max-width:none !important;
+  flex:none;
   object-fit:contain !important;
-  object-position:left center !important;
-  filter:drop-shadow(0 5px 14px rgba(0,0,0,.46));
-  transform:none !important;
+  object-position:center top !important;
+  filter:
+    drop-shadow(0 8px 13px rgba(0,0,0,.56))
+    drop-shadow(0 2px 3px rgba(0,0,0,.35)) !important;
+  transform:translateY(-5px) scale(1.03) !important;
+  transform-origin:center top;
 }
 
-/* Keep the navigation logo as a compact identity marker on phones.
-   The hero is now responsible for making the full brand clearly readable. */
+.hero-brand-wordmark{
+  margin-top:7px;
+  color:#fff;
+  text-align:center;
+  text-shadow:0 3px 14px rgba(0,0,0,.72),0 1px 3px rgba(0,0,0,.72);
+}
+
+.hero-brand-wordmark strong{
+  display:block;
+  font-family:"Playfair Display",serif;
+  font-size:33px;
+  line-height:1;
+  font-weight:600;
+  letter-spacing:.015em;
+}
+
+.hero-brand-wordmark span{
+  display:block;
+  margin-top:8px;
+  font-family:"DM Sans",sans-serif;
+  font-size:11px;
+  line-height:1;
+  font-weight:600;
+  letter-spacing:.48em;
+  padding-left:.48em;
+}
+
+/* Brandless header layout keeps navigation centered on desktop. */
+.site-header.brandless-header .desktop-nav{
+  grid-column:2;
+  justify-self:center;
+}
+.site-header.brandless-header .header-actions{
+  grid-column:3;
+  justify-self:end;
+}
+
+.footer-text-brand{
+  display:inline-block;
+  color:inherit;
+  font-family:"Playfair Display",serif;
+  font-size:21px;
+  font-weight:600;
+  letter-spacing:-.02em;
+  margin-bottom:12px;
+}
+
+@media(max-width:1000px){
+  .site-header.brandless-header .header-actions{
+    grid-column:2 !important;
+  }
+}
+
 @media(max-width:720px){
-  body .site-header .brand.client-brand-visual{
-    max-width:86px !important;
-    overflow:hidden !important;
-  }
-
-  body .site-header .brand.client-brand-visual > .client-brand-logo-shell,
-  body .site-header .client-brand-logo-shell,
-  body .site-header.nav-scrolled .client-brand-logo-shell,
-  body .site-header.scrolled .client-brand-logo-shell{
-    width:82px !important;
-    height:44px !important;
-    max-height:44px !important;
-    overflow:hidden !important;
-  }
-
-  body .site-header .client-brand-logo{
-    width:100% !important;
-    height:100% !important;
-    object-fit:contain !important;
-    object-position:center !important;
-    transform:none !important;
-  }
-
   .hero-content{
-    padding-top:108px !important;
+    padding-top:104px !important;
     padding-bottom:86px !important;
   }
 
   .hero-brand-lockup{
-    width:min(48vw,178px);
-    min-height:104px;
-    margin:0 auto 20px;
-    justify-content:center;
+    width:100%;
+    margin:0 auto 22px;
   }
 
-  .hero-brand-lockup::before{
-    inset:-18px -28px;
+  .hero-brand-icon-frame{
+    width:min(58vw,220px);
+    height:94px;
+  }
+
+  .hero-brand-icon-frame::before{
+    width:108%;
+    height:92%;
+    filter:blur(12px);
   }
 
   .hero-brand-logo{
-    height:108px !important;
-    max-height:108px !important;
-    object-position:center !important;
-    filter:drop-shadow(0 5px 13px rgba(0,0,0,.52));
+    transform:translateY(-4px) scale(1.035) !important;
+    filter:
+      drop-shadow(0 7px 12px rgba(0,0,0,.62))
+      drop-shadow(0 2px 3px rgba(0,0,0,.42)) !important;
+  }
+
+  .hero-brand-wordmark{margin-top:5px;}
+
+  .hero-brand-wordmark strong{
+    font-size:clamp(27px,8vw,34px);
+  }
+
+  .hero-brand-wordmark span{
+    margin-top:7px;
+    font-size:9px;
+    letter-spacing:.43em;
+    padding-left:.43em;
   }
 
   .hero-content > .eyebrow{
     margin-bottom:15px;
     font-size:10px;
     line-height:1.55;
-    letter-spacing:.2em;
+    letter-spacing:.19em;
   }
 
   .hero h1{
-    font-size:clamp(48px,13.6vw,64px) !important;
+    font-size:clamp(48px,13.4vw,64px) !important;
     line-height:.93 !important;
     max-width:560px;
   }
@@ -106,21 +172,11 @@
 }
 
 @media(max-width:390px){
-  body .site-header .brand.client-brand-visual{max-width:76px !important;}
-
-  body .site-header .brand.client-brand-visual > .client-brand-logo-shell,
-  body .site-header .client-brand-logo-shell,
-  body .site-header.nav-scrolled .client-brand-logo-shell,
-  body .site-header.scrolled .client-brand-logo-shell{
-    width:72px !important;
-    height:41px !important;
-    max-height:41px !important;
-  }
-
-  .hero-content{padding-top:100px !important;}
-  .hero-brand-lockup{width:min(50vw,166px);margin-bottom:16px;}
-  .hero-brand-logo{height:100px !important;max-height:100px !important;}
-  .hero h1{font-size:clamp(45px,13.3vw,57px) !important;}
+  .hero-content{padding-top:96px !important;}
+  .hero-brand-icon-frame{width:min(60vw,205px);height:88px;}
+  .hero-brand-wordmark strong{font-size:28px;}
+  .hero-brand-wordmark span{font-size:8px;}
+  .hero h1{font-size:clamp(45px,13vw,57px) !important;}
 }
 
 @keyframes heroBrandIn{
