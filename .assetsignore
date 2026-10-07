@@ -1,0 +1,19 @@
+# Only browser assets belong in the static deployment.
+node_modules/
+.git/
+.github/
+.wrangler/
+.env
+.env.*
+.gitignore
+.assetsignore
+supabase/
+backend/
+admin/tests/
+admin/app.js
+admin/schema.js
+package.json
+package-lock.json
+wrangler.jsonc
+*.md
+*.log
