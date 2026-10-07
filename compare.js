@@ -1,7 +1,7 @@
 (() => {
   const KEY = "aup-compare-properties-v1";
   const MAX = 3;
-  const inProperties = location.pathname.includes("/properties/") || location.pathname.endsWith("/property.html");
+  const inProperties = location.pathname.includes("/properties/") || /^\/property(?:\.html)?\/?$/.test(location.pathname);
   const base = location.pathname.includes("/properties/") ? "../" : "";
   const language = () => localStorage.getItem("aup-language") || "en";
   const currency = () => localStorage.getItem("aup-currency") || "USD";

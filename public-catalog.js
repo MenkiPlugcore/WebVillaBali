@@ -6,9 +6,9 @@
   const labels={villa:'Villa',house:'House',land:'Land',rental:'Rental',commercial:'Commercial',kost:'Kost'};
   const title=(p,lang=language())=>p['title_'+lang]||p.title_en||p.title_id||p.title||'';
   const description=(p,lang=language())=>p['description_'+lang]||p.description_en||p.description_id||'';
-  const href=slug=>'/property.html?slug='+encodeURIComponent(slug);
+  const href=slug=>'/property?slug='+encodeURIComponent(slug);
   const image=id=>id?endpoint+'?image='+encodeURIComponent(id):placeholder;
-  const slugFromURL=raw=>{try{const url=new URL(raw,location.href);return url.pathname.endsWith('/property.html')?url.searchParams.get('slug'):url.pathname.match(/\/properties\/([^/]+)\.html$/)?.[1]||null;}catch{return null;}};
+  const slugFromURL=raw=>{try{const url=new URL(raw,location.href);return /^\/property(?:\.html)?\/?$/.test(url.pathname)?url.searchParams.get('slug'):url.pathname.match(/\/properties\/([^/]+?)(?:\.html)?\/?$/)?.[1]||null;}catch{return null;}};
   function map(row){return {...row,title:title(row),type:labels[row.property_type]||row.property_type,location:row.locations?.name||'Bali',beds:row.bedrooms,baths:row.bathrooms,area:(row.building_area_m2??row.land_area_m2)!=null?(row.building_area_m2??row.land_area_m2)+' m²':'',featured:row.is_featured,image:image(row.property_images?.[0]?.id),ref:row.slug};}
   function money(p){
     if(p.price==null)return language()==='id'?'Hubungi kami':'Price on request';
