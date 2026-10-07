@@ -225,3 +225,112 @@
 
   .site-header .header-actions { gap: 2px !important; }
 }
+
+
+/* Compact text wordmark for brandless mobile navigation */
+.nav-wordmark{
+  display:none;
+}
+
+@media (max-width: 1000px) {
+  .site-header .nav-wordmark{
+    display:flex !important;
+    grid-column:1 !important;
+    align-self:center;
+    justify-self:start;
+    flex-direction:column;
+    justify-content:center;
+    min-width:0;
+    max-width:118px;
+    height:42px;
+    color:#f7f3ea;
+    text-decoration:none;
+    text-shadow:0 2px 10px rgba(0,0,0,.28);
+    overflow:hidden;
+  }
+
+  .site-header .nav-wordmark strong{
+    display:block;
+    font-family:"Playfair Display",serif;
+    font-size:13px;
+    line-height:1;
+    font-weight:600;
+    letter-spacing:.025em;
+    white-space:nowrap;
+  }
+
+  .site-header .nav-wordmark span{
+    display:block;
+    margin-top:5px;
+    padding-left:.22em;
+    font-family:"DM Sans",sans-serif;
+    font-size:6px;
+    line-height:1;
+    font-weight:700;
+    letter-spacing:.28em;
+    color:rgba(255,255,255,.68);
+    white-space:nowrap;
+  }
+
+  .site-header,
+  .site-header.scrolled,
+  .site-header.nav-scrolled{
+    min-height:62px !important;
+    height:62px !important;
+    grid-template-columns:minmax(86px,1fr) auto !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .site-header,
+  .site-header.scrolled,
+  .site-header.nav-scrolled{
+    min-height:58px !important;
+    height:58px !important;
+    padding-left:12px !important;
+    padding-right:10px !important;
+    gap:6px !important;
+    grid-template-columns:minmax(80px,1fr) auto !important;
+  }
+
+  .site-header .nav-wordmark{
+    max-width:104px;
+    height:38px;
+  }
+
+  .site-header .nav-wordmark strong{
+    font-size:12px;
+  }
+
+  .site-header .nav-wordmark span{
+    margin-top:4px;
+    font-size:5.5px;
+    letter-spacing:.26em;
+  }
+}
+
+@media (max-width: 390px) {
+  .site-header,
+  .site-header.scrolled,
+  .site-header.nav-scrolled{
+    min-height:56px !important;
+    height:56px !important;
+    padding-left:9px !important;
+    padding-right:8px !important;
+    gap:4px !important;
+    grid-template-columns:minmax(70px,1fr) auto !important;
+  }
+
+  .site-header .nav-wordmark{
+    max-width:88px;
+  }
+
+  .site-header .nav-wordmark strong{
+    font-size:10.5px;
+  }
+
+  .site-header .nav-wordmark span{
+    font-size:5px;
+    letter-spacing:.22em;
+  }
+}
