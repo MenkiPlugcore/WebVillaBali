@@ -33,7 +33,7 @@ const translations = {
     reviewTwo:"“The English presentation gave the property a much more international feel when we shared it overseas.”", reviewTwoName:"Property owner", reviewTwoMeta:"Canggu · Rental property",
     reviewThree:"“Clear photos, details, and inquiry steps made it easier to understand the property before arranging a viewing.”", reviewThreeName:"International buyer", reviewThreeMeta:"Australia · Bali property search",
     aboutEyebrow:"Agung Ubud Property", aboutTitle:"Local perspective.<br>Global standard.", aboutCopy:"A premium property platform concept designed to connect local opportunities with buyers, renters and investors from around the world.",
-    contactEyebrow:"Let’s find your Bali property", contactTitle:"Tell us what you’re looking for.", contactCopy:"This demo uses a manual inquiry flow. In production, inquiries can be connected to WhatsApp, email, CRM and PayPal payment instructions.", nameLabel:"Name", emailLabel:"Email", interestLabel:"I’m interested in", messageLabel:"Message", sendInquiry:"Send inquiry", demoNote:"Demo only. no personal data is transmitted.",
+    contactEyebrow:"Let’s find your Bali property", contactTitle:"Tell us what you’re looking for.", contactCopy:"Share your needs and contact details. Our team will follow up with you directly.", nameLabel:"Name", emailLabel:"Email", interestLabel:"I’m interested in", messageLabel:"Message", sendInquiry:"Send inquiry", demoNote:"Your inquiry is sent privately to the Agung Ubud Property team.",
     footerTagline:"Premium Bali property for living, renting and investing.", footerExplore:"Explore", footerCompany:"Company", footerContact:"Contact", contactLink:"Contact", privacyLink:"Privacy",
     viewDetails:"View details →", featured:"Featured", bedrooms:"beds", bathrooms:"baths", month:"/ month", freehold:"Freehold", leasehold:"Leasehold", inquiryToast:"Demo inquiry received. no data was sent.",
     saved:"Saved", save:"Save", savedNow:"Property saved to your shortlist.", removedSaved:"Property removed from your shortlist."
@@ -58,7 +58,7 @@ const translations = {
     reviewTwo:"“Presentasi bahasa Inggris membuat properti terasa lebih siap ketika kami membagikannya ke calon penyewa dari luar negeri.”", reviewTwoName:"Pemilik properti", reviewTwoMeta:"Canggu · Properti sewa",
     reviewThree:"“Foto, detail, dan alur inquiry yang jelas membuat properti lebih mudah dipahami sebelum menjadwalkan viewing.”", reviewThreeName:"Calon pembeli internasional", reviewThreeMeta:"Australia · Pencarian properti Bali",
     aboutEyebrow:"Agung Ubud Property", aboutTitle:"Perspektif lokal.<br>Standar global.", aboutCopy:"Konsep platform properti premium untuk menghubungkan peluang lokal dengan pembeli, penyewa, dan investor dari berbagai negara.",
-    contactEyebrow:"Temukan properti Bali kamu", contactTitle:"Ceritakan properti yang kamu cari.", contactCopy:"Demo ini menggunakan alur inquiry manual. Pada versi produksi, inquiry dapat dihubungkan ke WhatsApp, email, CRM, dan instruksi pembayaran PayPal.", nameLabel:"Nama", emailLabel:"Email", interestLabel:"Saya tertarik dengan", messageLabel:"Pesan", sendInquiry:"Kirim inquiry", demoNote:"Hanya demo. tidak ada data pribadi yang dikirim.",
+    contactEyebrow:"Temukan properti Bali kamu", contactTitle:"Ceritakan properti yang kamu cari.", contactCopy:"Ceritakan kebutuhanmu dan isi kontak yang bisa dihubungi. Tim kami akan menindaklanjuti langsung.", nameLabel:"Nama", emailLabel:"Email", interestLabel:"Saya tertarik dengan", messageLabel:"Pesan", sendInquiry:"Kirim inquiry", demoNote:"Pesanmu dikirim secara privat ke tim Agung Ubud Property.",
     footerTagline:"Properti premium Bali untuk tinggal, menyewa, dan berinvestasi.", footerExplore:"Jelajahi", footerCompany:"Perusahaan", footerContact:"Kontak", contactLink:"Kontak", privacyLink:"Privasi",
     viewDetails:"Lihat detail →", featured:"Pilihan", bedrooms:"kamar", bathrooms:"km mandi", month:"/ bulan", freehold:"Hak milik", leasehold:"Leasehold", inquiryToast:"Inquiry demo diterima. tidak ada data yang dikirim.",
     saved:"Tersimpan", save:"Simpan", savedNow:"Properti disimpan ke daftar pilihanmu.", removedSaved:"Properti dihapus dari daftar pilihanmu."
@@ -212,7 +212,7 @@ mobileMenu?.querySelectorAll('.nav-group').forEach(group=>group.addEventListener
 }));
 mobileMenu?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");}));
 mobileMenu?.addEventListener("keydown",event=>{if(event.key==="Escape"){mobileMenu.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");menuButton?.focus();}});
-document.getElementById("contactForm")?.addEventListener("submit",event=>{event.preventDefault();showToast(translations[language].inquiryToast);event.currentTarget.reset();});
+AUPInquiry.bind(document.getElementById('contactForm'),fields=>({interest:String(fields.get('interest')||'')}));
 
 renderSkeletons(); applyLanguage({render:false}); if(currencyToggle)currencyToggle.textContent=currency; initRevealObserver(); loadPublicProperties();
 window.addEventListener("storage",()=>{updateSavedCount();updateWishlistButtons();});

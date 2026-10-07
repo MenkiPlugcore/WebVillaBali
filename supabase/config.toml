@@ -5,3 +5,7 @@ entrypoint = "./functions/public-catalog/index.js"
 [functions.admin-media]
 verify_jwt = true
 entrypoint = "./functions/admin-media/index.ts"
+
+[functions.public-inquiry]
+verify_jwt = false
+entrypoint = "./functions/public-inquiry/index.js"

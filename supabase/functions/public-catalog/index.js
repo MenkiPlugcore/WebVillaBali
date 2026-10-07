@@ -9,6 +9,8 @@ export async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null,{headers});
   if (req.method !== 'GET') return reply({error:'Metode tidak tersedia.'},405);
   const url = new URL(req.url);
+  const motor=url.searchParams.get('kind')==='motorbike';
+  const table=motor?'motorbikes':'properties',imageTable=motor?'motorbike_images':'property_images',parentKey=motor?'motorbike_id':'property_id';
   // Always read the database as anonymous. Ignore caller JWTs, including staff JWTs.
   const anonHeaders = {apikey:env.anon, Authorization:'Bearer '+env.anon};
   async function read(table, params) {
@@ -20,12 +22,12 @@ export async function handle(req, env) {
     if (url.searchParams.get('image')) {
       const id = url.searchParams.get('image');
       if (!uuid.test(id)) return reply({error:'Foto tidak ditemukan.'},404);
-      const [image] = await read('property_images',{id:'eq.'+id,select:'storage_path,property_id',limit:'1'});
+      const [image] = await read(imageTable,{id:'eq.'+id,select:'storage_path,'+parentKey,limit:'1'});
       if (!image) return reply({error:'Foto tidak ditemukan.'},404);
-      const [parent] = await read('properties',{id:'eq.'+image.property_id,publication_status:'eq.published',select:'id',limit:'1'});
+      const [parent] = await read(table,{id:'eq.'+image[parentKey],publication_status:'eq.published',select:'id',limit:'1'});
       if (!parent) return reply({error:'Foto tidak ditemukan.'},404);
       // No caller-supplied path is ever signed. The bucket remains private.
-      if (!/^properties\/[0-9a-f-]+\/[0-9a-f-]+\.(jpg|png|webp)$/i.test(image.storage_path)) return reply({error:'Foto tidak ditemukan.'},404);
+      if (!(new RegExp('^'+table+'/[0-9a-f-]+/[0-9a-f-]+\\.(jpg|png|webp)$','i')).test(image.storage_path)) return reply({error:'Foto tidak ditemukan.'},404);
       const signed = await fetch(env.url+'/storage/v1/object/sign/aup-media/'+image.storage_path,{method:'POST',headers:{apikey:env.key,Authorization:'Bearer '+env.key,'Content-Type':'application/json'},body:JSON.stringify({expiresIn:300})});
       if (!signed.ok) throw Error('Image signing failed.');
       const data = await signed.json();
@@ -38,12 +40,14 @@ export async function handle(req, env) {
     const rawPage = url.searchParams.get('page') || '0';
     if (!/^\d{1,6}$/.test(rawPage)) return reply({error:'Halaman tidak valid.'},400);
     const page = Number(rawPage);
-    const params = {select:fields,publication_status:'eq.published',order:'is_featured.desc,created_at.desc,id.asc',limit:slug?'1':'100',offset:slug?'0':String(page*100)};
+    const bikeFields='id,slug,name,description_id,description_en,daily_price,monthly_price,currency,engine_cc,included_items,availability,motorbike_images(id,alt_id,alt_en,is_cover,sort_order)';
+    const params = {select:motor?bikeFields:fields,publication_status:'eq.published',order:motor?'sort_order.asc,created_at.desc,id.asc':'is_featured.desc,created_at.desc,id.asc',limit:slug?'1':'100',offset:slug?'0':String(page*100)};
     if (slug) params.slug = 'eq.'+slug;
-    const rows = await read('properties',params);
+    const rows = await read(table,params);
     if (slug && !rows.length) return reply({error:'Properti tidak ditemukan.'},404);
-    for (const row of rows) row.property_images = (row.property_images||[]).sort((a,b)=>Number(b.is_cover)-Number(a.is_cover)||a.sort_order-b.sort_order);
-    return reply({properties:rows,hasMore:!slug&&rows.length===100});
+    const imageKey=motor?'motorbike_images':'property_images';
+    for (const row of rows) row[imageKey] = (row[imageKey]||[]).sort((a,b)=>Number(b.is_cover)-Number(a.is_cover)||a.sort_order-b.sort_order);
+    return reply({[motor?'motorbikes':'properties']:rows,hasMore:!slug&&rows.length===100});
   } catch (error) {
     console.error('public-catalog failed',error.message);
     return reply({error:'Katalog belum bisa dimuat. Coba lagi.'},503);

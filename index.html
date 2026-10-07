@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="hero-brand.css?v=20261007-mobile-room-1" />
   <link rel="stylesheet" href="living-mobility.css" />
   <style>.property-image{display:block}</style>
+<link rel="stylesheet" href="inquiry.css?v=20261007-intake">
 </head>
 <body>
   <header class="site-header brandless-header" id="top">
@@ -213,14 +214,14 @@
       <div>
         <p class="eyebrow dark" data-i18n="contactEyebrow">Let’s find your Bali property</p>
         <h2 data-i18n="contactTitle">Tell us what you’re looking for.</h2>
-        <p data-i18n="contactCopy">This demo uses a manual inquiry flow. In production, inquiries can be connected to WhatsApp, email, CRM and PayPal payment instructions.</p>
+        <p data-i18n="contactCopy">Share your needs and contact details. Our team will follow up with you directly.</p>
       </div>
       <form class="contact-form" id="contactForm">
-        <div class="form-row"><label><span data-i18n="nameLabel">Name</span><input required name="name" type="text" placeholder="Your name"></label><label><span data-i18n="emailLabel">Email</span><input required name="email" type="email" placeholder="you@example.com"></label></div>
+        <div class="form-row"><label><span data-i18n="nameLabel">Name</span><input required maxlength="150" name="name" type="text" placeholder="Your name"></label><label><span data-i18n="emailLabel">Email</span><input required maxlength="254" name="email" type="email" placeholder="you@example.com"></label></div>
         <label><span data-i18n="interestLabel">I’m interested in</span><select name="interest"><option>Villa</option><option>House</option><option>Land</option><option>Rental</option><option>Commercial</option></select></label>
-        <label><span data-i18n="messageLabel">Message</span><textarea name="message" rows="5" placeholder="Budget, preferred area, property type..."></textarea></label>
+        <label><span data-i18n="messageLabel">Message</span><textarea required maxlength="4000" name="message" rows="5" placeholder="Budget, preferred area, property type..."></textarea></label>
         <button class="primary-btn dark-btn full-btn" type="submit" data-i18n="sendInquiry">Send inquiry</button>
-        <p class="form-note" data-i18n="demoNote">Demo only. no personal data is transmitted.</p>
+        <p class="form-note" data-i18n="demoNote">Your inquiry is sent privately to the Agung Ubud Property team.</p>
       </form>
     </section>
   </main>
@@ -236,10 +237,11 @@
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="public-catalog.js?v=20261007-route2"></script>
+  <script src="inquiry.js?v=20261007-intake"></script>
+  <script src="public-catalog.js?v=20261007-intake"></script>
   <script src="nav-enhancements.js?v=20261007-bold-icons-8"></script>
-  <script src="script.js?v=20261007-live"></script>
-  <script src="catalog-expansion.js?v=20261007-live"></script>
+  <script src="script.js?v=20261007-intake"></script>
+  <script src="catalog-expansion.js?v=20261007-intake"></script>
   <script src="compare.js?v=20261007-route2"></script>
 </body>
 </html>

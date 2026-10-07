@@ -25,10 +25,9 @@ Manage properties (including kos), motorbikes, locations, services, testimonials
 ## Remaining integration steps
 
 1. Transfer admin access to the owner's verified account when supplied; revoke the temporary admin role and existing sessions when appropriate.
-2. Implement a Cloudflare Worker inquiry endpoint with input validation, abuse protection, and server-side credentials. Database inquiry writes are intentionally not public.
-3. Connect the rental page, services, testimonials, guest moments and public business settings to published database records.
+2. Connect services, testimonials, guest moments and public business settings to published database records.
 
-Keep API secrets out of browser code, git and public settings. Use Cloudflare secret bindings. Store only public business contact information in `site_settings`.
+Keep API secrets out of browser code, git and public settings. Supabase Edge Functions use server environment secrets. Store only public business contact information in `site_settings`.
 
 ## Verification
 
@@ -42,6 +41,14 @@ The homepage catalog, kost teaser, universal `/property?slug=...` detail page, s
 
 The read-only public Edge Function has gateway JWT verification disabled. All database reads use the server's anonymous key and explicit published filters, regardless of caller tokens. The image route accepts a photo UUID, verifies both the image and its published parent through anonymous RLS, then signs only its database-owned private Storage path for five minutes. Responses and redirects have `Cache-Control: no-store`; a signed URL already issued can remain usable until it expires. Drafts and archived media are never signed through this endpoint. No secret key or storage path is returned by the listing endpoint.
 
-Properties are fetched in stable pages of 100; the browser loads all pages so existing location/type/bedroom/price filters operate over the full catalog. This is appropriate for the initial inventory. Very large inventories should move filtering/pagination into the endpoint rather than preloading all metadata. The public inquiry form remains explicitly a demo; submitting it does not save an inquiry. The admin's real-user draft/save/photo smoke test succeeded on 2026-10-07. `npm test` also checks public authorization, draft image denial, short-lived published image signing, pagination, hostile content, empty/error states, detail galleries, saved and comparison behavior.
+Properties are fetched in stable pages of 100; the browser loads all pages so existing location/type/bedroom/price filters operate over the full catalog. This is appropriate for the initial inventory. Very large inventories should move filtering/pagination into the endpoint rather than preloading all metadata. Public contact, property and rental forms now create private tickets through `public-inquiry`. Visitors receive a stable AUP ticket number; owner/admin manage status and internal notes under Tiket pelanggan, and can search by ticket number. Ticket numbers cannot be changed. No public ticket lookup or automatic email is enabled. The admin's real-user draft/save/photo smoke test succeeded on 2026-10-07. `npm test` also checks public authorization, draft image denial, short-lived published image signing, pagination, hostile content, empty/error states, detail galleries, saved and comparison behavior.
 
 Cloudflare canonicalizes `.html` URLs to extensionless paths. The slug parser supports both canonical and legacy paths, including optional trailing slashes, so redirects do not lose the selected listing.
+
+## Inquiry tickets and rental
+
+`public-catalog?kind=motorbike` reads published motorbikes and signs only their verified private images. The rental form uses database prices and availability. Booking requests require manual team confirmation; submitting a ticket does not reserve inventory or charge money.
+
+`public-inquiry` validates bounded JSON and published references, uses a honeypot and durable contact/global quotas, and calls a service-role-only SECURITY INVOKER RPC. Anonymous and ordinary authenticated users cannot read or insert inquiries directly. Customer contact hashes are server HMACs; raw IPs are not retained. Identical retries reuse the same ticket for two days, with conflicting payloads rejected. Client success appears only after database commit; network failures preserve the form. Status and internal notes are never accepted from public payloads. SQL fixtures roll back.
+
+The private quota/request tables intentionally enable RLS without client policies and grant access only to service_role; the advisor reports this as informational.
