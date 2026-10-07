@@ -245,36 +245,6 @@
       });
     }
     updateWhatsAppCopy();
-    // Keep the floating contact button clear of the mobile search controls.
-    const search = document.getElementById('heroSearch');
-    if (search) {
-      let scheduled = false;
-      const positionContact = () => {
-        scheduled = false;
-        link.style.bottom = '';
-        link.style.visibility = '';
-        if (!window.matchMedia('(max-width:720px)').matches) return;
-        const panel = search.getBoundingClientRect();
-        const button = link.getBoundingClientRect();
-        if (button.top < panel.bottom + 12 && button.bottom > panel.top - 12) {
-          const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom || 60;
-          if (panel.top - button.height - 12 > headerBottom + 12) {
-            link.style.bottom = `${window.innerHeight - panel.top + 12}px`;
-          } else if (panel.bottom + button.height + 26 < window.innerHeight) {
-            link.style.bottom = `${window.innerHeight - panel.bottom - button.height - 12}px`;
-          } else {
-            link.style.visibility = 'hidden';
-          }
-        }
-      };
-      const schedulePosition = () => {
-        if (!scheduled) { scheduled = true; requestAnimationFrame(positionContact); }
-      };
-      window.addEventListener('scroll', schedulePosition, { passive:true });
-      window.addEventListener('resize', schedulePosition);
-      new ResizeObserver(schedulePosition).observe(search);
-      schedulePosition();
-    }
   }
   function updateWhatsAppCopy(){
     const link=document.querySelector(".floating-whatsapp");
