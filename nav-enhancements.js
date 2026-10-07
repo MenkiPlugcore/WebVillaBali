@@ -49,6 +49,7 @@
     const currencyButton = header.querySelector('#currencyToggle');
     const language = (localStorage.getItem('aup-language') || 'en').toUpperCase();
     const currency = (localStorage.getItem('aup-currency') || 'USD').toUpperCase();
+    header.querySelectorAll('[data-desktop-home]').forEach(link=>link.textContent=language==='ID'?'Beranda':'Home');
 
     if (languageButton) {
       languageButton.dataset.navShort = language;
@@ -80,7 +81,7 @@
   window.addEventListener('storage', scheduleUtilitySync);
 
   header.addEventListener('click', event => {
-    if (event.target.closest('#languageToggle,#currencyToggle')) setTimeout(syncCompactUtilities, 0);
+    if (event.target.closest('#languageToggle,#currencyToggle,#rentalLanguage,#guestLanguage')) setTimeout(syncCompactUtilities, 0);
   });
 
   // Homepage guest documentation concept preview. The dedicated gallery page
