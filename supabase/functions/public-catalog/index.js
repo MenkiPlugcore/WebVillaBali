@@ -11,6 +11,7 @@ export async function handle(req, env) {
   if (req.method !== 'GET') return reply({error:'Metode tidak tersedia.'},405);
   const url = new URL(req.url);
   const motor=url.searchParams.get('kind')==='motorbike';
+  const guest=url.searchParams.get('kind')==='guest';
   const table=motor?'motorbikes':'properties',imageTable=motor?'motorbike_images':'property_images',parentKey=motor?'motorbike_id':'property_id';
   // Always read the database as anonymous. Ignore caller JWTs, including staff JWTs.
   const anonHeaders = {apikey:env.anon, Authorization:'Bearer '+env.anon};
@@ -20,6 +21,22 @@ export async function handle(req, env) {
     return res.json();
   }
   try {
+    if(guest){
+      const imageId=url.searchParams.get('image');
+      if(imageId!==null){
+        if(!uuid.test(imageId))return reply({error:'Foto tidak ditemukan.'},404);
+        const [moment]=await read('guest_moments',{id:'eq.'+imageId,publication_status:'eq.published',consent_confirmed:'eq.true',select:'storage_path',limit:'1'});
+        if(!moment||!/^guest_moments\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(jpg|png|webp)$/i.test(moment.storage_path))return reply({error:'Foto tidak ditemukan.'},404);
+        const signed=await fetch(env.url+'/storage/v1/object/sign/aup-media/'+moment.storage_path,{method:'POST',headers:{apikey:env.key,Authorization:'Bearer '+env.key,'Content-Type':'application/json'},body:JSON.stringify({expiresIn:300})});
+        if(!signed.ok)throw Error('Guest image signing failed.');
+        const data=await signed.json(),path=data.signedURL||data.signedUrl;
+        if(!path?.startsWith('/object/sign/aup-media/'))throw Error('Invalid signed guest image URL.');
+        return new Response(null,{status:302,headers:{...headers,Location:env.url+'/storage/v1'+path}});
+      }
+      const page=url.searchParams.get('page')||'0';if(!/^\d{1,6}$/.test(page))return reply({error:'Halaman tidak valid.'},400);
+      const rows=await read('guest_moments',{publication_status:'eq.published',consent_confirmed:'eq.true',select:'id,caption_id,caption_en,location_label,sort_order',order:'sort_order.asc,id.asc',limit:'20',offset:String(Number(page)*20)});
+      return reply({moments:rows,hasMore:rows.length===20});
+    }
     if(url.searchParams.get('kind')==='service'){const page=url.searchParams.get('page')||'0';if(!/^\d{1,6}$/.test(page))return reply({error:'Halaman tidak valid.'},400);const rows=await read('services',{publication_status:'eq.published',select:'id,slug,title_id,title_en,description_id,description_en,sort_order',order:'sort_order.asc,id.asc',limit:'100',offset:String(Number(page)*100)});return reply({services:rows,hasMore:rows.length===100});}
     if(url.searchParams.get('kind')==='settings'){const rows=await read('site_settings',{key:'in.(contact,social_links)',select:'key,value',order:'key.asc'});return reply({settings:publicSettings(rows)});}
     if (url.searchParams.get('image')) {

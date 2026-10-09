@@ -25,7 +25,7 @@ Manage properties (including kos), motorbikes, locations, services, testimonials
 ## Remaining integration steps
 
 1. Transfer admin access to the owner's verified account when supplied; revoke the temporary admin role and existing sessions when appropriate.
-2. Connect testimonials and guest moments to published database records.
+2. Connect testimonials to published database records (deferred by the owner).
 
 Keep API secrets out of browser code, git and public settings. Supabase Edge Functions use server environment secrets. Store only public business contact information in `site_settings`.
 
@@ -60,3 +60,11 @@ The homepage and rental footer read `public-catalog?kind=settings` using anonymo
 ## Published services and service tickets
 
 `public-catalog?kind=service` uses anonymous published-only reads with stable sort/id ordering and pages of 100. Live service cards replace sample construction/permit cards, populate the mobile menu and contact-form choices, and preserve typed customer messages when changing language. Empty and failed catalogs show explicit states without sample fallback. The inquiry endpoint verifies the published service, prefixes the database title, and records the service_id. The service-only reference check also runs atomically in the service-role-only intake RPC; draft or archived services return 404. `supabase/tests/service_inquiry.sql` verifies anonymous visibility, published ticket references, retry ticket stability and draft/archive rejection, with fixtures rolled back.
+
+## Published guest documentation
+
+`public-catalog?kind=guest` returns published, consent-confirmed moments in pages of 20 with stable sort/id ordering. Only the record UUID and public captions/location are returned; private Storage paths are excluded. `kind=guest&image=<uuid>` checks the published record and consent anonymously before signing its database-owned guest path for five minutes. The bucket stays private, and responses are no-store. Previously issued signed URLs can remain usable until expiry after a moment is archived.
+
+Homepage shows the first six photos; the dedicated gallery loads more on demand. English/Indonesian captions, safe text rendering, a keyboard-accessible photo dialog and explicit empty/retry states replace all sample guest imagery. Mobile uses a single column. Admin Momen tamu → Tambah foto uploads a draft; select Terbit with consent confirmed to publish, or Arsip to hide it. No guest photos or reviews are seeded.
+
+Ticket cards and detail forms now display the inquiry type and associated property/motor/service title. Status and internal notes are the only editable customer-ticket fields. Rollback SQL verifies three ticket types, stable retries, admin processing and denied editor/customer reads. These checks leave existing customer tickets untouched.
