@@ -37,3 +37,5 @@
 .gm-tile:focus-visible,.guest-moment-card:focus-visible{outline:3px solid #c2ad7c;outline-offset:4px}
 @media(max-width:900px){.gm-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gm-home-grid .guest-moment-card{height:200px}}
 @media(max-width:620px){.gm-home-grid{grid-template-columns:1fr}.gm-home-grid .guest-moment-card{height:230px}.gm-gallery{columns:auto;display:grid;grid-template-columns:1fr;gap:16px}.gm-tile{margin:0}.gm-state{padding:32px 16px}.gm-lightbox{padding:16px}}
+
+.guest-moments-page .site-header .header-cta{color:#10221b;background:#fff}
