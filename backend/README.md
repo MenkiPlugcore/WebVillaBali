@@ -68,3 +68,9 @@ The homepage and rental footer read `public-catalog?kind=settings` using anonymo
 Homepage shows the first six photos; the dedicated gallery loads more on demand. English/Indonesian captions, safe text rendering, a keyboard-accessible photo dialog and explicit empty/retry states replace all sample guest imagery. Mobile uses a single column. Admin Momen tamu → Tambah foto uploads a draft; select Terbit with consent confirmed to publish, or Arsip to hide it. No guest photos or reviews are seeded.
 
 Ticket cards and detail forms now display the inquiry type and associated property/motor/service title. Status and internal notes are the only editable customer-ticket fields. Rollback SQL verifies three ticket types, stable retries, admin processing and denied editor/customer reads. These checks leave existing customer tickets untouched.
+
+## Staff dashboard
+
+The admin panel opens on Ringkasan after login. Owner/admin see exact counts for new tickets, tickets in progress, published properties and published/available motorbikes. Editors only query content counts. Each count uses a HEAD query with the signed-in user's RLS and a 15-second timeout; no customer records are downloaded for summary statistics. Unavailable counts display a dash with a retry action instead of a false zero. There is no public summary endpoint or schema/permission change.
+
+Cards open the matching filtered list, including both publication and availability for motorbikes. Refresh reads current counts, stale responses cannot overwrite another section, and unsaved-edit navigation guards are retained. The responsive grid uses two columns on phones and one on very narrow screens. Notifications remain a separate future update.
