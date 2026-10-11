@@ -1,4 +1,6 @@
 begin;
+insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data) values ('00000000-0000-4000-8000-000000000001','staff-test-only@example.invalid','{}','{}');
+insert into auth.sessions(id,user_id,not_after) values ('00000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000001',now()+interval '1 hour');
 -- Fixtures and staff claims exist only inside this rollback transaction.
 insert into public.guest_moments(id,storage_path,caption_id,consent_confirmed,publication_status) values
 ('74f847f1-f32d-450c-a64a-7af7d7368301','guest_moments/74f847f1-f32d-450c-a64a-7af7d7368301/74f847f1-f32d-450c-a64a-7af7d7368301.jpg','Rollback live',true,'published'),
@@ -27,7 +29,8 @@ do $$declare typ text;idx integer:=0;ref uuid;data jsonb;result jsonb;retry json
  if (select count(*) from public.inquiries where email='rollback-flow@example.invalid')<>3 then raise exception 'Duplicate tickets';end if;
 end $$;
 reset role;
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated","app_metadata":{"aup_role":"editor"}}',true);
+update auth.users set raw_app_meta_data='{"aup_role":"editor"}' where id='00000000-0000-4000-8000-000000000001';
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","app_metadata":{"aup_role":"editor"}}',true);
 set local role authenticated;
 do $$begin
  if exists(select 1 from public.inquiries where email='rollback-flow@example.invalid') then raise exception 'Editor saw private tickets';end if;
@@ -37,7 +40,8 @@ do $$begin
  update public.guest_moments set publication_status='archived' where id='74f847f1-f32d-450c-a64a-7af7d7368302';
 end $$;
 reset role;
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated","app_metadata":{"aup_role":"admin"}}',true);
+update auth.users set raw_app_meta_data='{"aup_role":"admin"}' where id='00000000-0000-4000-8000-000000000001';
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","app_metadata":{"aup_role":"admin"}}',true);
 set local role authenticated;
 do $$declare state text;n integer;begin
  if (select count(*) from public.inquiries where email='rollback-flow@example.invalid')<>3 then raise exception 'Admin could not read tickets';end if;
@@ -48,7 +52,8 @@ do $$declare state text;n integer;begin
  if (select count(*) from public.inquiries where email='rollback-flow@example.invalid' and status='closed' and internal_notes='Rollback staff note')<>3 then raise exception 'Processing not persisted';end if;
 end $$;
 reset role;
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated","user_metadata":{"aup_role":"owner"},"app_metadata":{}}',true);
+update auth.users set raw_app_meta_data='{}' where id='00000000-0000-4000-8000-000000000001';
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","user_metadata":{"aup_role":"owner"},"app_metadata":{}}',true);
 set local role authenticated;
 do $$begin
  if exists(select 1 from public.inquiries where email='rollback-flow@example.invalid') then raise exception 'Customer saw tickets or internal notes';end if;
@@ -56,3 +61,4 @@ end $$;
 reset role;
 rollback;
 select 'passed: guest visibility/consent, three ticket references, idempotency, admin status/notes and editor/customer denial; fixtures rolled back' as verification;
+

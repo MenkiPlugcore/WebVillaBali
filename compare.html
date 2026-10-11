@@ -74,15 +74,7 @@
   <script src="public-catalog.js?v=20261007-route2"></script>
   <script src="nav-enhancements.js?v=20261007-home"></script>
   <script src="compare.js?v=20261007-route2"></script>
-  <script>
-    document.getElementById('languageToggle')?.addEventListener('click',()=>{
-      const next=(localStorage.getItem('aup-language')||'en')==='en'?'id':'en';
-      localStorage.setItem('aup-language',next);
-    });
-    document.getElementById('currencyToggle')?.addEventListener('click',()=>{
-      const next=(localStorage.getItem('aup-currency')||'USD')==='USD'?'IDR':'USD';
-      localStorage.setItem('aup-currency',next);
-    });
-  </script>
+  <script src="compare-preferences.js?v=20261011-security"></script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-import {imageType,staffRole,validUUID,mediaTables} from './validation.js';
+import {imageType,staffRole,validUUID,mediaTables,validMediaPath,boundedBody} from './validation.js';
 const bucket='aup-media';
 const allowedOrigins=['https://webvillabali.menkiestes.workers.dev','https://agungubudproperty.com','https://www.agungubudproperty.com'];
 export async function handle(req:Request,env:{url:string,key:string}){
@@ -9,26 +9,35 @@ export async function handle(req:Request,env:{url:string,key:string}){
  if(req.method!=='POST')return reply({error:'Metode tidak tersedia.'},405);
  const token=req.headers.get('authorization');if(!token?.startsWith('Bearer '))return reply({error:'Silakan login.'},401);
  const serverHeaders={apikey:env.key,Authorization:'Bearer '+env.key};
+ try{
  const userResponse=await fetch(env.url+'/auth/v1/user',{headers:{apikey:env.key,Authorization:token}});
  if(!userResponse.ok)return reply({error:'Sesi tidak valid. Masuk ulang.'},401);
  const user=await userResponse.json();if(!staffRole(user))return reply({error:'Akses pengelola diperlukan.'},403);
  const callerHeaders={apikey:env.key,Authorization:token,'Content-Type':'application/json',Prefer:'return=representation'};
  async function request(path:string,init:RequestInit={},server=false){const response=await fetch(env.url+path,{...init,headers:{...(server?serverHeaders:callerHeaders),...init.headers}});if(!response.ok)throw Error('Operasi gagal ('+response.status+').');if(response.status===204)return null;return response.json();}
- try{
+ const access=await request('/rest/v1/rpc/staff_access',{method:'POST',body:'{}'});
+ if(access!==true)return reply({error:'Akses atau sesi sudah tidak aktif. Masuk ulang.'},403);
  if(Number(req.headers.get('content-length')||0)>9*1024*1024)return reply({error:'Maksimal 8 MB per foto.'},413);
- const multipart=req.headers.get('content-type')?.startsWith('multipart/form-data');const body=multipart?await req.formData():await req.json();const get=(key:string)=>multipart?body.get(key):body[key];
+ const multipart=req.headers.get('content-type')?.startsWith('multipart/form-data');
+ const bytesBody=await boundedBody(req,multipart?9*1024*1024:16384);
+ const bounded=new Request(req.url,{method:'POST',headers:req.headers,body:bytesBody});
+ const body=multipart?await bounded.formData():await bounded.json();
+ if(!multipart&&(!body||typeof body!=='object'||Array.isArray(body)))return reply({error:'Isian tidak valid.'},400);
+ const get=(key:string)=>multipart?body.get(key):body[key];
  const table=get('table'),id=get('id'),action=multipart?'upload':get('action');if(!Object.hasOwn(mediaTables,table))return reply({error:'Jenis konten tidak valid.'},400);
  if(!(table==='guest_moments'&&action==='upload')&&!validUUID(id))return reply({error:'ID konten tidak valid.'},400);
  const [imageTable,parent]=mediaTables[table as keyof typeof mediaTables];
  let record;if(id){const records=await request('/rest/v1/'+table+'?id=eq.'+id+'&select=id,storage_path'.replace(',storage_path',table==='guest_moments'?',storage_path':''));record=records[0];if(!record)return reply({error:'Konten tidak ditemukan.'},404);}
  if(action==='list'){
  const images=table==='guest_moments'?[record]:await request('/rest/v1/'+imageTable+'?'+parent+'=eq.'+id+'&select=id,storage_path,is_cover&order=sort_order.asc,created_at.asc');
+ if(images.some((image:any)=>!validMediaPath(table,image.storage_path,id)))return reply({error:'Lokasi foto tidak valid.'},400);
  const signed=await Promise.all(images.map(async(image:any)=>{const signed=await request('/storage/v1/object/sign/'+bucket+'/'+image.storage_path,{method:'POST',body:JSON.stringify({expiresIn:300}),headers:{'Content-Type':'application/json'}},true);return {...image,url:env.url+'/storage/v1'+(signed.signedURL||signed.signedUrl)};}));return reply({images:signed});
  }
  if(action==='remove'){
  if(table==='guest_moments')return reply({error:'Arsipkan momen untuk menyembunyikan foto tamu.'},400);
  if(!validUUID(get('image_id')))return reply({error:'ID foto tidak valid.'},400);
  const images=await request('/rest/v1/'+imageTable+'?id=eq.'+get('image_id')+'&'+parent+'=eq.'+id+'&select=id,storage_path');if(!images[0])return reply({error:'Foto tidak ditemukan.'},404);
+ if(!validMediaPath(table,images[0].storage_path,id))return reply({error:'Lokasi foto tidak valid.'},400);
  await request('/rest/v1/'+imageTable+'?id=eq.'+images[0].id,{method:'DELETE'});
  await request('/storage/v1/object/'+bucket,{method:'DELETE',body:JSON.stringify({prefixes:[images[0].storage_path]}),headers:{'Content-Type':'application/json'}},true);return reply({success:true});
  }
@@ -47,6 +56,7 @@ export async function handle(req:Request,env:{url:string,key:string}){
  saved=await request('/rest/v1/'+imageTable,{method:'POST',body:JSON.stringify(payload)});
  }catch(error){await fetch(env.url+'/storage/v1/object/'+bucket,{method:'DELETE',headers:{...serverHeaders,'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})});throw error;}
  return reply({success:true,record:saved[0]});
- }catch(error){console.error('admin-media operation failed',error instanceof Error?error.message:'unknown');return reply({error:'Foto belum berhasil diproses. Coba lagi atau periksa koneksi.'},500);}
+ }catch(error){if(error instanceof Error&&error.message==='BODY_TOO_LARGE')return reply({error:'Permintaan terlalu besar.'},413);if(error instanceof SyntaxError||error instanceof TypeError)return reply({error:'Isian tidak valid.'},400);console.error('admin-media operation failed');return reply({error:'Foto belum berhasil diproses. Coba lagi atau periksa koneksi.'},500);}
 }
 Deno.serve((req:Request)=>handle(req,{url:Deno.env.get('SUPABASE_URL')!,key:Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!}));
+

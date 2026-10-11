@@ -74,3 +74,8 @@ Ticket cards and detail forms now display the inquiry type and associated proper
 The admin panel opens on Ringkasan after login. Owner/admin see exact counts for new tickets, tickets in progress, published properties and published/available motorbikes. Editors only query content counts. Each count uses a HEAD query with the signed-in user's RLS and a 15-second timeout; no customer records are downloaded for summary statistics. Unavailable counts display a dash with a retry action instead of a false zero. There is no public summary endpoint or schema/permission change.
 
 Cards open the matching filtered list, including both publication and availability for motorbikes. Refresh reads current counts, stale responses cannot overwrite another section, and unsaved-edit navigation guards are retained. The responsive grid uses two columns on phones and one on very narrow screens. Notifications remain a separate future update.
+
+
+## Stage 1 security audit — 11 October 2026
+
+See SECURITY-AUDIT-2026-10-11.md for findings, verification and remaining actions. Staff RLS now checks the current Auth user role and the caller's active session via a narrow private helper; JWT role metadata alone does not grant access. The panel and admin-media also call the caller-scoped staff_access RPC. Explicit logout revokes server sessions globally. Authenticated ticket updates are limited to status/internal_notes; server intake alone creates inquiries. New migrations match the versions applied to production. Public signup and admin MFA configuration remain explicit pre-handover actions.

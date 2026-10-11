@@ -1,4 +1,6 @@
 begin;
+insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data) values ('00000000-0000-4000-8000-000000000001','staff-test-only@example.invalid','{}','{}');
+insert into auth.sessions(id,user_id,not_after) values ('00000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000001',now()+interval '1 hour');
 insert into public.properties(slug,title_en,title_id,property_type,purpose,publication_status) values
 ('rls-test-draft','Test','Test','villa','rent','draft'),
 ('rls-test-published','Test','Test','villa','rent','published');
@@ -12,7 +14,8 @@ do $$ begin
  begin insert into public.properties(slug,title_en,title_id,property_type,purpose) values ('rls-unauthorized','Test','Test','villa','rent'); raise exception 'anonymous write unexpectedly allowed'; exception when insufficient_privilege then null; end;
 end $$;
 reset role;
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated","user_metadata":{"aup_role":"owner"},"app_metadata":{}}',true);
+update auth.users set raw_app_meta_data='{}' where id='00000000-0000-4000-8000-000000000001';
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","user_metadata":{"aup_role":"owner"},"app_metadata":{}}',true);
 set local role authenticated;
 do $$ begin
  if (select count(*) from public.inquiries) <> 0 then raise exception 'customer inquiry access failed'; end if;
@@ -20,7 +23,8 @@ do $$ begin
  begin insert into public.properties(slug,title_en,title_id,property_type,purpose) values ('rls-unauthorized','Test','Test','villa','rent'); raise exception 'customer write unexpectedly allowed'; exception when insufficient_privilege then null; end;
 end $$;
 reset role;
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated","app_metadata":{"aup_role":"editor"}}',true);
+update auth.users set raw_app_meta_data='{"aup_role":"editor"}' where id='00000000-0000-4000-8000-000000000001';
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","app_metadata":{"aup_role":"editor"}}',true);
 set local role authenticated;
 do $$ begin
  if (select count(*) from public.properties where slug like 'rls-test-%') <> 2 then raise exception 'editor read failed'; end if;
@@ -31,14 +35,16 @@ do $$ begin
  begin insert into public.guest_moments(storage_path,publication_status) values ('test/no-consent','published'); raise exception 'consent check failed'; exception when check_violation then null; end;
 end $$;
 reset role;
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated","app_metadata":{"aup_role":"owner"}}',true);
+update auth.users set raw_app_meta_data='{"aup_role":"owner"}' where id='00000000-0000-4000-8000-000000000001';
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","app_metadata":{"aup_role":"owner"}}',true);
 set local role authenticated;
 do $$ begin
- if (select count(*) from public.inquiries) <> 1 then raise exception 'owner inquiry read failed'; end if;
+ if (select count(*) from public.inquiries where email='test@example.invalid') <> 1 then raise exception 'owner inquiry read failed'; end if;
  update public.inquiries set status='contacted' where email='test@example.invalid';
  if not found then raise exception 'owner inquiry update failed'; end if;
- insert into public.site_settings(key,value) values ('brand','{"name":"Test"}');
+ insert into public.site_settings(key,value) values ('brand','{"name":"Test"}') on conflict(key) do update set value=excluded.value;
 end $$;
 reset role;
 rollback;
 select 'passed: public visibility, draft images, denied writes, no metadata escalation, editor restrictions, owner access, consent, update triggers; fixtures rolled back' as verification;
+

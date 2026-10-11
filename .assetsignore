@@ -19,3 +19,6 @@ wrangler.jsonc
 *.log
 
 public-tests/
+
+
+admin/dashboard.js
