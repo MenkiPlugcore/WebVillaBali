@@ -17,10 +17,11 @@
     preferences=Array.from(document.querySelectorAll('#languageToggle,#rentalLanguage,#currencyToggle,#rentalCurrency')).concat(Array.from(form.querySelectorAll('input,textarea,select'))).map(el=>({el,disabled:el.disabled}));preferences.forEach(({el})=>el.disabled=true);
     const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,request_id:requestId,started_at:started}),signal:AbortSignal.timeout(30000)});
     const result=await response.json();if(response.status===409)lastPayload='';if(!response.ok||result.success!==true||!/^AUP-[0-9]+$/.test(result.ticket_no||'')){const error=Error(response.status===429?c.limit:response.status===404?c.gone:response.status===409?c.conflict:response.status===400?c.invalid:c.error);throw error;}
-    form.reset();lastPayload='';requestId='';started=Date.now();status.textContent=(language()==='id'?'Nomor tiket: ':'Ticket number: ')+result.ticket_no+'. '+c.success;onSuccess();
+    form.reset();lastPayload='';requestId='';started=Date.now();status.textContent=(language()==='id'?'Nomor tiket: ':'Ticket number: ')+result.ticket_no+'. '+c.success;try{onSuccess();}catch{console.warn('Inquiry success callback failed');}
    }catch(error){status.textContent=error.message&&Object.values(c).includes(error.message)?error.message:c.error;status.classList.add('is-error');}
    finally{pending=false;button.disabled=false;button.textContent=label;form.setAttribute('aria-busy','false');preferences.forEach(({el,disabled})=>el.disabled=disabled);}
   });
  }
  window.AUPInquiry={bind};
 })();
+

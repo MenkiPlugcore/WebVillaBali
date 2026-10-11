@@ -29,6 +29,7 @@ do $$declare typ text;idx integer:=0;ref uuid;data jsonb;result jsonb;retry json
  if (select count(*) from public.inquiries where email='rollback-flow@example.invalid')<>3 then raise exception 'Duplicate tickets';end if;
 end $$;
 reset role;
+insert into public.inquiries(id,name,email,message,inquiry_type,language,updated_at) values ('74f847f1-f32d-450c-a64a-7af7d7368340','Conflict fixture','ticket-conflict@example.invalid','Rollback only','general','id','2020-01-01T00:00:00Z');
 update auth.users set raw_app_meta_data='{"aup_role":"editor"}' where id='00000000-0000-4000-8000-000000000001';
 select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","app_metadata":{"aup_role":"editor"}}',true);
 set local role authenticated;
@@ -45,11 +46,14 @@ select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-00000000
 set local role authenticated;
 do $$declare state text;n integer;begin
  if (select count(*) from public.inquiries where email='rollback-flow@example.invalid')<>3 then raise exception 'Admin could not read tickets';end if;
- foreach state in array array['contacted','in_progress','closed'] loop
+ foreach state in array array['contacted','in_progress','closed','spam','in_progress','closed'] loop
   update public.inquiries set status=state,internal_notes='Rollback staff note' where email='rollback-flow@example.invalid';get diagnostics n=row_count;
   if n<>3 then raise exception 'Admin status update failed';end if;
  end loop;
  if (select count(*) from public.inquiries where email='rollback-flow@example.invalid' and status='closed' and internal_notes='Rollback staff note')<>3 then raise exception 'Processing not persisted';end if;
+ update public.inquiries set status='contacted',internal_notes='First admin note' where id='74f847f1-f32d-450c-a64a-7af7d7368340' and updated_at='2020-01-01T00:00:00Z';if not found then raise exception 'First conditional save failed';end if;
+ update public.inquiries set status='closed',internal_notes='Stale overwrite' where id='74f847f1-f32d-450c-a64a-7af7d7368340' and updated_at='2020-01-01T00:00:00Z';if found then raise exception 'Stale overwrite accepted';end if;
+ if not exists(select 1 from public.inquiries where id='74f847f1-f32d-450c-a64a-7af7d7368340' and status='contacted' and internal_notes='First admin note') then raise exception 'Conflict corrupted latest note';end if;
 end $$;
 reset role;
 update auth.users set raw_app_meta_data='{}' where id='00000000-0000-4000-8000-000000000001';
@@ -60,5 +64,5 @@ do $$begin
 end $$;
 reset role;
 rollback;
-select 'passed: guest visibility/consent, three ticket references, idempotency, admin status/notes and editor/customer denial; fixtures rolled back' as verification;
+select 'passed: guest visibility/consent, three ticket references, idempotency, admin status/reopen/notes and stale-save rejection and editor/customer denial; fixtures rolled back' as verification;
 

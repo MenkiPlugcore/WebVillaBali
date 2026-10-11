@@ -25,3 +25,5 @@ admin/dashboard.js
 
 admin/gallery.js
 admin/property-form.js
+
+admin/ticket.js

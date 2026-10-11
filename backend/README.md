@@ -78,7 +78,7 @@ Cards open the matching filtered list, including both publication and availabili
 
 ## Stage 1 security audit — 11 October 2026
 
-See SECURITY-AUDIT-2026-10-11.md for findings, verification and remaining actions. Staff RLS now checks the current Auth user role and the caller's active session via a narrow private helper; JWT role metadata alone does not grant access. The panel and admin-media also call the caller-scoped staff_access RPC. Explicit logout revokes server sessions globally. Authenticated ticket updates are limited to status/internal_notes; server intake alone creates inquiries. New migrations match the versions applied to production. Public signup and admin MFA configuration remain explicit pre-handover actions.
+See SECURITY-AUDIT-2026-10-11.md for findings, verification and remaining actions. Staff RLS now checks the current Auth user role and the caller's active session via a narrow private helper; JWT role metadata alone does not grant access. The panel and admin-media also call the caller-scoped staff_access RPC. Explicit logout revokes server sessions globally. Authenticated ticket updates are limited to status/internal_notes; server intake alone creates inquiries. New migrations match the versions applied to production. Public signup is disabled and verified. Admin MFA remains a pre-handover action.
 
 ## Stage 2 property management — 11 October 2026
 
@@ -87,3 +87,11 @@ The property form now groups identity, location, price/tenure, specifications/fa
 Property and motorbike galleries support cover selection and left/right ordering on touch devices. Changes save immediately, separately from the property form. New uploads append to the saved order. The caller-authorized SECURITY INVOKER manage_gallery RPC atomically switches the unique cover, validates a full nonduplicated parent-specific order, and selects a replacement cover when the previous cover is removed. It serializes mutations per parent and retains RLS plus live-role/session checks. Anonymous/customer/revoked accounts are denied. Metadata removal is reported separately from a failed private-file cleanup; no false failure suggests the gallery record still exists.
 
 Verification: automated panel/gallery/endpoint tests, SQL rollback fixtures for properties and motorbikes, caller JWT rather than service privilege for metadata RPC, and existing published-only public catalog checks. Authenticated browser testing still requires a legitimate staff login.
+
+## Stage 3 — ticket follow-up
+
+Ticket details load the current database row when opened. Owner/admin can open a validated WhatsApp, telephone or email link and copy the ticket number; messages are sent manually and opening a link does not change the ticket status. Context-specific guidance explains each status, including reopening a completed ticket. Internal notes remain private.
+
+Saving uses id plus the original updated_at filter and checks that exactly one row was returned. A stale save does not overwrite another admin’s changes: unsaved notes remain visible, with a guarded reload action. Navigation waits for active saves; returning to the list preserves search/status filters. The database’s existing update timestamp trigger and staff RLS enforce the underlying access. No new public ticket lookup or extra staff grants were introduced.
+
+A successful public inquiry keeps its ticket receipt even if a post-success UI callback fails. Tests cover duplicate submit suppression, same-request retry, honest network failure, status/notes-only writes, safe contact links and stale-write detection. Rollback database fixtures verify property/motor/service references, ticket idempotency, quota enforcement, processing through closure/reopening, conditional-write conflicts and denied editor/customer access. Automated checks do not replace a final hands-on test in the owner’s mobile session.
