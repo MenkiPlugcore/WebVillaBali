@@ -10,3 +10,5 @@
 
 
 .ticket-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}.ticket-actions a,.ticket-actions button,#reload-ticket{min-height:46px}.ticket-actions a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:12px 16px;border-radius:10px}.ticket-context dd{overflow-wrap:anywhere}#ticket-status-help{padding:12px;border-left:3px solid var(--gold,#c9b67d);background:rgba(201,182,125,.08)}@media(max-width:600px){.ticket-actions>*{flex:1 1 45%}}
+
+@media(max-width:600px){.save-bar{padding-bottom:max(14px,env(safe-area-inset-bottom));bottom:0}.filters input{flex-basis:100%}.toolbar p{overflow-wrap:anywhere;min-width:0;flex:1}.editor h2{overflow-wrap:anywhere}.login{max-width:100%}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

@@ -15,10 +15,11 @@
     return new Intl.NumberFormat(p.currency==='IDR'?'id-ID':'en-US',{style:'currency',currency:p.currency,maximumFractionDigits:p.currency==='IDR'?0:2}).format(p.price);
   }
   function suffix(p){const id=language()==='id';return ({night:id?'/ malam':'/ night',day:id?'/ hari':'/ day',month:id?'/ bulan':'/ month',year:id?'/ tahun':'/ year'})[p.price_period]||(p.tenure==='freehold'?(id?'Hak milik':'Freehold'):p.tenure==='leasehold'?'Leasehold':'');}
-  let pending;
+  let pending,motorPending;
   async function request(params={}){const response=await fetch(endpoint+'?'+new URLSearchParams(params),{signal:AbortSignal.timeout(20000),cache:'no-store'});if(!response.ok)throw Error(response.status===404?'NOT_FOUND':'LOAD_FAILED');const data=await response.json();return {...data,properties:data.properties.map(map)};}
   async function load(){if(pending)return pending;pending=(async()=>{const rows=[];for(let page=0;;page++){const data=await request({page});rows.push(...data.properties);if(!data.hasMore)break;}api.items.splice(0,api.items.length,...rows);api.loaded=true;document.dispatchEvent(new CustomEvent('aup:catalog-loaded'));return rows;})().catch(error=>{pending=null;throw error;});return pending;}
-  async function motorbikes(){const rows=[];for(let page=0;;page++){const res=await fetch(endpoint+'?kind=motorbike&page='+page,{signal:AbortSignal.timeout(20000),cache:'no-store'});if(!res.ok)throw Error('LOAD_FAILED');const data=await res.json();rows.push(...data.motorbikes.map(b=>({...b,image:b.motorbike_images?.[0]?.id?endpoint+'?kind=motorbike&image='+encodeURIComponent(b.motorbike_images[0].id):placeholder})));if(!data.hasMore)break;}return rows;}
+  async function motorbikes(){if(motorPending)return motorPending;motorPending=(async()=>{const rows=[];for(let page=0;;page++){const res=await fetch(endpoint+'?kind=motorbike&page='+page,{signal:AbortSignal.timeout(20000),cache:'no-store'});if(!res.ok)throw Error('LOAD_FAILED');const data=await res.json();rows.push(...data.motorbikes.map(b=>({...b,image:b.motorbike_images?.[0]?.id?endpoint+'?kind=motorbike&image='+encodeURIComponent(b.motorbike_images[0].id):placeholder})));if(!data.hasMore)break;}return rows;})().finally(()=>motorPending=null);return motorPending;}
   const api={motorbikes,endpoint,placeholder,escape,language,title,description,href,image,slugFromURL,money,suffix,items:[],loaded:false,load,detail:slug=>request({slug}).then(data=>data.properties[0]),view:p=>({...p,title:escape(title(p)),location:escape(p.location),type:escape(p.type),area:escape(p.area),ref:escape(p.ref)})};
   window.AUPCatalog=api;
 })();
+

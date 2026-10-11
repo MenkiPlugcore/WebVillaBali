@@ -96,7 +96,7 @@
     }
     if (!document.querySelector('script[data-guest-moments-script]')) {
       const script = document.createElement('script');
-      script.src = 'guest-moments.js?v=20261009-guest-2';
+      script.src = 'guest-moments.js?v=20261011-device';
       script.defer = true;
       script.dataset.guestMomentsScript = 'true';
       document.body.appendChild(script);
@@ -127,7 +127,7 @@
     if (!document.querySelector('link[data-client-feedback-style]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'client-feedback.css?v=20261007-accordion-menu-6';
+      style.href = 'client-feedback.css?v=20261011-device';
       style.dataset.clientFeedbackStyle = 'true';
       document.head.appendChild(style);
     }
@@ -138,7 +138,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = 'client-feedback.js?v=20261007-services';
+      script.src = 'client-feedback.js?v=20261011-device';
       script.dataset.clientFeedbackScript = 'true';
       script.addEventListener('load', () => {
         scheduleUtilitySync();
@@ -152,3 +152,4 @@
     scheduleUtilitySync();
   }
 })();
+

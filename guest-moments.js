@@ -12,7 +12,7 @@
   const caption=item=>item['caption_'+language()]||item.caption_en||item.caption_id||t().caption;
   const image=(id,fresh=false)=>endpoint+'?kind=guest&image='+encodeURIComponent(id)+(fresh?'&v='+Date.now():'');
   let moments=[],page=0,hasMore=false,busy=false,failed=false,opener;
-  function card(item){const label=caption(item),place=item.location_label||'';return `<button class="${dedicated?'gm-tile':'guest-moment-card'}" type="button" data-gm-id="${escape(item.id)}" aria-label="${escape([label,place].filter(Boolean).join(' · '))}"><img src="${image(item.id)}" alt="${escape(label)}" loading="lazy"><span class="guest-moment-caption"><strong>${escape(place)}</strong><small>${escape(label)}</small></span></button>`;}
+  function card(item){const label=caption(item),place=item.location_label||'';return `<button class="${dedicated?'gm-tile':'guest-moment-card'}" type="button" data-gm-id="${escape(item.id)}" aria-label="${escape([label,place].filter(Boolean).join(' · '))}"><img src="${image(item.id)}" alt="${escape(label)}" loading="lazy" decoding="async"><span class="guest-moment-caption"><strong>${escape(place)}</strong><small>${escape(label)}</small></span></button>`;}
   function state(){const c=t();return `<div class="gm-state" role="status"><p>${escape(busy?c.loading:failed?c.error:c.empty)}</p>${failed&&!busy?`<button type="button" data-gm-retry>${c.retry}</button>`:''}</div>`;}
   function homepage(){
     let section=document.getElementById('guestMoments');
@@ -46,3 +46,4 @@
   else document.getElementById('languageToggle')?.addEventListener('click',()=>setTimeout(()=>{close();render();},0));
   load();
 })();
+

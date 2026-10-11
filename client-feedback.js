@@ -75,42 +75,26 @@
   }
 
   function addHeroSlideshow(){
-    const hero=document.querySelector(".hero");
-    const overlay=hero?.querySelector(".hero-overlay");
-    if(!hero||!overlay||hero.querySelector(".hero-client-slider"))return;
-    const images=[
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2200&q=90",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2200&q=90",
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2200&q=90",
-      "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=2200&q=90"
-    ];
-    const slider=document.createElement("div");
-    slider.className="hero-client-slider";
-    slider.setAttribute("aria-hidden","true");
-    slider.innerHTML=images.map((src,i)=>`<div class="hero-client-slide${i===0?" is-active":""}" style="background-image:url('${src}')"></div>`).join("");
-    overlay.insertAdjacentElement("beforebegin",slider);
-
-    const dots=document.createElement("div");
-    dots.className="hero-client-dots";
-    dots.innerHTML=images.map((_,i)=>`<button class="hero-client-dot${i===0?" is-active":""}" type="button" aria-label="Photo ${i+1}"></button>`).join("");
-    hero.appendChild(dots);
-    hero.classList.add("client-hero-slideshow");
-
-    const slides=[...slider.children],buttons=[...dots.children];
-    let active=0,timer=null;
-    const show=index=>{
-      active=(index+slides.length)%slides.length;
-      slides.forEach((el,i)=>el.classList.toggle("is-active",i===active));
-      buttons.forEach((el,i)=>el.classList.toggle("is-active",i===active));
+    const hero=document.querySelector('.hero'),overlay=hero?.querySelector('.hero-overlay');
+    if(!hero||!overlay||hero.querySelector('.hero-client-slider'))return;
+    const mobile=window.matchMedia('(max-width:700px)').matches;
+    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+    const photos=['1600607687920-4e2a09cf159d','1600585154340-be6161a56a0c','1600566753190-17f0baa2a6c3','1540541338287-41700207dee6'];
+    const images=photos.map(photo=>'https://images.unsplash.com/photo-'+photo+'?auto=format&fit=crop&w='+(mobile?900:1800)+'&q='+(mobile?75:80));
+    const slider=document.createElement('div');slider.className='hero-client-slider';slider.setAttribute('aria-hidden','true');
+    slider.innerHTML=images.map((_,i)=>`<div class="hero-client-slide${i===0?' is-active':''}"></div>`).join('');overlay.insertAdjacentElement('beforebegin',slider);
+    const dots=document.createElement('div');dots.className='hero-client-dots';dots.innerHTML=images.map((_,i)=>`<button class="hero-client-dot${i===0?' is-active':''}" type="button" aria-label="Photo ${i+1}" aria-pressed="${i===0}"></button>`).join('');hero.appendChild(dots);hero.classList.add('client-hero-slideshow');
+    const slides=[...slider.children],buttons=[...dots.children];let active=0,timer=null,visible=true,turn=0;
+    slides[0].style.backgroundImage='url("'+images[0]+'")';
+    const show=index=>{const next=(index+slides.length)%slides.length,version=++turn;
+      const display=()=>{if(version!==turn)return;active=next;slides.forEach((el,i)=>el.classList.toggle('is-active',i===active));buttons.forEach((el,i)=>{el.classList.toggle('is-active',i===active);el.setAttribute('aria-pressed',String(i===active));});};
+      if(slides[next].style.backgroundImage){display();return;}
+      const photo=new Image();photo.onload=()=>{slides[next].style.backgroundImage='url("'+images[next]+'")';display();};photo.onerror=()=>{};photo.src=images[next];
     };
-    const restart=()=>{
-      clearInterval(timer);
-      if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-        timer=setInterval(()=>show(active+1),5200);
-      }
-    };
-    buttons.forEach((btn,i)=>btn.addEventListener("click",()=>{show(i);restart()}));
-    document.addEventListener("visibilitychange",()=>{if(document.hidden)clearInterval(timer);else restart()});
+    const restart=()=>{clearInterval(timer);timer=null;if(visible&&!document.hidden&&!reduced.matches&&!window.navigator?.connection?.saveData)timer=setInterval(()=>show(active+1),5200);};
+    buttons.forEach((button,i)=>button.addEventListener('click',()=>{show(i);restart();}));
+    document.addEventListener('visibilitychange',restart);reduced.addEventListener?.('change',restart);
+    if(typeof IntersectionObserver==='function'){const observer=new IntersectionObserver(entries=>{visible=entries.some(entry=>entry.isIntersecting);if(!visible)turn++;restart();},{threshold:.01});observer.observe(hero);}
     restart();
   }
 
@@ -266,3 +250,4 @@
   addWhatsAppButton();
   document.getElementById("languageToggle")?.addEventListener("click",()=>setTimeout(refreshCopy,0));
 })();
+

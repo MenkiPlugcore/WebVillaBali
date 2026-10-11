@@ -8,7 +8,7 @@
 
 .hero.client-hero-slideshow .hero-media{opacity:0;transition:opacity .6s ease}
 .hero-client-slider{position:absolute;inset:0;z-index:0;overflow:hidden;background:#15231d}
-.hero-client-slide{position:absolute;inset:-2%;background-size:cover;background-position:center;opacity:0;transform:scale(1.035);transition:opacity 1.15s ease,transform 7s ease;will-change:opacity,transform}
+.hero-client-slide{position:absolute;inset:-2%;background-size:cover;background-position:center;opacity:0;transform:scale(1.035);transition:opacity 1.15s ease,transform 7s ease;will-change:auto}
 .hero-client-slide.is-active{opacity:1;transform:scale(1.01)}
 .hero.client-hero-slideshow .hero-overlay{z-index:1}
 .hero-client-dots{position:absolute;z-index:3;right:max(24px,5vw);bottom:32px;display:flex;gap:7px;align-items:center}
@@ -101,3 +101,6 @@
   }
   .floating-whatsapp svg { width:26px; height:26px; }
 }
+
+
+.hero-client-slide.is-active{will-change:opacity,transform}.hero-client-dot{position:relative;min-width:44px;min-height:44px;background:transparent!important}.hero-client-dot::after{content:"";position:absolute;left:8px;right:8px;top:21px;height:2px;background:rgba(255,255,255,.34)}.hero-client-dot.is-active::after{background:#fff}
