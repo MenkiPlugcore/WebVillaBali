@@ -18,7 +18,7 @@ export async function showMFA(app,auth,{onVerified,onExit,onError}){
  const start=app.querySelector('#mfa-start');
  if(start)start.onclick=async()=>{if(busy)return;busy=true;start.disabled=true;errorEl.textContent='';try{
   // Clean up unfinished enrollment from a previous reload; verified factors are untouched.
-  for(const f of factors.all||[])if(f.factor_type==='totp'&&f.status==='unverified')await checked(await auth.mfa.unenroll({factorId:f.id}));
+  for(const f of factors.all||[])if(f.factor_type==='totp'&&f.status==='unverified'){await checked(await auth.mfa.unenroll({factorId:f.id}));f.status='removed';}
   const enrollment=await checked(await auth.mfa.enroll({factorType:'totp',friendlyName:'Agung Ubud Admin',issuer:'Agung Ubud Property'}));
   factorId=enrollment.id;const setup=app.querySelector('#mfa-setup');
   setup.innerHTML='<p>Scan QR ini, atau masukkan kunci berikut di aplikasi authenticator.</p><img class="mfa-qr" alt="QR pemasangan authenticator"><details><summary>Pakai kunci manual di HP ini</summary><label for="mfa-secret">Kunci pemasangan</label><input id="mfa-secret" readonly autocomplete="off" spellcheck="false"><p>Tambahkan akun TOTP dengan kunci ini, lalu kembali ke panel dan isi kodenya.</p></details>';

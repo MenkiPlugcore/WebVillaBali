@@ -2,11 +2,13 @@ begin;
 -- Database-only fixtures. No password, token or persistent account is created.
 insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data)
 values ('74f847f1-f32d-450c-a64a-7af7d7368391','audit-only@example.invalid','{"aup_role":"admin"}','{}');
-insert into auth.sessions(id,user_id,not_after)
-values ('74f847f1-f32d-450c-a64a-7af7d7368392','74f847f1-f32d-450c-a64a-7af7d7368391',now()+interval '1 hour');
+insert into auth.sessions(id,user_id,not_after,aal)
+values ('74f847f1-f32d-450c-a64a-7af7d7368392','74f847f1-f32d-450c-a64a-7af7d7368391',now()+interval '1 hour','aal2');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values (gen_random_uuid(),'74f847f1-f32d-450c-a64a-7af7d7368391','totp','verified',now(),now());
+
 insert into public.inquiries(id,inquiry_type,name,email,message)
 values ('74f847f1-f32d-450c-a64a-7af7d7368393','general','Audit only','audit-only@example.invalid','Rollback only');
-select set_config('request.jwt.claims','{"sub":"74f847f1-f32d-450c-a64a-7af7d7368391","session_id":"74f847f1-f32d-450c-a64a-7af7d7368392","role":"authenticated","app_metadata":{"aup_role":"admin"},"user_metadata":{"aup_role":"owner"}}',true);
+select set_config('request.jwt.claims','{"sub":"74f847f1-f32d-450c-a64a-7af7d7368391","session_id":"74f847f1-f32d-450c-a64a-7af7d7368392","role":"authenticated","aal":"aal2","app_metadata":{"aup_role":"admin"},"user_metadata":{"aup_role":"owner"}}',true);
 set local role authenticated;
 do $$begin
  if not public.staff_access() or not aup_private.is_admin() then raise exception 'Active admin denied';end if;
@@ -15,6 +17,22 @@ do $$begin
  if has_table_privilege('authenticated','public.inquiries','INSERT') or has_table_privilege('authenticated','public.inquiries','DELETE') then raise exception 'Excessive ticket privileges';end if;
 end $$;
 reset role;
+-- An aal1 JWT, downgraded session or removed factor never grants staff access.
+select set_config('request.jwt.claims',(current_setting('request.jwt.claims')::jsonb||'{"aal":"aal1"}')::text,true);
+set local role authenticated;
+do $$begin if public.staff_access() or exists(select 1 from public.inquiries) then raise exception 'Password-only access';end if;end $$;
+reset role;
+select set_config('request.jwt.claims',(current_setting('request.jwt.claims')::jsonb||'{"aal":"aal2"}')::text,true);
+update auth.sessions set aal='aal1' where user_id='74f847f1-f32d-450c-a64a-7af7d7368391';
+set local role authenticated;
+do $$begin if public.staff_access() then raise exception 'Downgraded session access';end if;end $$;
+reset role;
+update auth.sessions set aal='aal2' where user_id='74f847f1-f32d-450c-a64a-7af7d7368391';
+update auth.mfa_factors set status='unverified' where user_id='74f847f1-f32d-450c-a64a-7af7d7368391';
+set local role authenticated;
+do $$begin if public.staff_access() then raise exception 'Removed verified factor access';end if;end $$;
+reset role;
+update auth.mfa_factors set status='verified' where user_id='74f847f1-f32d-450c-a64a-7af7d7368391';
 -- Downgrade with exactly the same stale admin claims.
 update auth.users set raw_app_meta_data='{"aup_role":"editor"}' where id='74f847f1-f32d-450c-a64a-7af7d7368391';
 set local role authenticated;

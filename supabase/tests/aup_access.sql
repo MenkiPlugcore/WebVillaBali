@@ -1,6 +1,8 @@
 begin;
 insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data) values ('00000000-0000-4000-8000-000000000001','staff-test-only@example.invalid','{}','{}');
-insert into auth.sessions(id,user_id,not_after) values ('00000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000001',now()+interval '1 hour');
+insert into auth.sessions(id,user_id,not_after,aal) values ('00000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000001',now()+interval '1 hour','aal2');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values (gen_random_uuid(),'00000000-0000-4000-8000-000000000001','totp','verified',now(),now());
+
 insert into public.properties(slug,title_en,title_id,property_type,purpose,publication_status) values
 ('rls-test-draft','Test','Test','villa','rent','draft'),
 ('rls-test-published','Test','Test','villa','rent','published');
@@ -15,7 +17,7 @@ do $$ begin
 end $$;
 reset role;
 update auth.users set raw_app_meta_data='{}' where id='00000000-0000-4000-8000-000000000001';
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","user_metadata":{"aup_role":"owner"},"app_metadata":{}}',true);
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","aal":"aal2","user_metadata":{"aup_role":"owner"},"app_metadata":{}}',true);
 set local role authenticated;
 do $$ begin
  if (select count(*) from public.inquiries) <> 0 then raise exception 'customer inquiry access failed'; end if;
@@ -24,7 +26,7 @@ do $$ begin
 end $$;
 reset role;
 update auth.users set raw_app_meta_data='{"aup_role":"editor"}' where id='00000000-0000-4000-8000-000000000001';
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","app_metadata":{"aup_role":"editor"}}',true);
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","aal":"aal2","app_metadata":{"aup_role":"editor"}}',true);
 set local role authenticated;
 do $$ begin
  if (select count(*) from public.properties where slug like 'rls-test-%') <> 2 then raise exception 'editor read failed'; end if;
@@ -36,7 +38,7 @@ do $$ begin
 end $$;
 reset role;
 update auth.users set raw_app_meta_data='{"aup_role":"owner"}' where id='00000000-0000-4000-8000-000000000001';
-select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","app_metadata":{"aup_role":"owner"}}',true);
+select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000001","session_id":"00000000-0000-4000-8000-000000000002","role":"authenticated","aal":"aal2","app_metadata":{"aup_role":"owner"}}',true);
 set local role authenticated;
 do $$ begin
  if (select count(*) from public.inquiries where email='test@example.invalid') <> 1 then raise exception 'owner inquiry read failed'; end if;

@@ -103,3 +103,11 @@ Hero images request 900px/q75 at viewport widths up to 700px and 1800px/q80 on l
 Concurrent motor catalog calls share the in-flight request, then clear the promise so later reads revalidate availability. Gallery images decode asynchronously. Public form fonts, focus states, menu scrolling, touch targets, and the admin sticky save bar are adjusted for narrow screens and safe areas. Catalog publication checks, no-store API responses and private admin permissions are unchanged. No persistent client cache stores ticket/customer data.
 
 Verification includes behavioral tests for lazy background requests, hero loading/pause/reduced-motion behavior and fleet deduplication/retry. These are request-count and configuration improvements; no synthetic Lighthouse score or real-device speed percentage is claimed. Private uploaded originals still require a separate image-size optimization strategy as inventory grows.
+
+## Stage 5 — mandatory staff MFA (2026-10-11)
+
+The admin panel now gates staff data behind TOTP verification. First login offers QR or manual-secret enrollment for use on the same phone; later password-only sessions show the code challenge. Backend staff access additionally requires JWT/session aal2 and a currently verified TOTP factor, while retaining live role, ban, expiry and revocation checks. MFA setup is performed by the real staff member, not the agent. Actual enrollment and authenticated phone testing are pending.
+
+83 automated tests passed, including password-only/stale-factor denial, enrollment/retry/secret cleanup and no private reads before MFA. Six SQL regression files passed against production using rollback fixtures. Migration: `20261011155814_staff_mfa_required.sql`. Frontend deployment is live.
+
+Backup and isolated restore remain pending: connected tools do not supply backup downloads or protected database connection credentials. `RECOVERY-RUNBOOK.md` documents Auth recovery, separate database/photo exports, off-site encryption and the isolated drill. No backup schedule or paid plan was enabled. Stage 5 is not complete until real staff enrollment and backup/restore verification succeed.

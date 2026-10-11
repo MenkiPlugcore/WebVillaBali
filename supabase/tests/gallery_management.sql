@@ -1,6 +1,8 @@
 begin;
 insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data) values ('74f847f1-f32d-450c-a64a-7af7d7368401','gallery-test@example.invalid','{}','{"aup_role":"owner"}');
-insert into auth.sessions(id,user_id,not_after) values ('74f847f1-f32d-450c-a64a-7af7d7368402','74f847f1-f32d-450c-a64a-7af7d7368401',now()+interval '1 hour');
+insert into auth.sessions(id,user_id,not_after,aal) values ('74f847f1-f32d-450c-a64a-7af7d7368402','74f847f1-f32d-450c-a64a-7af7d7368401',now()+interval '1 hour','aal2');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values (gen_random_uuid(),'74f847f1-f32d-450c-a64a-7af7d7368401','totp','verified',now(),now());
+
 insert into public.properties(id,slug,title_id,title_en,property_type,purpose) values
 ('74f847f1-f32d-450c-a64a-7af7d7368411','gallery-test-one','Test','Test','villa','rent'),
 ('74f847f1-f32d-450c-a64a-7af7d7368412','gallery-test-two','Test','Test','villa','rent');
@@ -8,7 +10,7 @@ insert into public.property_images(id,property_id,storage_path,is_cover,sort_ord
 select ('74f847f1-f32d-450c-a64a-7af7d736842'||n)::uuid,'74f847f1-f32d-450c-a64a-7af7d7368411','properties/74f847f1-f32d-450c-a64a-7af7d7368411/74f847f1-f32d-450c-a64a-7af7d736842'||n||'.jpg',n=1,n-1 from generate_series(1,3)n;
 insert into public.motorbikes(id,slug,name) values ('74f847f1-f32d-450c-a64a-7af7d7368411','gallery-test-motor','Test motor');
 insert into public.motorbike_images(id,motorbike_id,storage_path,is_cover,sort_order) select ('74f847f1-f32d-450c-a64a-7af7d736843'||n)::uuid,'74f847f1-f32d-450c-a64a-7af7d7368411','motorbikes/74f847f1-f32d-450c-a64a-7af7d7368411/74f847f1-f32d-450c-a64a-7af7d736843'||n||'.jpg',n=1,n-1 from generate_series(1,2)n;
-select set_config('request.jwt.claims','{"sub":"74f847f1-f32d-450c-a64a-7af7d7368401","session_id":"74f847f1-f32d-450c-a64a-7af7d7368402","role":"authenticated","user_metadata":{"aup_role":"owner"}}',true);
+select set_config('request.jwt.claims','{"sub":"74f847f1-f32d-450c-a64a-7af7d7368401","session_id":"74f847f1-f32d-450c-a64a-7af7d7368402","role":"authenticated","aal":"aal2","user_metadata":{"aup_role":"owner"}}',true);
 set local role authenticated;
 do $$begin
  begin perform public.manage_gallery('properties','74f847f1-f32d-450c-a64a-7af7d7368411','cover','74f847f1-f32d-450c-a64a-7af7d7368422');raise exception 'Customer could edit gallery';exception when insufficient_privilege then null;end;
