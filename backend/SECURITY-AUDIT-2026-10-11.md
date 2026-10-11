@@ -28,7 +28,7 @@ The new private SECURITY DEFINER helper is deliberately narrow: no arguments, em
 
 ## Open actions before final handover
 
-1. Disable public account signup in Supabase Auth. Public settings currently report disable_signup=false. Signup does not grant staff access; staff role comes from trusted app_metadata plus live Auth/session checks. The connected plugin has no Auth-settings mutation operation, so this setting requires the project dashboard.
+1. CLOSED — Public signup disabled by the project owner and independently verified via Auth settings on 11 October 2026: disable_signup=true, external.anonymous_users=false, external.email=true. Existing email login remains enabled. No test signup or email was sent.
 2. Leaked-password protection is disabled. Supabase documents this feature as Pro-plan-and-above; no paid plan change was made. https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
 3. Add and test admin MFA enrollment/recovery and backend enforcement before handover; do not mandate an unconfigured factor and lock the owner out. Evaluate login CAPTCHA, password strength and Auth rate settings.
 4. Audit VPS/Tripay separately with explicit server access. No SSH firewall, OS updates, PM2 credentials, Tripay callback validation, backups or restoration were inspected in this audit. Future WA service must use separate credentials and service permissions.
