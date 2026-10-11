@@ -22,3 +22,6 @@ public-tests/
 
 
 admin/dashboard.js
+
+admin/gallery.js
+admin/property-form.js

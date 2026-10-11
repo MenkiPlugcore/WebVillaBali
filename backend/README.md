@@ -79,3 +79,11 @@ Cards open the matching filtered list, including both publication and availabili
 ## Stage 1 security audit — 11 October 2026
 
 See SECURITY-AUDIT-2026-10-11.md for findings, verification and remaining actions. Staff RLS now checks the current Auth user role and the caller's active session via a narrow private helper; JWT role metadata alone does not grant access. The panel and admin-media also call the caller-scoped staff_access RPC. Explicit logout revokes server sessions globally. Authenticated ticket updates are limited to status/internal_notes; server intake alone creates inquiries. New migrations match the versions applied to production. Public signup and admin MFA configuration remain explicit pre-handover actions.
+
+## Stage 2 property management — 11 October 2026
+
+The property form now groups identity, location, price/tenure, specifications/facilities and publication/availability into accessible native details sections. Invalid controls open their section. Price preview never changes the saved numeric value; facility shortcuts preserve custom entries. Property and motorbike lists expose availability filters/badges.
+
+Property and motorbike galleries support cover selection and left/right ordering on touch devices. Changes save immediately, separately from the property form. New uploads append to the saved order. The caller-authorized SECURITY INVOKER manage_gallery RPC atomically switches the unique cover, validates a full nonduplicated parent-specific order, and selects a replacement cover when the previous cover is removed. It serializes mutations per parent and retains RLS plus live-role/session checks. Anonymous/customer/revoked accounts are denied. Metadata removal is reported separately from a failed private-file cleanup; no false failure suggests the gallery record still exists.
+
+Verification: automated panel/gallery/endpoint tests, SQL rollback fixtures for properties and motorbikes, caller JWT rather than service privilege for metadata RPC, and existing published-only public catalog checks. Authenticated browser testing still requires a legitimate staff login.
