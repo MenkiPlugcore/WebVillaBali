@@ -27,3 +27,7 @@ admin/gallery.js
 admin/property-form.js
 
 admin/ticket.js
+
+admin/mfa.js
+admin/portal.js
+admin/access.js

@@ -111,3 +111,15 @@ The admin panel now gates staff data behind TOTP verification. First login offer
 83 automated tests passed, including password-only/stale-factor denial, enrollment/retry/secret cleanup and no private reads before MFA. Six SQL regression files passed against production using rollback fixtures. Migration: `20261011155814_staff_mfa_required.sql`. Frontend deployment is live.
 
 Backup and isolated restore remain pending: connected tools do not supply backup downloads or protected database connection credentials. `RECOVERY-RUNBOOK.md` documents Auth recovery, separate database/photo exports, off-site encryption and the isolated drill. No backup schedule or paid plan was enabled. Stage 5 is not complete until real staff enrollment and backup/restore verification succeed.
+
+## Developer entry — 2026-10-12
+
+`/dev/` uses the same bundled business panel as `/admin/`, a dedicated developer role and a separate `aup-dev-session` storage key. Developer logout revokes only the current session; no owner credentials are shared. The existing temporary account `menkiestes@gmail.com` is designated for developer access. Real user MFA enrollment remains a user action. An actual owner account is still awaiting the owner's email; no owner identity was fabricated.
+
+Developer grants are checked live by the common backend staff helper along with MFA, session validity and current role. Revoking/expiring a grant denies staff-only data and writes even with an old JWT. Published public content remains public. Developers retain the existing admin business features but cannot assign roles, manage their grants, or view other actors' activity. Only an MFA-verified owner can activate/revoke existing developer grants through the owner panel. User provisioning and role assignment remain in trusted Supabase account management.
+
+Append-only `staff_activity` records actor UUID, role, session, action, table, record key and timestamp for business changes and grant updates. It excludes row values, customer messages/notes and authentication secrets. Logs start at deployment; no historical changes were reconstructed. Owner can read all; developer only their own. This is a database change journal, not a complete access/login audit or backup. Backend service credentials remain a trusted boundary and are not placed in the browser.
+
+Validation: 89 automated tests; developer rollback SQL for MFA, business writes, owner-only grant management, immediate revocation/expiry, no self-grant, audit attribution/isolation and anonymous denial; four existing SQL regression suites also passed. Admin media function version 4 includes the developer role with unchanged live backend authorization. Existing advisor warning about leaked-password protection remains: https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection .
+
+Migration: `20261012072835_developer_portal_and_staff_activity.sql`. Authenticated live-phone testing and backup/restore work remain pending.

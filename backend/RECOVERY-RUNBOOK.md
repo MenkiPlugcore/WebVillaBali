@@ -45,3 +45,7 @@ Verify counts and representative records for properties, locations, images, moto
 - https://supabase.com/docs/reference/cli/supabase-db-dump
 
 Pending owner setup: trusted backup execution environment, protected database credentials, encrypted off-site destination, retention choice and isolated restore project. No paid subscription or PITR add-on was enabled.
+
+## Developer portal addendum
+
+The temporary developer account uses `/dev/`, its own password/MFA, and role `developer`. Owner/admin/editor use `/admin/`. The dedicated account grants are checked in the database, not inferred from the URL. Record `developer_grants` and `staff_activity` in database backup inventories. A revoked developer cannot restore their own grant. Only a current MFA-verified `owner` can manage existing developer grants through the panel. Until the real owner account is provisioned, grant administration stays with trusted Supabase project administration.
