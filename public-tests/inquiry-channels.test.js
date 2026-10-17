@@ -13,7 +13,7 @@ function page(number='6281234567890',options={}){
  form.reset=()=>form.querySelectorAll('input,textarea').forEach(el=>el.value='');
  class FormData{constructor(f){this.form=f;}get(name){return this.form.querySelector('[name='+name+']')?.value||'';}}
  vm.runInNewContext(fs.readFileSync('inquiry.js','utf8'),{
-  window:runtime,document,FormData,localStorage:{getItem:()=>language},crypto:webcrypto,Date,AbortSignal,
+  window:runtime,document,FormData,localStorage:{getItem:()=>language},crypto:webcrypto,Date,AbortSignal,setTimeout,
   fetch:async(...args)=>{requests++;return options.fetch?options.fetch(...args):new Response(JSON.stringify({success:true,ticket_no:'AUP-100001'}));}
  });
  runtime.AUPInquiry.bind(form,()=>({}),()=>{},{context:options.context||(()=> 'tentang properti Ubud Villa')});
@@ -64,7 +64,7 @@ test('WhatsApp refreshes the selected public context on click and omits private 
  let topic='tentang rental motor A';const b=page('6281234567890',{context:()=>topic});
  b.toggle().click();b.form.querySelector('[name=email]').value='private@example.invalid';b.form.querySelector('[name=message]').value='Private draft';
  topic='tentang rental motor B & C';b.link().click();assert.match(text(b),/B & C/);assert.doesNotMatch(text(b),/Private draft|private@example/);
- b.setLanguage('en');b.document.getElementById('languageToggle').click();await Promise.resolve();assert.match(b.link().textContent,/Chat on WhatsApp/);
+ b.document.getElementById('languageToggle').addEventListener('click',()=>queueMicrotask(()=>b.setLanguage('en')));b.document.getElementById('languageToggle').click();await new Promise(resolve=>setTimeout(resolve,10));assert.match(b.link().textContent,/Chat on WhatsApp/);
  assert.equal(b.body().hidden,false);assert.match(text(b),/^Hello/);assert.equal(b.requests(),0);
 });
 

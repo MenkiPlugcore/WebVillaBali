@@ -70,7 +70,7 @@
   });
  }
  document.addEventListener('aup:settings-loaded',()=>refresh());
- for(const id of ['languageToggle','rentalLanguage'])document.getElementById(id)?.addEventListener('click',()=>Promise.resolve().then(()=>refresh()));
+ for(const id of ['languageToggle','rentalLanguage'])document.getElementById(id)?.addEventListener('click',()=>setTimeout(()=>refresh(),0));
  window.AUPInquiry={bind,refresh};
 })();
 
