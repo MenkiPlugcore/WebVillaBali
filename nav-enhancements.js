@@ -114,7 +114,7 @@
     }
     if(!document.querySelector('script[data-build-services-script]')){
       const script=document.createElement('script');
-      script.src='build-services.js?v=20261007-services';
+      script.src='build-services.js?v=20261017-dual-inquiry';
       script.dataset.buildServicesScript='true';
       document.body.appendChild(script);
     }
