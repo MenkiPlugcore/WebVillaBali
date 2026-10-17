@@ -8,10 +8,10 @@ Mandatory staff TOTP MFA is implemented. Actual enrollment must be done by each 
 
 ## Staff setup and lost authenticator
 
-1. Sign in at `/admin/` with the registered staff email/password.
+1. Sign in at `/dev/` for the dedicated developer account, or `/admin/` for owner/admin/editor, with the registered email/password.
 2. Select “Siapkan authenticator”. Scan the QR or add the displayed secret manually on the same phone. Enter the current six-digit code.
 3. Store an encrypted authenticator backup separately from the phone. Do not send the QR, secret, password or codes in chat. TOTP has no application-generated recovery codes in this implementation.
-4. Verify a fresh browser sign-in requires a code, then verify logout. Enrollment and verification are still awaiting the real user's test on their phone.
+4. Verify a fresh browser sign-in requires a code, then verify logout. On 17 October 2026, the user confirmed enrollment/login, logout and a fresh MFA sign-in work on their device. This is user-reported acceptance testing.
 5. Protect the Supabase dashboard owner account with its own MFA and recovery options as well. Dashboard access is a separate account from website staff login.
 
 If the authenticator is lost, the verified project owner can use Supabase Auth user management to remove the affected factor after an independent identity check. Revoke that user's sessions. The user signs in again and enrolls a replacement; mandatory MFA is never disabled. Record who approved the reset and when. If the dashboard owner is also locked out, use Supabase's account recovery/support process rather than weakening database policies.
@@ -23,7 +23,7 @@ Backend staff checks require current app metadata role, a live unexpired session
 Current official guidance recommends regular CLI exports for Free projects. Storage objects are excluded from database backups.
 
 1. Obtain the project's database connection URL through the Supabase dashboard Connect dialog on a trusted machine. Keep the password in a protected environment/secret manager, never Git or chat. Install supported Supabase CLI and its dump prerequisites.
-2. Follow the official backup/restore guide below to export **roles, schema and data**. Explicitly include the application schemas `public` and `aup_private`. Confirm the output contains functions, policies, grants, custom ticket sequence and all application tables. The CLI default excludes managed Auth/Storage schemas; application-only exports cannot restore staff identities, MFA/session state or bucket configuration.
+2. Follow the official backup/restore guide below to export **roles, schema and data**. Explicitly include the application schemas `public` and `aup_private`. Confirm the output contains functions, policies, grants, custom ticket sequence and all application tables. The default schema export skips managed Auth/Storage definitions. Check the data dump separately for Auth and Storage records; application-only exports cannot restore staff identities, MFA state or bucket configuration.
 3. Separately follow the official managed Auth/Storage migration instructions if full project reconstruction is required. Do not assume ordinary `db dump` includes those. Record Auth settings, signup disabled, redirect URLs, MFA enforcement, bucket configuration, deployed Edge Functions, public keys and secret names (not plaintext secrets).
 4. Encrypt exports, copy them to an owner-controlled off-site location, calculate checksums and record completion time, PostgreSQL/CLI versions and inventory counts. Backup failure must be visible to an operator. Target daily backups and before major migrations; these are targets, not an active schedule.
 
@@ -49,3 +49,7 @@ Pending owner setup: trusted backup execution environment, protected database cr
 ## Developer portal addendum
 
 The temporary developer account uses `/dev/`, its own password/MFA, and role `developer`. Owner/admin/editor use `/admin/`. The dedicated account grants are checked in the database, not inferred from the URL. Record `developer_grants` and `staff_activity` in database backup inventories. A revoked developer cannot restore their own grant. Only a current MFA-verified `owner` can manage existing developer grants through the panel. Until the real owner account is provisioned, grant administration stays with trusted Supabase project administration.
+
+## Acceptance and backup tooling — 17 October 2026
+
+The user confirmed draft properties, save, photo upload, customer tickets, account activity and logout/fresh MFA login all work. Backend preparation now includes local backup tools in `backup/README.md`: CLI database exports, private media download, per-file checksums and GPG encryption. Ten synthetic-fixture tests pass. The tools are not an actual backup. Database/Storage export, off-site copy and isolated restore remain pending execution on an owner-controlled trusted machine with its credentials. No production restore, new backup endpoint, paid project, retention schedule or permission bypass was introduced.
