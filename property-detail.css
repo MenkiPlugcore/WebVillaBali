@@ -43,3 +43,62 @@ body.property-page header.site-header.brandless-header:not(.nav-scrolled):not(.s
     min-height: 48px;
   }
 }
+
+/* A readable type scale for property details and customer inquiries. */
+.property-page .detail-summary h1 { line-height: 1.12; }
+.property-page .detail-lead,
+.property-page .detail-content p:not(.detail-kicker),
+.property-page .feature-list li {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #40584b;
+}
+.property-page .detail-kicker {
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: .12em;
+}
+.property-page .detail-price strong {
+  font-size: 30px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.property-page .detail-price small,
+.property-page .detail-specs span,
+.property-page .detail-back { font-size: 14px; line-height: 1.6; }
+.property-page .overview-item small {
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: .08em;
+  color: #607267;
+}
+.property-page .overview-item strong { font-size: 16px; line-height: 1.5; }
+.property-page .detail-actions a,
+.property-page .detail-actions button {
+  font-size: 14px;
+  line-height: 1.5;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.property-page .inquiry-card > p { font-size: 15px; line-height: 1.75; }
+.property-page .inquiry-card label { font-size: 14px; line-height: 1.6; }
+.property-page .inquiry-card input,
+.property-page .inquiry-card textarea { font-size: 16px; line-height: 1.6; }
+.property-page .inquiry-card form [type=submit] { font-size: 14px; line-height: 1.5; }
+.property-page .inquiry-card .payment-note,
+.property-page .inquiry-card .inquiry-channel-note {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #b8c6bf;
+}
+.property-page .inquiry-card .inquiry-channel-title,
+.property-page .inquiry-card .inquiry-channel { font-size: 15px; }
+@media (max-width: 760px) {
+  .property-page .detail-summary h1 {
+    font-size: clamp(32px, 8.5vw, 40px);
+    letter-spacing: -.02em;
+  }
+  .property-page .property-breadcrumb { font-size: 12px; line-height: 1.5; }
+  .property-page .overview-item { padding: 14px 12px; }
+  .property-page .overview-item small { overflow-wrap: anywhere; }
+}
