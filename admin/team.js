@@ -1,0 +1,27 @@
+import {escapeHTML as esc} from './schema.js';
+export const staffRoles={editor:{label:'Editor konten',description:'Kelola dan terbitkan properti, foto, rental motor, layanan, ulasan, dan momen tamu.'},admin:{label:'Admin operasional',description:'Semua akses Editor, ditambah tiket pelanggan dan pengaturan website.'}};
+const checked=result=>{if(result.error)throw result.error;return result.data;};
+export async function loadTeamAccess(db,container,opts){
+ const {isCurrent,onNotice,onError}=opts;
+ const entries=checked(await db.rpc('manage_staff_access'));
+ if(!isCurrent())return;
+ const options=selected=>Object.entries(staffRoles).map(([role,item])=>`<option value="${role}" ${role===selected?'selected':''}>${item.label}</option>`).join('');
+ container.innerHTML=`<section class="team-access"><p class="eyebrow">IZIN OWNER</p><h1>Tim & akses</h1><p>Setiap karyawan memakai akun dan authenticator sendiri. Pilih akses sesuai tugasnya; owner tetap mengatur tim dan akses developer.</p><div class="team-role-guide">${Object.values(staffRoles).map(role=>`<article class="card"><h2>${role.label}</h2><p>${role.description}</p></article>`).join('')}</div><details class="card team-add"><summary>Tambahkan akun karyawan</summary><p class="help">Gunakan email yang sudah terdaftar di Supabase Auth. Jika belum ada, minta pengelola teknis mendaftarkan akunnya terlebih dahulu. Pilih Editor konten untuk karyawan yang hanya bertugas posting.</p><form id="staff-add"><div class="form-grid"><div class="field"><label for="staff-email">Email karyawan</label><input id="staff-email" name="email" type="email" maxlength="254" autocomplete="off" required></div><div class="field"><label for="staff-add-role">Peran karyawan</label><select id="staff-add-role" name="role">${options('editor')}</select></div></div><p id="staff-add-error" class="error" role="alert"></p><button type="submit">Tambahkan akses</button></form></details><div class="page-heading"><h2>Akun karyawan (${entries.length})</h2><button id="staff-refresh" class="outline">Muat ulang</button></div><p class="help">Perubahan peran atau status mengharuskan karyawan masuk ulang. Menonaktifkan akses tidak menghapus postingan yang pernah dibuat.</p><p id="staff-error" class="error" role="alert"></p><div class="cards">${entries.length?entries.map(row=>`<details class="card team-member"><summary><span class="team-email">${esc(row.email)}</span><span class="badge ${row.enabled?'published':'archived'}">${row.enabled?'Aktif':'Nonaktif'}</span></summary><p>${esc(staffRoles[row.role]?.label||row.role)} · ${row.mfa_enabled?'MFA aktif':'MFA belum diatur'}</p><p class="muted">${row.email_confirmed?'Email terverifikasi':'Email belum terverifikasi'}</p><form data-staff-user="${esc(row.user_id)}" data-enabled="${row.enabled===true}"><label for="staff-role-${esc(row.user_id)}">Peran</label><select id="staff-role-${esc(row.user_id)}" name="role">${options(row.role)}</select><div class="actions team-actions"><button type="submit" class="secondary">Simpan peran</button><button type="button" class="outline" data-staff-toggle>${row.enabled?'Nonaktifkan akses':'Aktifkan akses'}</button></div><p class="error" role="alert" data-staff-error></p></form></details>`).join(''):'<p class="empty">Belum ada akun karyawan. Tambahkan akun melalui formulir di atas.</p>'}</div></section>`;
+ async function mutate(form,args,prompt,errorNode,message){
+  if(form.dataset.busy==='true'||!confirm(prompt))return;
+  form.dataset.busy='true';form.querySelectorAll('button').forEach(b=>b.disabled=true);errorNode.textContent='';
+  try{checked(await db.rpc('manage_staff_access',args));if(isCurrent()){onNotice(message);await loadTeamAccess(db,container,opts);}}
+  catch(error){if(isCurrent())errorNode.textContent=onError(error);}
+  finally{form.dataset.busy='false';form.querySelectorAll('button').forEach(b=>b.disabled=false);}
+ }
+ const add=container.querySelector('#staff-add');
+ add.onsubmit=async e=>{e.preventDefault();const email=add.querySelector('[name=email]').value.trim(),role=add.querySelector('[name=role]').value;if(!Object.hasOwn(staffRoles,role))return;
+  await mutate(add,{p_email:email,p_role:role,p_enabled:true},`Berikan akses ${staffRoles[role].label} kepada ${email}?`,container.querySelector('#staff-add-error'),'Akses karyawan ditambahkan. Karyawan dapat masuk lewat /admin dengan MFA.');
+ };
+ container.querySelectorAll('[data-staff-user]').forEach(form=>{
+  const save=async enabled=>{const role=form.querySelector('[name=role]').value;if(!Object.hasOwn(staffRoles,role))return;await mutate(form,{p_user_id:form.dataset.staffUser,p_role:role,p_enabled:enabled},enabled?`Simpan akses ${staffRoles[role].label} untuk akun ini? Karyawan perlu masuk ulang.`:'Nonaktifkan akses akun ini? Postingan yang sudah dibuat tetap tersimpan.',form.querySelector('[data-staff-error]'),enabled?'Peran karyawan disimpan. Karyawan perlu masuk ulang.':'Akses karyawan dinonaktifkan.');};
+  form.onsubmit=async e=>{e.preventDefault();await save(form.dataset.enabled==='true');};
+  form.querySelector('[data-staff-toggle]').onclick=()=>save(form.dataset.enabled!=='true');
+ });
+ container.querySelector('#staff-refresh').onclick=async e=>{const button=e.target;if(button.disabled)return;button.disabled=true;try{await loadTeamAccess(db,container,opts);}catch(error){if(isCurrent())container.querySelector('#staff-error').textContent=onError(error);}finally{button.disabled=false;}};
+}

@@ -6,6 +6,7 @@ const slug=f('slug','Alamat halaman (slug)','text',{required:true,pattern:'[a-z0
 const currency=f('currency','Mata uang','select',{options:['IDR','USD']});
 const sort=f('sort_order','Urutan tampil','number',{default:0,min:0,step:1});
 export const sections={
+ staff_access:{label:'Tim & akses',owner:true,fields:[]},
  developer_access:{label:'Akses developer',owner:true,fields:[]},
  activity_log:{label:'Aktivitas akun',audit:true,fields:[]},
  dashboard:{label:'Ringkasan',fields:[]},

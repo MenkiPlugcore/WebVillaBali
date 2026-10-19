@@ -33,3 +33,5 @@ admin/portal.js
 admin/access.js
 
 admin/session-storage.js
+
+admin/team.js
