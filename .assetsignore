@@ -35,3 +35,7 @@ admin/access.js
 admin/session-storage.js
 
 admin/team.js
+
+admin/staff-client.js
+admin/activation.js
+admin/activation-entry.js

@@ -25,3 +25,7 @@
 /properties/*
   Cache-Control: no-store
 
+
+/admin/activate/*
+  Referrer-Policy: no-referrer
+  Cache-Control: no-store
