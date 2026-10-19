@@ -1,6 +1,6 @@
 begin;
 insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data) values ('74f847f1-f32d-450c-a64a-7af7d7368401','gallery-test@example.invalid','{}','{"aup_role":"owner"}');
-insert into auth.sessions(id,user_id,not_after,aal) values ('74f847f1-f32d-450c-a64a-7af7d7368402','74f847f1-f32d-450c-a64a-7af7d7368401',now()+interval '1 hour','aal2');
+insert into auth.sessions(id,user_id,not_after,aal,created_at) values ('74f847f1-f32d-450c-a64a-7af7d7368402','74f847f1-f32d-450c-a64a-7af7d7368401',now()+interval '1 hour','aal2',now());
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values (gen_random_uuid(),'74f847f1-f32d-450c-a64a-7af7d7368401','totp','verified',now(),now());
 
 insert into public.properties(id,slug,title_id,title_en,property_type,purpose) values

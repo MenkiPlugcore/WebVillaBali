@@ -1,6 +1,6 @@
 begin;
 insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data) values ('00000000-0000-4000-8000-000000000001','staff-test-only@example.invalid','{}','{}');
-insert into auth.sessions(id,user_id,not_after,aal) values ('00000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000001',now()+interval '1 hour','aal2');
+insert into auth.sessions(id,user_id,not_after,aal,created_at) values ('00000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000001',now()+interval '1 hour','aal2',now());
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values (gen_random_uuid(),'00000000-0000-4000-8000-000000000001','totp','verified',now(),now());
 
 insert into public.properties(slug,title_en,title_id,property_type,purpose,publication_status) values
@@ -49,4 +49,3 @@ end $$;
 reset role;
 rollback;
 select 'passed: public visibility, draft images, denied writes, no metadata escalation, editor restrictions, owner access, consent, update triggers; fixtures rolled back' as verification;
-

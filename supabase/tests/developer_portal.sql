@@ -4,9 +4,9 @@ insert into auth.users(id,email,raw_app_meta_data) values
 ('00000000-0000-4000-8000-000000000101','owner-dev-test@example.invalid','{"aup_role":"owner"}'),
 ('00000000-0000-4000-8000-000000000102','developer-test@example.invalid','{"aup_role":"developer"}'),
 ('00000000-0000-4000-8000-000000000103','other-dev-test@example.invalid','{"aup_role":"developer"}');
-insert into auth.sessions(id,user_id,aal,not_after) values
-('00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000101','aal2',now()+interval '1 hour'),
-('00000000-0000-4000-8000-000000000112','00000000-0000-4000-8000-000000000102','aal2',now()+interval '1 hour');
+insert into auth.sessions(id,user_id,aal,not_after,created_at) values
+('00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000101','aal2',now()+interval '1 hour',now()),
+('00000000-0000-4000-8000-000000000112','00000000-0000-4000-8000-000000000102','aal2',now()+interval '1 hour',now());
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at)
 select gen_random_uuid(),id,'totp','verified',now(),now() from auth.users where id in('00000000-0000-4000-8000-000000000101','00000000-0000-4000-8000-000000000102');
 insert into public.developer_grants(user_id,enabled) values

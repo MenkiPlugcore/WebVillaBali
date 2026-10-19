@@ -123,3 +123,9 @@ Append-only `staff_activity` records actor UUID, role, session, action, table, r
 Validation: 89 automated tests; developer rollback SQL for MFA, business writes, owner-only grant management, immediate revocation/expiry, no self-grant, audit attribution/isolation and anonymous denial; four existing SQL regression suites also passed. Admin media function version 4 includes the developer role with unchanged live backend authorization. Existing advisor warning about leaked-password protection remains: https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection .
 
 Migration: `20261012072835_developer_portal_and_staff_activity.sql`. Authenticated live-phone testing and backup/restore work remain pending.
+
+### Remembered staff sessions
+
+The owner and developer login pages offer an unchecked “Tetap masuk di perangkat ini” option for private devices. The storage adapter persists only after fresh user, MFA AAL2 and live staff access checks succeed. The retained session expires after seven days without extending its deadline during token refresh. Passwords and authenticator secrets are never retained by this feature. Fresh sign-in after logout still requires MFA. Blocked browser storage falls back to the current tab.
+
+`aup_private.current_staff_role()` also limits every staff session to seven days from its server creation time, including sessions kept open in a tab. Browser state cannot extend this limit. Revoked sessions, roles, developer grants and verified factors remain checked on the server. Owner and developer storage keys remain separate. The SQL rollback suite covers the seven-day boundary and existing role/session revocation checks.

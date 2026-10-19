@@ -31,3 +31,5 @@ admin/ticket.js
 admin/mfa.js
 admin/portal.js
 admin/access.js
+
+admin/session-storage.js

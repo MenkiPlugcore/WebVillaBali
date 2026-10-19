@@ -2,8 +2,8 @@ begin;
 -- Database-only fixtures. No password, token or persistent account is created.
 insert into auth.users(id,email,raw_app_meta_data,raw_user_meta_data)
 values ('74f847f1-f32d-450c-a64a-7af7d7368391','audit-only@example.invalid','{"aup_role":"admin"}','{}');
-insert into auth.sessions(id,user_id,not_after,aal)
-values ('74f847f1-f32d-450c-a64a-7af7d7368392','74f847f1-f32d-450c-a64a-7af7d7368391',now()+interval '1 hour','aal2');
+insert into auth.sessions(id,user_id,not_after,aal,created_at)
+values ('74f847f1-f32d-450c-a64a-7af7d7368392','74f847f1-f32d-450c-a64a-7af7d7368391',now()+interval '1 hour','aal2',now());
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values (gen_random_uuid(),'74f847f1-f32d-450c-a64a-7af7d7368391','totp','verified',now(),now());
 
 insert into public.inquiries(id,inquiry_type,name,email,message)
@@ -17,6 +17,12 @@ do $$begin
  if has_table_privilege('authenticated','public.inquiries','INSERT') or has_table_privilege('authenticated','public.inquiries','DELETE') then raise exception 'Excessive ticket privileges';end if;
 end $$;
 reset role;
+-- A remembered browser cannot extend the server session lifetime.
+update auth.sessions set created_at=now()-interval '7 days' where user_id='74f847f1-f32d-450c-a64a-7af7d7368391';
+set local role authenticated;
+do $$begin if public.staff_access() or exists(select 1 from public.inquiries) then raise exception 'Seven-day session accepted';end if;end $$;
+reset role;
+update auth.sessions set created_at=now() where user_id='74f847f1-f32d-450c-a64a-7af7d7368391';
 -- An aal1 JWT, downgraded session or removed factor never grants staff access.
 select set_config('request.jwt.claims',(current_setting('request.jwt.claims')::jsonb||'{"aal":"aal1"}')::text,true);
 set local role authenticated;
