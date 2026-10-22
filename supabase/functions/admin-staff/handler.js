@@ -19,7 +19,7 @@ export async function handle(req,env,fetcher=fetch){
   const caller={apikey:env.key,Authorization:token,'Content-Type':'application/json'};
   const service={apikey:env.key,Authorization:'Bearer '+env.key,'Content-Type':'application/json'};
   const user=await fetcher(env.url+'/auth/v1/user',{headers:caller});if(!user.ok)return reply({error:'Sesi tidak valid. Masuk ulang.'},401);
-  if((await user.json()).app_metadata?.aup_role!=='owner')return reply({error:'Hanya owner yang dapat mengatur akun karyawan.'},403);
+  if(!['owner','developer'].includes((await user.json()).app_metadata?.aup_role))return reply({error:'Hanya owner atau developer yang dapat mengatur akun karyawan.'},403);
   async function rpc(name,args){const r=await fetcher(env.url+'/rest/v1/rpc/'+name,{method:'POST',headers:caller,body:JSON.stringify(args)});const data=await r.json();if(!r.ok){const codes={'42501':403,'22023':400,'23505':409,'P0002':404,'54000':429};if(codes[data.code])throw Object.assign(Error(data.message),{status:codes[data.code]});throw Error('RPC');}return data;}
   const request=await rpc('begin_staff_account',body.action==='create'?{p_action:'create',p_email:body.email.trim(),p_role:body.role}:{p_action:'activate',p_user_id:body.user_id});
   if(!uuid(request.request_id)||!role(request.role)||typeof request.email!=='string')throw Error('RPC');

@@ -1,4 +1,4 @@
-import {portalConfig,portalRoleAllowed} from './portal.js';
+import {portalConfig,portalRoleAllowed,canManagePanel} from './portal.js';
 import {loadTeamAccess} from './team.js';
 import {createPortalStorage} from './session-storage.js';
 import {loadDeveloperAccess,loadActivity} from './access.js';
@@ -24,8 +24,8 @@ function notice(message,error=false){const el=document.querySelector('#notice');
 function humanError(error){if(error.code==='23505')return 'Alamat halaman sudah dipakai. Gunakan slug yang berbeda.';if(error.code==='23514')return 'Periksa isian dan izin publikasi foto/ulasan.';if(error.code==='42501')return 'Akses ditolak. Masuk ulang atau hubungi pengelola.';if(/Invalid login credentials/i.test(error.message))return 'Email atau password belum cocok.';if(/fetch|network/i.test(error.message))return 'Koneksi terputus. Isian tetap disimpan di layar; coba lagi.';return error.message||'Terjadi kesalahan. Coba lagi.';}
 async function checked(result){if(result.error)throw result.error;return result.data;}
 const isAdmin=()=>['owner','admin','developer'].includes(user?.app_metadata?.aup_role);
-const isOwner=()=>user?.app_metadata?.aup_role==='owner';
-const allowedSection=s=>(!s.admin||isAdmin())&&(!s.owner||isOwner())&&(!s.audit||isOwner()||portal.developer);
+const isManager=()=>canManagePanel(user?.app_metadata?.aup_role);
+const allowedSection=s=>(!s.admin||isAdmin())&&(!s.manager||isManager())&&(!s.audit||isManager());
 async function authorized(){const fresh=await checked(await db.auth.getUser());if(!portalRoleAllowed(fresh.user?.app_metadata?.aup_role,portal.developer))throw Error('Akun ini belum memiliki akses pengelola.');await requireMFA(db.auth);if(!(await checked(await db.rpc(portal.developer?'developer_access':'staff_access'))))throw Error('Akses atau sesi sudah tidak aktif. Masuk ulang.');user=fresh.user;return user;}
 async function enterPanel(){
  await authorized();const retained=sessionStore.confirm();await shell();clearTimeout(rememberedTimer);
@@ -43,7 +43,7 @@ document.querySelector('#logout').onclick=async()=>{if(!canLeave())return;reques
 const picker=document.querySelector('#section-picker');
 async function selectSection(next,filters={}){if(!sections[next]||!allowedSection(sections[next]))return;if(!canLeave()){picker.value=section;return;}dirty=false;section=next;picker.value=section;page=0;app.querySelectorAll('[data-section]').forEach(b=>b.setAttribute('aria-current',b.dataset.section===section?'page':'false'));if(next==='dashboard')await dashboard(selectSection);else if(['staff_access','developer_access','activity_log'].includes(next))await accessSection();else await list('',filters.status||'',filters.availability||'');}
 picker.onchange=e=>selectSection(e.target.value);
-app.querySelectorAll('[data-section]').forEach(button=>button.onclick=()=>selectSection(button.dataset.section));if(section==='dashboard')await dashboard(selectSection);else if(['developer_access','activity_log'].includes(section))await accessSection();else await list();}
+app.querySelectorAll('[data-section]').forEach(button=>button.onclick=()=>selectSection(button.dataset.section));if(section==='dashboard')await dashboard(selectSection);else if(['staff_access','developer_access','activity_log'].includes(section))await accessSection();else await list();}
 async function accessSection(){const version=++requestVersion;const container=document.querySelector('#content');container.innerHTML='<p role="status">Memuat…</p>';try{await authorized();if(version!==requestVersion)return;const opts={isCurrent:()=>version===requestVersion,onNotice:notice,onError:humanError};if(section==='staff_access')await loadTeamAccess(db,container,opts);else if(section==='developer_access')await loadDeveloperAccess(db,container,opts);else await loadActivity(db,container,opts);}catch(error){if(version===requestVersion)container.innerHTML=`<p class="error" role="alert">${esc(humanError(error))}</p>`;}}
 async function dashboard(onOpen){const version=++requestVersion;document.body.classList.remove('editing');const container=document.querySelector('#content');try{await authorized();if(version!==requestVersion)return;await loadDashboard(db,{admin:isAdmin(),container,isCurrent:()=>version===requestVersion&&section==='dashboard',onOpen,onRefresh:()=>dashboard(onOpen)});}catch(error){if(version!==requestVersion)return;container.innerHTML=`<section class="empty"><h2>Ringkasan belum bisa dimuat</h2><p class="error">${esc(humanError(error))}</p><button id="retry-summary">Coba lagi</button></section>`;container.querySelector('#retry-summary').onclick=()=>dashboard(onOpen);}}
 function primary(row){return row.title_id||row.name||row.display_name||row.caption_id||row.key||'Tanpa judul';}
