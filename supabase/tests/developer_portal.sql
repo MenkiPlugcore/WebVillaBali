@@ -25,7 +25,7 @@ do $$begin
  update public.inquiries set status='contacted',internal_notes='Not copied into activity' where id='00000000-0000-4000-8000-000000000122';
  if not found then raise exception 'Dev ticket denied';end if;
  if (select count(*) from public.staff_activity where actor_id=auth.uid())<>2 then raise exception 'Missing actor audit';end if;
- if exists(select 1 from public.staff_activity where actor_id<>auth.uid()) then raise exception 'Other actor audit exposed';end if;
+ if not exists(select 1 from public.staff_activity where actor_id<>auth.uid()) then raise exception 'Shared management audit denied';end if;
  begin perform public.manage_developer_access('00000000-0000-4000-8000-000000000102',true);raise exception 'Dev self grant';exception when insufficient_privilege then null;end;
  begin delete from public.staff_activity;raise exception 'Dev audit delete';exception when insufficient_privilege then null;end;
  begin update public.developer_grants set enabled=true;raise exception 'Dev direct grant';exception when insufficient_privilege then null;end;
@@ -65,4 +65,4 @@ do $$begin
 end $$;
 reset role;
 rollback;
-select 'passed: dev business access, owner-only revocation, MFA denial, audit attribution/isolation/immutability, stale grant expiry/revocation and anonymous denial; all fixtures rolled back' as verification;
+select 'passed: dev business access, manager revocation, MFA denial, audit attribution/visibility/immutability, stale grant expiry/revocation and anonymous denial; all fixtures rolled back' as verification;

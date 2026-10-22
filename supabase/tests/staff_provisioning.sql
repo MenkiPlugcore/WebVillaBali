@@ -59,4 +59,4 @@ end $$;
 reset role;
 do $$begin if (select count(*) from public.staff_activity where actor_id='00000000-0000-4000-8000-000000000401' and table_name in ('staff_accounts','staff_activation'))<>3 then raise exception 'Missing provisioning audit';end if;end $$;
 rollback;
-select 'passed: owner/MFA-only provisioning, role bounds, existing/protected accounts, binding/replay, private requests, rate limiting, incomplete setup recovery and audit; all fixtures rolled back' as verification;
+select 'passed: owner/MFA provisioning and employee denial, role bounds, existing/protected accounts, binding/replay, private requests, rate limiting, incomplete setup recovery and audit; all fixtures rolled back' as verification;

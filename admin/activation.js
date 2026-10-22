@@ -1,7 +1,7 @@
 import {escapeHTML as esc} from './schema.js';
 export function activationParams(hash){const p=new URLSearchParams(String(hash||'').replace(/^#/,''));const tokenHash=p.get('token_hash'),type=p.get('type');return /^[a-zA-Z0-9_-]{32,256}$/.test(tokenHash||'')&&['invite','recovery'].includes(type)?{tokenHash,type}:null;}
 export async function mountActivation(container,auth,params){
- const invalid=()=>{container.innerHTML='<section class="login"><h1>Tautan tidak tersedia.</h1><p>Tautan aktivasi sudah dipakai, kedaluwarsa, atau tidak valid. Minta owner membuat tautan baru lewat Tim & akses.</p><a class="button" href="/admin/">Kembali ke login</a></section>';};
+ const invalid=()=>{container.innerHTML='<section class="login"><h1>Tautan tidak tersedia.</h1><p>Tautan aktivasi sudah dipakai, kedaluwarsa, atau tidak valid. Minta owner atau developer membuat tautan baru lewat Tim & akses.</p><a class="button" href="/admin/">Kembali ke login</a></section>';};
  if(!params){invalid();return;}
  let token=params.tokenHash;
  container.innerHTML='<section class="login"><p class="eyebrow">AKUN KARYAWAN</p><h1>Aktifkan akunmu.</h1><p>Buat password pribadi, lalu atur authenticator saat pertama masuk ke panel.</p><p id="activation-error" class="error" role="alert"></p><button id="activation-continue">Lanjutkan aktivasi</button></section>';

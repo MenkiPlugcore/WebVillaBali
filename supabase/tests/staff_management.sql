@@ -60,10 +60,10 @@ select set_config('request.jwt.claims',(current_setting('request.jwt.claims')::j
 set local role authenticated;
 do $$begin if not public.staff_access() or not aup_private.is_admin() then raise exception 'Fresh admin role or live metadata ignored';end if;end $$;
 reset role;
--- Admin, editor and developer cannot read/change the team, even with owner JWT claims.
+-- Admin and editor cannot read/change the team, even with owner JWT claims.
 set local role authenticated;
 do $$declare i integer;begin
- for i in 202..204 loop
+ for i in 202..203 loop
   perform set_config('request.jwt.claims',jsonb_build_object('sub','00000000-0000-4000-8000-000000000'||i::text,'session_id','00000000-0000-4000-8000-000000000'||(i+100)::text,'role','authenticated','aal','aal2','app_metadata',jsonb_build_object('aup_role','owner'))::text,true);
   begin perform public.manage_staff_access();raise exception 'Non-owner team read accepted';exception when insufficient_privilege then null;end;
   begin perform public.manage_staff_access(p_user_id=>'00000000-0000-4000-8000-000000000205',p_role=>'admin',p_enabled=>true);raise exception 'Non-owner team write accepted';exception when insufficient_privilege then null;end;
@@ -96,4 +96,4 @@ do $$begin if has_function_privilege('anon','public.manage_staff_access(text,uui
 reset role;
 do $$begin if (select count(*) from public.staff_activity where actor_id='00000000-0000-4000-8000-000000000201' and table_name='staff_access')<>4 then raise exception 'Missing access change audit';end if;end $$;
 rollback;
-select 'passed: owner-only team management, protected owner/developer, no escalation, editor/admin split, MFA, disabled/re-enabled/changed-role old session denial, safe listing and audit; fixtures rolled back' as verification;
+select 'passed: owner team management and employee restrictions, protected owner/developer, no escalation, editor/admin split, MFA, disabled/re-enabled/changed-role old session denial, safe listing and audit; fixtures rolled back' as verification;
