@@ -4,6 +4,32 @@ Status 25 Oktober 2026: pengguna telah mengonfirmasi checklist akun karyawan set
 
 ## Persiapan Linux Mint
 
+Untuk perangkat yang sudah dikonfirmasi pada 25 Oktober 2026: **Linux Mint 22.3, Ubuntu Noble, amd64, Node 24.19.0**. Dari clone repository, tersedia skrip persiapan berikut:
+
+```bash
+git pull --ff-only
+bash backend/backup/setup-linux-mint.sh
+```
+
+Skrip memakai sudo untuk menyiapkan paket komputer: npm global 12.2.1, Docker Engine dari repositori Docker untuk Noble, PostgreSQL client 17 dari PGDG, dan Supabase CLI 2.122.0 dari paket release resmi. Paket Supabase diverifikasi dengan SHA-256 yang tercatat pada release. Paket aplikasi dipasang mengikuti lockfile dengan `npm ci --omit=dev --ignore-scripts`. Skrip berhenti jika platform tidak sesuai, checksum gagal, atau APT perlu menghapus paket yang sudah ada. Sintaks skrip telah diperiksa; hasil pemasangan tetap perlu diverifikasi pada komputer pengguna.
+
+**Hak Docker:** skrip menambahkan pengguna yang menjalankannya ke grup `docker`, yang memberikan kemampuan administratif setara root. Gunakan akun operator yang dipercaya. Linux Mint merupakan turunan Ubuntu; Docker sendiri mendokumentasikan bahwa dukungan resmi distribusi turunannya tidak diberikan.
+
+Sesudah instalasi, aktifkan grup di shell baru:
+
+```bash
+newgrp docker
+```
+
+Lalu ulangi pemeriksaan dari folder proyek:
+
+```bash
+cd "$HOME/WebVillaBali-backup"
+python3 backend/backup/run.py preflight
+```
+
+Skrip persiapan tidak meminta kredensial Supabase. Login/link dan ekspor terenkripsi tetap menjadi langkah berikutnya setelah preflight berhasil.
+
 Dari clone repository `MenkiPlugcore/WebVillaBali`, cek:
 
 ```bash
