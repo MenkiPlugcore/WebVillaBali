@@ -8,12 +8,17 @@
   }
   .hero-journey .hero-media {
     inset: -2.5%; background-position: center 46%; transform-origin: 50% 52%;
-    transform: scale(1.06); animation: aupHeroBreathe 17s ease-in-out infinite alternate;
+    transform: translate3d(0, var(--hero-shift, 0%), 0) scale(var(--hero-scale, 1.06));
     will-change: transform; backface-visibility: hidden;
   }
-  .hero-journey.is-scrubbing .hero-media {
-    animation: none;
-    transform: translate3d(0, var(--hero-shift, 0%), 0) scale(var(--hero-scale, 1.06));
+  /* Separate layers let the slow breathing and scroll zoom continue seamlessly. */
+  .hero-journey .hero-media::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: inherit; background-size: cover;
+    background-position: inherit; background-repeat: no-repeat;
+    transform-origin: center center;
+    animation: aupHeroBreathe 17s ease-in-out infinite alternate;
+    will-change: transform; backface-visibility: hidden;
   }
   .hero-journey .hero-overlay {
     background:
@@ -81,6 +86,16 @@
   20%,80% { opacity: 1; }
   100% { transform: translateY(55px); opacity: 0; }
 }
+/* Laptop-height refinement: avoid cropping the search panel at 720–820px. */
+@media (min-width: 1024px) and (min-height: 720px) and (max-height: 820px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hero-journey .hero-content { padding-top: 74px; padding-bottom: 60px; }
+  .hero-journey .hero-brand-lockup { margin-bottom: 12px; }
+  .hero-journey .hero-brand-icon-frame { width: clamp(135px,11.5vw,170px); }
+  .hero-journey .hero h1 { font-size: clamp(52px,5.75vw,78px); }
+  .hero-journey .hero-copy { margin: 14px 0 18px; line-height: 1.5; }
+  .hero-journey .hero-trust, .hero-journey .hero-scroll-cue { bottom: 17px; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .hero-journey .hero-media { animation: none !important; will-change: auto; }
+  .hero-journey .hero-media,
+  .hero-journey .hero-media::before { animation: none !important; will-change: auto; }
 }
