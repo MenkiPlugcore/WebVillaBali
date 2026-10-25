@@ -25,6 +25,24 @@
 /properties/*
   Cache-Control: no-store
 
+/saved
+  X-Robots-Tag: noindex, follow
+
+/saved.html
+  X-Robots-Tag: noindex, follow
+
+/compare
+  X-Robots-Tag: noindex, follow
+
+/compare.html
+  X-Robots-Tag: noindex, follow
+
+/guest-moments
+  X-Robots-Tag: noindex, follow
+
+/guest-moments.html
+  X-Robots-Tag: noindex, follow
+
 
 /admin/activate/*
   Referrer-Policy: no-referrer

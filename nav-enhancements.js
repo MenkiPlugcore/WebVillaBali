@@ -138,7 +138,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = 'client-feedback.js?v=20261011-device';
+      script.src = 'client-feedback.js?v=20261025-content-1';
       script.dataset.clientFeedbackScript = 'true';
       script.addEventListener('load', () => {
         scheduleUtilitySync();

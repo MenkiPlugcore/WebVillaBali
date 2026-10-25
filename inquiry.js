@@ -19,6 +19,7 @@
  function addChannels(form,context){
   const body=document.createElement('div');body.className='inquiry-ticket-fields';body.id=(form.id||'aup-inquiry')+'-ticket-fields';
   Array.from(form.childNodes).forEach(node=>body.appendChild(node));
+  const privacy=document.createElement('p');privacy.className='inquiry-policy-note';body.appendChild(privacy);
   const panel=document.createElement('div');panel.className='inquiry-channels';
   panel.innerHTML='<p class="inquiry-channel-title"></p><div class="inquiry-channel-actions"><a class="inquiry-channel inquiry-whatsapp" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.02 4.8A11.14 11.14 0 0 0 6.5 21.7L5 27.2l5.62-1.47A11.17 11.17 0 1 0 16.02 4.8Zm0 20.3a9.23 9.23 0 0 1-4.7-1.28l-.34-.2-3.34.88.9-3.25-.22-.34a9.25 9.25 0 1 1 7.7 4.19Zm5.08-6.92c-.28-.14-1.65-.81-1.9-.9-.26-.1-.45-.14-.64.14-.19.28-.73.9-.9 1.09-.16.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.39a8.43 8.43 0 0 1-1.55-1.93c-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.16.19-.28.28-.47.1-.19.05-.35-.02-.5-.07-.14-.64-1.54-.88-2.11-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.35-.26.28-1 1-1 2.43s1.03 2.81 1.17 3c.14.19 2.02 3.09 4.9 4.33.68.3 1.22.47 1.64.6.69.22 1.31.19 1.8.12.55-.08 1.65-.68 1.88-1.33.23-.66.23-1.22.16-1.34-.07-.12-.26-.19-.54-.33Z"/></svg><span></span></a><button class="inquiry-channel inquiry-ticket-toggle" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 3h7l4 4v14H6V3zM14 3v5h4M9 12h6M9 16h6"/></svg><span></span><span class="inquiry-channel-chevron" aria-hidden="true">⌄</span></button></div><p class="inquiry-channel-note"></p>';
   form.appendChild(panel);form.appendChild(body);
@@ -26,6 +27,7 @@
   toggle.setAttribute('aria-controls',body.id);
   let ticketOpen=form.dataset.inquiryTicketOpen===undefined?null:form.dataset.inquiryTicketOpen==='true';
   function render(){
+   privacy.innerHTML=language()==='id'?'Dengan mengirim inquiry, kamu meminta tim memproses isian untuk menindaklanjuti kebutuhanmu. Baca <a href="/privacy">Kebijakan Privasi</a> dan <a href="/terms">Ketentuan Situs</a>.':'By sending an inquiry, you ask our team to process the details to respond to your needs. Read the <a href="/privacy">Privacy Policy</a> and <a href="/terms">Website Terms</a>.';
    const c=channelCopy[language()],number=businessNumber(),busy=form.getAttribute('aria-busy')==='true';
    const open=ticketOpen===null?!number:ticketOpen;
    body.hidden=!open;toggle.setAttribute('aria-expanded',String(open));toggle.disabled=busy;

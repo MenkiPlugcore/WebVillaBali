@@ -67,11 +67,11 @@
     if(hero)hero.textContent=c.heroCopy;
     if(trust)trust.textContent=c.trustCopy;
     if(note)note.textContent=c.demoNote;
-    document.title="Agung Ubud Property | Premium Bali Property";
+    document.title=language()==="id"?"Properti Bali, Vila & Hunian | Agung Ubud Property":"Bali Property, Villas & Long Stays | Agung Ubud Property";
     const meta=document.querySelector('meta[name="description"]');
     if(meta)meta.content=language()==="id"
-      ?"Agung Ubud Property adalah konsep platform properti premium untuk vila, rumah, tanah, sewa, kos, layanan mobilitas, dan bantuan izin properti di Bali."
-      :"Agung Ubud Property is a premium Bali property platform concept for villas, homes, land, rentals, boarding rooms, mobility, and property permit assistance.";
+      ?"Jelajahi vila, rumah, tanah, dan hunian long-stay di Bali. Tanyakan ketersediaan, viewing, rental motor, dan layanan properti kepada Agung Ubud Property."
+      :"Explore Bali villas, homes, land and long-stay options. Ask Agung Ubud Property about availability, viewings, motorbike rental and property services.";
   }
 
   function addHeroSlideshow(){

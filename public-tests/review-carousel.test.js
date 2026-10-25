@@ -12,6 +12,8 @@ function setup({ mobile = true, reduced = false, count = 3 } = {}) {
   const track = document.querySelector('#reviewTrack');
   [...track.children].slice(count).forEach(card => card.remove());
   const cards = [...track.children], timers = new Map(), frames = new Map(), listeners = new Map(), mediaListeners = new Map(), calls = [];
+  // Synthetic ratings exercise the optional accessible star-label behaviour.
+  cards.forEach(card=>{const stars=document.createElement('span');stars.className='review-stars';stars.textContent='★★★★★';card.querySelector('.review-top').appendChild(stars);});
   let id = 0, stride = 374;
   const media = { matches: mobile, addEventListener: (event, callback) => mediaListeners.set(event, callback) };
   cards.forEach((card, i) => Object.defineProperty(card, 'offsetLeft', { get: () => 40 + i * stride }));
@@ -121,11 +123,11 @@ test('language changes preserve the selected review and translate controls and s
   p.cards[1].querySelector('.review-stars').textContent = '★★★★☆';
   p.language('id');
   assert.equal(p.counter(), '02 / 03');
-  assert.equal(p.next.getAttribute('aria-label'), 'Ulasan berikutnya');
-  assert.equal(p.cards[1].getAttribute('aria-label'), 'Ulasan 2 dari 3');
+  assert.equal(p.next.getAttribute('aria-label'), 'Kartu berikutnya');
+  assert.equal(p.cards[1].getAttribute('aria-label'), 'Kartu 2 dari 3');
   assert.equal(p.cards[1].querySelector('.review-stars').getAttribute('aria-label'), '4 dari 5 bintang');
   p.language('en');
-  assert.equal(p.previous.getAttribute('aria-label'), 'Previous review');
+  assert.equal(p.previous.getAttribute('aria-label'), 'Previous card');
   assert.equal(p.counter(), '02 / 03');
 });
 

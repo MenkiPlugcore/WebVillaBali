@@ -13,8 +13,8 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0, scrollTimer, resizeFrame;
   const copy = {
-    en: { browse: 'Client stories. Swipe or use left and right arrow keys to browse.', carousel: 'carousel', slide: 'slide', previous: 'Previous review', next: 'Next review', position: (n, total) => `Review ${n} of ${total}`, stars: n => `${n} out of 5 stars` },
-    id: { browse: 'Cerita klien. Geser atau gunakan tombol panah kiri dan kanan untuk membaca.', carousel: 'karusel', slide: 'slide', previous: 'Ulasan sebelumnya', next: 'Ulasan berikutnya', position: (n, total) => `Ulasan ${n} dari ${total}`, stars: n => `${n} dari 5 bintang` }
+    en: { browse: 'How we help. Swipe or use left and right arrow keys to browse.', carousel: 'carousel', slide: 'slide', previous: 'Previous card', next: 'Next card', position: (n, total) => `Card ${n} of ${total}`, stars: n => `${n} out of 5 stars` },
+    id: { browse: 'Pendampingan. Geser atau gunakan tombol panah kiri dan kanan untuk membaca.', carousel: 'karusel', slide: 'slide', previous: 'Kartu sebelumnya', next: 'Kartu berikutnya', position: (n, total) => `Kartu ${n} dari ${total}`, stars: n => `${n} dari 5 bintang` }
   };
   const language = () => copy[document.documentElement.lang] || copy.en;
   cards.forEach(() => dots.appendChild(document.createElement('span')));

@@ -1,49 +1,41 @@
-# Agung Ubud Property. Concept Preview
+# Agung Ubud Property
 
-Premium property marketplace concept for the working domain `AgungUbudProperty.com`.
+Bali property, long-stay and motorbike rental website with a Supabase-backed staff panel, inquiry tickets and invoice administration.
 
-This repository is intentionally build-free so the preview can be deployed to Cloudflare Pages immediately.
+Live website: https://webvillabali.menkiestes.workers.dev/
 
-## Demo scope
+## Current features
 
-- Premium responsive landing page
-- Villa, house, land, rental, and commercial property catalogue
-- Property type filter
-- Location/type/purpose search
-- Property detail modal
-- English / Indonesian language toggle
-- USD / IDR display toggle
-- Manual inquiry demo
-- Manual PayPal flow placeholder
-- Location, services, about, and contact sections
-- Mobile-first responsive layout
+- Responsive English/Indonesian catalogue, saved properties, comparison, galleries and inquiry forms.
+- Owner/staff access with MFA, property publication controls and customer ticket management.
+- Ticket-linked invoices, print/PDF, manual BCA verification and payment audit history.
+- Bilingual privacy, website/booking terms and cancellation/refund request pages.
+- Public metadata, canonical URLs and structured data; a dynamic sitemap and server-rendered published property summaries.
 
-## Important
+PayPal remains deferred. Owners supply business identity/contact details and the specific commercial conditions for each transaction. Only genuine, permitted customer reviews should be presented as reviews.
 
-This is a **sales / concept preview**, not the final production system. Property data, pricing, contact details, payment handling, brand assets, logo, legal copy, and images are placeholders until the client confirms the final requirements.
+## Development and deployment
 
-## Deploy to Cloudflare Pages
+The public frontend uses plain HTML, CSS and JavaScript. A small Cloudflare Worker handles the sitemap and property SEO routes; all other paths retain static asset serving. Supabase provides the existing public catalogue, inquiries and staff services.
 
-1. Open Cloudflare Dashboard.
-2. Go to **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-3. Select `MenkiPlugcore/WebVillaBali`.
-4. Framework preset: **None**.
-5. Build command: leave empty.
-6. Build output directory: `/` (repository root) if requested; otherwise leave the default for static deployment.
-7. Deploy.
-8. After the preview is approved, connect the final custom domain.
+```sh
+npm ci
+npm test
+node backend/build-public.mjs
+```
 
-No environment variables are required for this concept preview.
+Rebuild admin bundles only when changing staff application source with `npm run build:admin`. Public content changes do not require rebuilding the admin panel.
 
-## Production roadmap
+GitHub changes deploy through Cloudflare Workers Builds. `wrangler.jsonc` defines the Worker and static asset binding. `.assetsignore` excludes backend code, tests, dependencies and credentials from static serving.
 
-The production version can later add Supabase-backed property management, admin authentication, image storage, inquiry management, real WhatsApp/email delivery, CRM integration, PayPal payment instructions or API integration, SEO pages, analytics, property status, favourites, and role-based staff access.
+`seo/config.js` contains the canonical origin. The custom `.com` domain must be connected and verified before switching that origin and regenerating public files. See [production content and SEO notes](backend/PRODUCTION-CONTENT-SEO.md).
 
-## Credits
+Source code is retained in GitHub. Data/photo/video backup work is outside the current agreed scope.
 
-Project: Agung Ubud Property concept  
-Development: CADERA / MENKIESTES
+## Further documentation
 
-## License
+- [Backend setup and feature history](backend/README.md)
+- [Invoice operation and limits](backend/INVOICES.md)
+- [Policies, content, SEO and owner follow-up](backend/PRODUCTION-CONTENT-SEO.md)
 
-Licensed under the custom **MENKIESTES SOFTWARE LICENSE v1.0**. See `LICENSE`.
+Development: CADERA / MENKIESTES. Licensed under the custom MENKIESTES SOFTWARE LICENSE v1.0; see `LICENSE`.
