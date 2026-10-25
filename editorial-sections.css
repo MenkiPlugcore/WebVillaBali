@@ -1,0 +1,294 @@
+/* Agung Ubud Property — editorial polish for the catalogue, categories,
+   Bali neighbourhoods and core services. Styling-only: no changes to tickets,
+   catalogue filters, translations, owner panel or existing card behaviour. */
+
+@media (min-width: 721px) {
+  #properties { padding-top: clamp(94px, 9vw, 136px); }
+  #properties .catalog-intro {
+    display: block;
+    margin-bottom: 29px;
+  }
+  #properties .catalog-intro > .section-heading {
+    position: relative;
+    grid-template-columns: minmax(0,1.2fr) minmax(230px,.55fr);
+    align-items: end;
+    gap: clamp(25px,4vw,68px);
+    padding: clamp(30px,4vw,54px);
+    margin-bottom: 21px;
+    border: 1px solid rgba(16,34,27,.09);
+    border-radius: 18px;
+    background:
+      radial-gradient(ellipse at 93% 10%, rgba(189,155,99,.11), transparent 48%),
+      #f2eee6;
+  }
+  #properties .catalog-intro > .section-heading::before {
+    content: "";
+    position: absolute;
+    top: 35px;
+    bottom: 35px;
+    left: 0;
+    width: 3px;
+    background: #bd9b63;
+    border-radius: 0 3px 3px 0;
+  }
+  #properties .catalog-intro .filter-row {
+    margin-bottom: 0;
+  }
+}
+
+#properties .catalog-intro .eyebrow,
+#locations .eyebrow,
+#services .eyebrow {
+  color: #836a41;
+  font-size: 10px;
+  letter-spacing: .22em;
+}
+#properties .catalog-intro .section-heading h2 {
+  font-size: clamp(39px, 4.7vw, 66px);
+  line-height: 1.04;
+  text-wrap: balance;
+}
+#properties .catalog-intro .section-heading > p {
+  font-size: 14px;
+  line-height: 1.8;
+  max-width: 41ch;
+}
+#properties .filter-chip {
+  min-height: 41px;
+  padding: 9px 17px;
+  border: 1px solid #d5dbd2;
+  background: #fff;
+  color: #30473a;
+  font-weight: 700;
+  transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+#properties .filter-chip:hover { transform: translateY(-1px); border-color: #a89166; }
+#properties .filter-chip.active {
+  background: #173b2c;
+  color: #fff9eb;
+  border-color: #173b2c;
+  box-shadow: inset 0 -2px 0 #bd9b63;
+}
+#properties .property-grid { gap: clamp(16px, 2vw, 25px); }
+#properties .property-card {
+  border: 1px solid rgba(16,34,27,.10);
+  border-radius: 16px;
+  box-shadow: 0 8px 26px rgba(13,37,24,.04);
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+#properties .property-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(189,155,99,.32);
+  box-shadow: 0 24px 56px rgba(13,37,24,.11);
+}
+#properties .property-image { background-color: #dde4db; }
+#properties .property-badges { z-index: 1; }
+#properties .property-body { padding: 23px 23px 24px; }
+#properties .property-location { color: #786a50; }
+#properties .property-title-row h3 { line-height: 1.14; }
+#properties .property-specs { flex-wrap: wrap; row-gap: 8px; }
+#properties .empty-state {
+  background: #f5f3ec;
+  border-color: #d9d2c4;
+  color: #243e31;
+}
+#properties .empty-state h3 { overflow-wrap: anywhere; }
+
+/* Category cards: retain existing imagery and text, just frame them like
+   editorial destination tiles with more balanced proportions. */
+#propertyTypes {
+  padding: clamp(80px, 9vw, 122px) 0;
+  background:
+    radial-gradient(ellipse at 6% 2%, rgba(189,155,99,.11), transparent 40%),
+    #0c1713;
+}
+#propertyTypes .section-heading { margin-bottom: 36px; }
+#propertyTypes .eyebrow { color: #d3c29d; }
+#propertyTypes .section-heading h2 {
+  max-width: 730px;
+  font-size: clamp(43px, 5vw, 70px);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+#propertyTypes .category-grid {
+  grid-template-columns: 1.2fr repeat(3,minmax(0,1fr));
+  gap: 14px;
+  background: transparent;
+}
+#propertyTypes .category-card {
+  min-width: 0;
+  min-height: 365px;
+  padding: 27px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 14px;
+  background-color: #214133;
+  transition: border-color .25s ease, transform .25s ease;
+}
+#propertyTypes .category-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(230,215,179,.62);
+}
+#propertyTypes .category-card::before {
+  background: linear-gradient(0deg,rgba(2,12,7,.91) 0%,rgba(3,15,9,.39) 52%,rgba(3,15,9,.15));
+}
+#propertyTypes .category-card span {
+  top: 23px;
+  left: 27px;
+  color: #f2dfb9;
+  font-size: 10px;
+  opacity: 1;
+}
+#propertyTypes .category-card h3 {
+  font-size: clamp(28px,2.9vw,38px);
+  line-height: 1.06;
+  margin: 0 0 11px;
+}
+#propertyTypes .category-card p { max-width: 25ch; color: rgba(255,255,255,.86); font-size: 12px; }
+
+/* Actual neighbourhood photo backgrounds are managed by device-performance.js. */
+#locations { padding-top: clamp(90px, 9vw, 136px); }
+#locations .section-heading { margin-bottom: 38px; align-items: end; }
+#locations .section-heading h2 {
+  max-width: 760px;
+  font-size: clamp(41px,4.8vw,69px);
+  text-wrap: balance;
+}
+#locations .text-link {
+  width: max-content;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 1px solid #bd9b63;
+  color: #203e2e;
+  font-size: 12px;
+}
+#locations .location-grid { gap: 15px; }
+#locations .location-card {
+  min-width: 0;
+  min-height: 475px;
+  border: 1px solid rgba(16,34,27,.09);
+  border-radius: 16px;
+  background-color: #294b3b;
+  box-shadow: 0 15px 39px rgba(17,37,25,.08);
+  transition: transform .28s ease, box-shadow .28s ease;
+}
+#locations .location-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(17,37,25,.14);
+}
+#locations .location-card::after {
+  background: linear-gradient(0deg,rgba(3,18,10,.88) 0%,rgba(3,18,10,.25) 46%,rgba(5,19,11,.12) 100%);
+}
+#locations .location-card div { right: 22px; left: 26px; bottom: 28px; }
+#locations .location-card span { font-size: clamp(32px,3.5vw,45px); line-height: 1.02; }
+#locations .location-card small {
+  margin-top: 11px;
+  color: #f0e2c6;
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: .085em;
+}
+#locations .location-card:first-child { border-bottom: 3px solid #bd9b63; }
+
+/* A quieter, luxury-brochure service rhythm that stays compatible with
+   the separately injected paid/permit service list below this section. */
+#services {
+  position: relative;
+  grid-template-columns: minmax(0,.95fr) minmax(0,1.05fr);
+  gap: clamp(30px,5vw,77px);
+  margin-top: 20px;
+  margin-bottom: 38px;
+  padding: clamp(38px,5vw,70px);
+  border: 1px solid #d9ded6;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(189,155,99,.11),transparent 50%),
+    #f2eee6;
+}
+#services .services-copy { min-width: 0; }
+#services .services-copy h2 {
+  font-size: clamp(39px,4.4vw,61px);
+  letter-spacing: -.04em;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+#services .services-copy > p:not(.eyebrow) {
+  color: #5a6b60;
+  font-size: 14px;
+  line-height: 1.8;
+}
+#services .services-copy .primary-btn {
+  min-height: 47px;
+  background: #173b2c;
+  color: #fff;
+  border: 1px solid #173b2c;
+}
+#services .service-list { min-width: 0; display: grid; gap: 11px; }
+#services .service-list article {
+  grid-template-columns: 43px minmax(0,1fr);
+  gap: 17px;
+  align-items: start;
+  padding: 22px;
+  border: 1px solid rgba(20,56,37,.13);
+  border-radius: 12px;
+  background: rgba(255,255,255,.79);
+  box-shadow: 0 5px 24px rgba(13,37,24,.035);
+}
+#services .service-list article:last-child { border-bottom: 1px solid rgba(20,56,37,.13); }
+#services .service-list article > span {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(189,155,99,.5);
+  color: #8e754a;
+  font-size: 10px;
+}
+#services .service-list h3 {
+  color: #173b2c;
+  font-size: clamp(23px,2.3vw,29px);
+  line-height: 1.18;
+  margin-bottom: 8px;
+}
+#services .service-list p { font-size: 12px; color: #5b6a60; }
+
+@media (max-width: 1000px) {
+  #propertyTypes .category-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #propertyTypes .category-card { min-height: 335px; }
+  #locations .location-card { min-height: 400px; }
+  #services { grid-template-columns: 1fr; gap: 30px; padding: 38px; }
+}
+@media (max-width: 720px) {
+  #properties { padding-top: 48px; }
+  /* Mobile's existing curated-intro/filter layout remains authoritative. */
+  #properties .catalog-intro .section-heading > p { font-size: 13px; }
+  #properties .property-body { padding: 19px; }
+  #propertyTypes { padding: 74px 0; }
+  #propertyTypes .section-heading { margin-bottom: 25px; }
+  #propertyTypes .category-grid { grid-template-columns: 1fr; gap: 12px; }
+  #propertyTypes .category-card { min-height: 275px; padding: 25px; }
+  #propertyTypes .category-card span { left: 25px; }
+  #propertyTypes .category-card h3 { font-size: 33px; }
+  #locations { padding-top: 80px; }
+  #locations .section-heading { gap: 16px; margin-bottom: 26px; }
+  #locations .location-grid { grid-template-columns: 1fr; }
+  #locations .location-card, #locations .location-card:last-child { min-height: 340px; }
+  #locations .location-card span { font-size: 38px; }
+  #services {
+    padding: 28px 23px;
+    margin-top: 0;
+    margin-bottom: 18px;
+    gap: 28px;
+    border-radius: 15px;
+  }
+  #services .services-copy h2 { font-size: clamp(36px,9vw,46px); }
+  #services .service-list article { padding: 19px 16px; gap: 12px; }
+  #services .service-list h3 { font-size: 23px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #properties .filter-chip,
+  #properties .property-card,
+  #propertyTypes .category-card,
+  #locations .location-card { transition: none !important; }
+}
