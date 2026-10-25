@@ -17,6 +17,8 @@
   <style>.property-image{display:block}</style>
 <link rel="stylesheet" href="inquiry.css?v=20261017-dual-inquiry">
 <link rel="stylesheet" href="/device-performance.css?v=20261011-device">
+<link rel="stylesheet" href="/hero-immersive.css?v=20261025-1">
+<link rel="stylesheet" href="/contact-refinement.css?v=20261025-1">
 </head>
 <body>
   <header class="site-header brandless-header" id="top">
@@ -66,6 +68,7 @@
   </header>
 
   <main>
+    <div class="hero-journey" id="heroJourney">
     <section class="hero">
       <div class="hero-media" aria-hidden="true"></div>
       <div class="hero-overlay"></div>
@@ -96,7 +99,12 @@
         <span data-i18n="trustTwo">International-ready service</span>
         <span data-i18n="trustThree">Transparent inquiry process</span>
       </div>
+      <div class="hero-scroll-cue" aria-hidden="true">
+        <span class="hero-scroll-cue-label">SCROLL TO EXPLORE</span>
+        <span class="hero-scroll-cue-track"><span></span></span>
+      </div>
     </section>
+    </div>
 
     <section class="section shell intro-section reveal-item" id="properties">
       <div class="section-heading split-heading">
@@ -207,11 +215,16 @@
       </div>
     </section>
 
-    <section class="section shell contact-section reveal-item" id="contact">
-      <div>
-        <p class="eyebrow dark" data-i18n="contactEyebrow">Let’s find your Bali property</p>
-        <h2 data-i18n="contactTitle">Tell us what you’re looking for.</h2>
+    <section class="section contact-section reveal-item" id="contact" aria-labelledby="contactTitle">
+      <div class="shell contact-layout">
+      <div class="contact-intro">
+        <p class="eyebrow" data-i18n="contactEyebrow">Let’s find your Bali property</p>
+        <h2 id="contactTitle" data-i18n="contactTitle">Tell us what you’re looking for.</h2>
         <p data-i18n="contactCopy">Chat with our team on WhatsApp, or send your needs through an inquiry ticket.</p>
+        <div class="contact-signature">
+          <span class="contact-signature-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="m3 11 9-7 9 7M5 10v10h14V10M10 20v-6h4v6"/></svg></span>
+          <div><span class="contact-signature-name">Agung Ubud Property</span><span class="contact-signature-location">Bali, Indonesia</span></div>
+        </div>
       </div>
       <form class="contact-form" id="contactForm">
         <div class="form-row"><label><span data-i18n="nameLabel">Name</span><input required maxlength="150" name="name" type="text" placeholder="Your name"></label><label><span data-i18n="emailLabel">Email</span><input required maxlength="254" name="email" type="email" placeholder="you@example.com"></label></div>
@@ -220,6 +233,7 @@
         <button class="primary-btn dark-btn full-btn" type="submit" data-i18n="sendInquiry">Create ticket</button>
         <p class="form-note" data-i18n="demoNote">You will receive a ticket number after sending. Save it for follow-up with our team.</p>
       </form>
+      </div>
     </section>
   </main>
 
@@ -240,6 +254,7 @@
   <script src="script.js?v=20261017-dual-inquiry"></script>
   <script src="catalog-expansion.js?v=20261007-tickets"></script>
   <script src="compare.js?v=20261007-route2"></script>
-<script src="/public-settings.js?v=20261007-settings"></script><script src="/device-performance.js?v=20261011-device"></script></body>
+<script src="/public-settings.js?v=20261007-settings"></script><script src="/device-performance.js?v=20261011-device"></script>
+<script src="/hero-immersive.js?v=20261025-1"></script></body>
 </html>
 
