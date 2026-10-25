@@ -78,8 +78,8 @@
   }
 }
 @keyframes aupHeroBreathe {
-  from { transform: scale(1.06); }
-  to { transform: scale(1.105); }
+  from { transform: scale(1); }
+  to { transform: scale(1.042); }
 }
 @keyframes aupScrollDrop {
   0% { transform: translateY(-25px); opacity: 0; }
