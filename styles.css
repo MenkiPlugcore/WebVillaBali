@@ -15,6 +15,13 @@
 .site-policy-links { display: flex; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; padding-bottom: 24px; border-top: 1px solid rgba(228,215,188,.2); }
 .site-policy-links a { display: inline-flex; align-items: center; min-height: 44px; color: #e4d7bc; font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
 .review-stage { color: #96733d; font-size: 11px; font-weight: 600; letter-spacing: .16em; }
+.public-socials { display: flex; flex-wrap: wrap; gap: 10px; }
+.public-socials[hidden] { display: none; }
+.public-socials-footer { padding-top: 18px; padding-bottom: 18px; }
+.public-socials .public-social-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 14px; margin: 0; border: 1px solid #a68b5e; border-radius: 8px; background: #173127; color: #f3ead8; font-size: 12px; line-height: 1.5; font-weight: 500; }
+.public-socials .public-social-link svg { flex: 0 0 18px; width: 18px; height: 18px; }
+.public-socials .public-social-link:hover { background: #254936; border-color: #e4d7bc; }
+.public-socials .public-social-link:focus-visible { outline: 2px solid #e4d7bc; outline-offset: 3px; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
