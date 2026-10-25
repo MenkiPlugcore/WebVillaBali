@@ -1,0 +1,105 @@
+import {escapeHTML as esc} from './schema.js';
+
+const maximumMinor=9000000000000;
+const statuses={draft:'Draft',issued:'Menunggu pembayaran',paid:'Lunas',cancelled:'Dibatalkan'};
+const kinds={deposit:'Uang muka / DP',balance:'Pelunasan',full:'Pembayaran penuh',other:'Lainnya'};
+const events={created:'Draft dibuat',draft_saved:'Draft diperbarui',issued:'Invoice diterbitkan',cancelled:'Invoice dibatalkan',bca_confirmed:'Dana BCA dikonfirmasi'};
+const currencyFor=method=>method==='paypal'?'USD':'IDR';
+export function parseInvoiceAmount(value,currency){
+ const raw=String(value??'').trim();
+ if(!['IDR','USD'].includes(currency)||!(currency==='USD'?/^\d+(?:\.\d{1,2})?$/:/^\d+$/).test(raw))throw Error('Isi nominal tanpa pemisah ribuan. USD boleh memakai dua desimal dengan titik.');
+ const [whole,fraction='']=raw.split('.');
+ const minor=BigInt(whole)*(currency==='USD'?100n:1n)+(currency==='USD'?BigInt(fraction.padEnd(2,'0')):0n);
+ if(minor<1n||minor>BigInt(maximumMinor))throw Error('Nominal harus lebih dari nol dan berada dalam batas invoice.');
+ return Number(minor);
+}
+export function invoiceMoney(minor,currency){
+ if(!Number.isSafeInteger(Number(minor))||!['IDR','USD'].includes(currency))return '—';
+ return new Intl.NumberFormat(currency==='IDR'?'id-ID':'en-US',{style:'currency',currency,maximumFractionDigits:currency==='IDR'?0:2}).format(Number(minor)/(currency==='USD'?100:1));
+}
+function amountInput(row){return row.currency==='USD'?(Number(row.amount_minor)/100).toFixed(2):String(row.amount_minor??'');}
+function date(value,lang='id'){if(!value)return '—';const parsed=new Date(/^\d{4}-\d{2}-\d{2}$/.test(value)?value+'T12:00:00Z':value);return Number.isNaN(parsed.getTime())?'—':new Intl.DateTimeFormat(lang==='en'?'en-GB':'id-ID',{dateStyle:'medium',timeZone:'Asia/Makassar'}).format(parsed);}
+export function invoicePayload(form,row){
+ const method=String(form.get('payment_method')||'');const currency=currencyFor(method);
+ if(!['bca','paypal'].includes(method))throw Error('Pilih PayPal atau transfer BCA.');
+ return {id:row.id,expected_revision:row.revision||0,inquiry_id:row.inquiry_id||String(form.get('inquiry_id')||''),summary:String(form.get('summary')||'').trim(),
+  payment_kind:String(form.get('payment_kind')||''),payment_method:method,currency,amount_minor:parseInvoiceAmount(form.get('amount'),currency),due_date:String(form.get('due_date')||''),
+  notes:String(form.get('notes')||'').trim(),terms:String(form.get('terms')||'').trim(),bca_account_name:method==='bca'?String(form.get('bca_account_name')||'').trim():'',bca_account_number:method==='bca'?String(form.get('bca_account_number')||'').trim():''};
+}
+export function invoicePrintHTML(row){
+ const en=row.customer_language==='en';
+ const label=en?{draft:'DRAFT · NOT ISSUED',paid:'Paid',cancelled:'Cancelled',bill:'Bill to',ticket:'Inquiry',issued:'Issued',due:'Due date',description:'Description',amount:'Amount',total:'Total',payment:'Payment instructions',bank:'Bank',account:'Account number',holder:'Account name',notes:'Notes',terms:'Payment and cancellation terms',reference:'Payment reference',reason:'Cancellation reason'}:{draft:'DRAFT · BELUM DITERBITKAN',paid:'Lunas',cancelled:'Dibatalkan',bill:'Ditagihkan kepada',ticket:'Tiket',issued:'Diterbitkan',due:'Jatuh tempo',description:'Deskripsi',amount:'Nominal',total:'Total tagihan',payment:'Petunjuk pembayaran',bank:'Bank',account:'Nomor rekening',holder:'Atas nama',notes:'Catatan',terms:'Ketentuan pembayaran dan pembatalan',reference:'Referensi pembayaran',reason:'Alasan pembatalan'};
+ const state=row.status==='draft'?label.draft:row.status==='paid'?label.paid:row.status==='cancelled'?label.cancelled:(en?'Awaiting payment':'Menunggu pembayaran');
+ return `<div class="invoice-paper"><div class="invoice-paper-head"><div><p class="eyebrow">AGUNG UBUD PROPERTY</p><h1>Invoice</h1><p>${esc(row.invoice_no||'Draft')}</p></div><span class="badge ${esc(row.status)}">${esc(state)}</span></div><div class="invoice-paper-meta"><div><h2>${label.bill}</h2><p>${esc(row.customer_name)}<br>${esc(row.customer_email||'')}<br>${esc(row.customer_phone||'')}</p></div><dl><dt>${label.ticket}</dt><dd>${esc(row.ticket_no)}</dd><dt>${label.issued}</dt><dd>${esc(date(row.issued_at,en?'en':'id'))}</dd><dt>${label.due}</dt><dd>${esc(date(row.due_date,en?'en':'id'))}</dd></dl></div><table><thead><tr><th>${label.description}</th><th>${label.amount}</th></tr></thead><tbody><tr><td>${esc(row.summary)}</td><td>${esc(invoiceMoney(row.amount_minor,row.currency))}</td></tr></tbody><tfoot><tr><th>${label.total}</th><td>${esc(invoiceMoney(row.amount_minor,row.currency))}</td></tr></tfoot></table>${row.payment_method==='bca'?`<section><h2>${label.payment}</h2><dl><dt>${label.bank}</dt><dd>BCA</dd><dt>${label.account}</dt><dd>${esc(row.bca_account_number||'—')}</dd><dt>${label.holder}</dt><dd>${esc(row.bca_account_name||'—')}</dd></dl></section>`:''}${row.payment_reference?`<section><h2>${label.reference}</h2><p>${esc(row.payment_reference)} · ${esc(date(row.paid_at,en?'en':'id'))}</p></section>`:''}${row.cancellation_reason?`<section><h2>${label.reason}</h2><p class="invoice-text">${esc(row.cancellation_reason)}</p></section>`:''}${row.notes?`<section><h2>${label.notes}</h2><p class="invoice-text">${esc(row.notes)}</p></section>`:''}${row.terms?`<section><h2>${label.terms}</h2><p class="invoice-text">${esc(row.terms)}</p></section>`:''}</div>`;
+}
+export function clearInvoicePrint(){document.getElementById('invoice-print')?.remove();document.body.classList.remove('invoice-printing');}
+function printInvoice(row){
+ clearInvoicePrint();const target=document.createElement('section');target.id='invoice-print';target.innerHTML=invoicePrintHTML(row);document.body.appendChild(target);document.body.classList.add('invoice-printing');
+ window.addEventListener('afterprint',clearInvoicePrint,{once:true});try{window.print();}catch(error){clearInvoicePrint();throw error;}
+}
+
+export async function loadInvoices(db,container,options={}){
+ const {isCurrent=()=>true,onNotice=()=>{},onError=e=>e.message||'Invoice belum bisa dimuat.',onDirty=()=>{},onBusy=()=>{},canLeave=()=>true,authorize=async()=>{}}=options;
+ let busy=false,generation=0,filters={search:'',status:'',page:0};
+ const current=()=>isCurrent()&&container.isConnected;
+ const rpc=async(action,payload={})=>{await authorize();if(!current())return null;const {data,error}=await db.rpc('invoice_admin',{p_action:action,p_payload:payload});if(error)throw error;return data;};
+ const heading=(subtitle,action='')=>`<div class="page-heading"><div><p class="eyebrow">PENGELOLAAN TAGIHAN</p><h1>Invoice & pembayaran</h1><p class="muted">${esc(subtitle)}</p></div>${action}</div>`;
+ const input=(name,label,value='',extra='')=>`<div class="field"><label for="invoice-${name}">${label}</label><input id="invoice-${name}" name="${name}" value="${esc(value)}" ${extra}></div>`;
+ const text=(name,label,value='',max=2000)=>`<div class="field wide"><label for="invoice-${name}">${label}</label><textarea id="invoice-${name}" name="${name}" maxlength="${max}">${esc(value)}</textarea></div>`;
+ function failure(error){const el=container.querySelector('[data-invoice-error]');if(el){el.textContent=onError(error);el.scrollIntoView?.({block:'center',behavior:'smooth'});}else if(current())onNotice(onError(error),true);}
+ async function mutation(action,payload,after){
+  if(busy||!current())return;busy=true;onBusy(true);const controls=[...container.querySelectorAll('input,textarea,select,button')].map(el=>({el,disabled:el.disabled}));controls.forEach(({el})=>el.disabled=true);
+  container.querySelector('[data-invoice-error]')?.replaceChildren();
+  try{const data=await rpc(action,payload);if(data&&current()){onDirty(false);await after(data);onNotice('Perubahan invoice tersimpan.');}}
+  catch(error){if(current())failure(error);}finally{busy=false;onBusy(false);controls.forEach(({el,disabled})=>{if(el.isConnected)el.disabled=disabled;});}
+ }
+ async function list(){
+  const version=++generation;document.body.classList.remove('editing');onDirty(false);container.innerHTML='<p role="status">Memuat invoice…</p>';
+  try{const data=await rpc('list',filters);if(!data||!current()||version!==generation)return;
+   container.innerHTML=heading('Tagihan terhubung ke tiket pelanggan.','<button id="new-invoice">+ Buat invoice</button>')+`<form id="invoice-filters" class="filters"><input name="search" value="${esc(filters.search)}" placeholder="Cari nomor invoice, tiket, atau pelanggan…" aria-label="Cari invoice"><select name="status" aria-label="Filter status invoice"><option value="">Semua status</option>${Object.entries({...statuses,overdue:'Lewat jatuh tempo'}).map(([v,label])=>`<option value="${v}" ${filters.status===v?'selected':''}>${label}</option>`).join('')}</select><button class="secondary">Cari</button></form><p class="muted">${Number(data.total)||0} invoice</p><div class="cards">${data.rows.length?data.rows.map(row=>`<article class="card invoice-card"><div class="actions"><span class="badge ${esc(row.status)}">${esc(row.is_overdue?'Lewat jatuh tempo':statuses[row.status])}</span><small>${esc(row.ticket_no)}</small></div><h2>${esc(row.invoice_no)}</h2><p>${esc(row.customer_name)}</p><p class="muted">${esc(row.summary)}</p><strong class="invoice-total">${esc(invoiceMoney(row.amount_minor,row.currency))}</strong><p class="muted">Jatuh tempo ${esc(date(row.due_date))}</p><button class="outline" data-invoice-id="${esc(row.id)}">Buka invoice</button></article>`).join(''):'<section class="empty"><h2>Belum ada invoice</h2><p>Mulai dari tiket pelanggan untuk menyiapkan tagihan.</p></section>'}</div><div class="pagination"><button id="invoice-prev" class="secondary" ${filters.page===0?'disabled':''}>← Sebelumnya</button><small>Halaman ${filters.page+1}</small><button id="invoice-next" class="secondary" ${(filters.page+1)*20>=data.total?'disabled':''}>Berikutnya →</button></div>`;
+   container.querySelector('#new-invoice').onclick=()=>editNew();
+   container.querySelector('#invoice-filters').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target);filters={page:0,search:String(fd.get('search')||''),status:String(fd.get('status')||'')};return list();};
+   container.querySelector('#invoice-prev').onclick=()=>{filters.page--;return list();};container.querySelector('#invoice-next').onclick=()=>{filters.page++;return list();};
+   container.querySelectorAll('[data-invoice-id]').forEach(b=>b.onclick=()=>open(b.dataset.invoiceId));
+  }catch(error){if(current()&&version===generation){container.innerHTML=heading('Daftar invoice belum bisa dimuat.')+`<p class="error" role="alert">${esc(onError(error))}</p><button id="retry-invoices">Coba lagi</button>`;container.querySelector('#retry-invoices').onclick=list;}}
+ }
+ async function open(id){
+  const version=++generation;container.innerHTML='<p role="status">Memuat rincian invoice…</p>';
+  try{const data=await rpc('get',{id});if(data&&current()&&version===generation)detail(data);}catch(error){if(current()&&version===generation){container.innerHTML=`<p data-invoice-error class="error" role="alert"></p><button id="invoice-back">Kembali</button>`;failure(error);container.querySelector('#invoice-back').onclick=list;}}
+ }
+ function detail(data){
+  const row=data.invoice;document.body.classList.remove('editing');onDirty(false);
+  container.innerHTML=heading(row.invoice_no,'<button id="invoice-back" class="secondary">Kembali ke daftar</button>')+`<div class="invoice-detail-actions actions"><span class="badge ${esc(row.status)}">${esc(statuses[row.status])}</span><div class="actions">${row.status==='draft'?'<button id="invoice-edit" class="outline">Edit draft</button>':''}<button id="invoice-print-button" class="outline">Cetak / simpan PDF</button>${row.status==='draft'?`<button id="invoice-issue" ${row.payment_method==='paypal'?'disabled':''}>Terbitkan invoice</button>`:''}</div></div>${row.status==='draft'?`<p class="help">${row.payment_method==='paypal'?'Draft PayPal memakai USD. Hubungkan akun pembayaran PayPal sebelum invoice dapat diterbitkan.':'Periksa nominal, rekening BCA, dan ketentuan pembayaran. Rincian tagihan dikunci setelah diterbitkan.'}</p>`:''}<p data-invoice-error class="error" role="alert"></p><div class="invoice-preview">${invoicePrintHTML(row)}</div>${row.status==='issued'&&row.payment_method==='bca'?`<section class="card invoice-confirm"><h2>Konfirmasi dana BCA</h2><p>Nominal tagihan: <strong>${esc(invoiceMoney(row.amount_minor,row.currency))}</strong></p><form id="invoice-confirm-bca"><div class="form-grid">${input('reference','Referensi mutasi / transaksi','', 'required minlength="3" maxlength="120"')}${input('received','Dana masuk · IDR','', 'required inputmode="numeric" placeholder="Tanpa titik atau koma"')}</div><label class="invoice-verified"><input name="verified" type="checkbox" required> Saya sudah mencocokkan dana masuk pada mutasi rekening BCA.</label><button type="submit">Konfirmasi sebagai lunas</button></form></section>`:''}${['draft','issued'].includes(row.status)?`<details class="invoice-cancel card"><summary>Batalkan invoice</summary><form id="invoice-cancel-form">${text('reason','Alasan pembatalan','',500)}<button type="submit" class="outline">Batalkan invoice ini</button></form></details>`:''}<section class="card invoice-history"><h2>Riwayat invoice</h2><ol>${(data.events||[]).map(e=>`<li><strong>${esc(events[e.action]||e.action)}</strong><span>${esc(date(e.occurred_at))} · ${esc(e.actor_role)}</span></li>`).join('')}</ol></section>`;
+  container.querySelector('#invoice-back').onclick=()=>{if(canLeave()){onDirty(false);return list();}};
+  container.querySelector('#invoice-print-button').onclick=async()=>{const button=container.querySelector('#invoice-print-button');button.disabled=true;try{const fresh=await rpc('get',{id:row.id});if(fresh&&current())printInvoice(fresh.invoice);}catch(error){failure(error);}finally{if(button.isConnected)button.disabled=false;}};
+  if(row.status==='draft'){
+   container.querySelector('#invoice-edit').onclick=()=>edit(row);
+   container.querySelector('#invoice-issue').onclick=()=>mutation('issue',{id:row.id,expected_revision:row.revision},detail);
+  }
+  const confirmForm=container.querySelector('#invoice-confirm-bca');
+  if(confirmForm){confirmForm.oninput=()=>onDirty(true);confirmForm.onsubmit=e=>{e.preventDefault();try{const fd=new FormData(confirmForm);return mutation('confirm_bca',{id:row.id,expected_revision:row.revision,reference:String(fd.get('reference')||'').trim(),amount_minor:parseInvoiceAmount(fd.get('received'),'IDR'),currency:'IDR',verified:fd.get('verified')==='on'},detail);}catch(error){failure(error);}};}
+  const cancel=container.querySelector('#invoice-cancel-form');if(cancel){cancel.oninput=()=>onDirty(true);cancel.querySelector('textarea').required=true;cancel.querySelector('textarea').minLength=3;cancel.onsubmit=e=>{e.preventDefault();return mutation('cancel',{id:row.id,expected_revision:row.revision,reason:String(new FormData(cancel).get('reason')||'').trim()},detail);};}
+ }
+ async function editNew(inquiryId){
+  const version=++generation;container.innerHTML='<p role="status">Memuat tiket pelanggan…</p>';
+  try{const tickets=await rpc('tickets',inquiryId?{id:inquiryId}:{});if(!tickets||!current()||version!==generation)return;edit({id:crypto.randomUUID(),revision:0,inquiry_id:inquiryId||'',payment_method:'bca',currency:'IDR',payment_kind:'other'},tickets.rows);}catch(error){if(current()){container.innerHTML=`<p data-invoice-error class="error" role="alert"></p><button id="invoice-back">Kembali</button>`;failure(error);container.querySelector('#invoice-back').onclick=list;}}
+ }
+ function edit(row,tickets=[]){
+  document.body.classList.add('editing');onDirty(false);
+  const existing=!!row.revision;
+  if(existing)tickets=[{id:row.inquiry_id,ticket_no:row.ticket_no,name:row.customer_name}];
+  const ticketOptions=items=>'<option value="">Pilih tiket pelanggan</option>'+items.map(t=>`<option value="${esc(t.id)}" ${row.inquiry_id===t.id?'selected':''}>${esc(t.ticket_no+' · '+t.name)}</option>`).join('');
+  container.innerHTML=heading(existing?'Edit '+row.invoice_no:'Buat draft invoice')+`<section class="editor invoice-editor">${!existing?'<form id="invoice-find-ticket" class="filters"><input name="search" maxlength="100" placeholder="Cari nomor tiket atau nama pelanggan…" aria-label="Cari tiket pelanggan"><button class="secondary">Cari tiket</button></form><p id="invoice-ticket-status" role="status"></p>':''}<form id="invoice-editor-form"><div class="form-grid"><div class="field wide"><label for="invoice-ticket">Tiket pelanggan *</label><select id="invoice-ticket" name="inquiry_id" required ${existing?'disabled':''}>${ticketOptions(tickets)}</select></div>${text('summary','Deskripsi tagihan *',row.summary||'',500)}<div class="field"><label for="invoice-payment_kind">Jenis tagihan</label><select id="invoice-payment_kind" name="payment_kind">${Object.entries(kinds).map(([v,label])=>`<option value="${v}" ${row.payment_kind===v?'selected':''}>${label}</option>`).join('')}</select></div><div class="field"><label for="invoice-payment_method">Metode pembayaran</label><select id="invoice-payment_method" name="payment_method"><option value="bca" ${row.payment_method==='bca'?'selected':''}>Transfer BCA · IDR</option><option value="paypal" ${row.payment_method==='paypal'?'selected':''}>PayPal · USD</option></select></div>${input('amount','Nominal *',existing?amountInput(row):'','required inputmode="decimal" maxlength="16" placeholder="Tanpa pemisah ribuan"')}${input('due_date','Jatuh tempo *',row.due_date||'','required type="date"')}<p id="invoice-amount-preview" class="help wide" role="status"></p><fieldset id="invoice-bca-fields" class="wide invoice-bank"><legend>Rekening tujuan BCA</legend><div class="form-grid">${input('bca_account_name','Atas nama',row.bca_account_name||'','maxlength="120"')}${input('bca_account_number','Nomor rekening',row.bca_account_number||'','inputmode="numeric" pattern="[0-9]{6,20}" maxlength="20"')}</div><p class="muted">Rekening ini akan dicantumkan pada invoice pelanggan.</p></fieldset>${text('notes','Catatan untuk pelanggan',row.notes||'')}${text('terms','Ketentuan pembayaran dan pembatalan',row.terms||'')}</div><p class="help">Isi nominal tanpa pemisah ribuan. PayPal memakai USD dengan maksimal dua desimal. Data pelanggan diambil dari tiket; draft belum menjadi permintaan pembayaran.</p><p data-invoice-error class="error" role="alert"></p><div class="save-bar"><button id="invoice-edit-back" type="button" class="secondary">Kembali</button><button type="submit">Simpan draft</button></div></form></section>`;
+  const form=container.querySelector('#invoice-editor-form');form.querySelector('[name=summary]').required=true;
+  const method=form.querySelector('[name=payment_method]'),amount=form.querySelector('[name=amount]'),bank=form.querySelector('#invoice-bca-fields');
+  function preview(){const currency=currencyFor(method.value);bank.hidden=method.value!=='bca';bank.querySelectorAll('input').forEach(el=>el.disabled=bank.hidden);let label='Isi nominal · '+currency;try{label=invoiceMoney(parseInvoiceAmount(amount.value,currency),currency);}catch{}form.querySelector('#invoice-amount-preview').textContent=label;}
+  method.onchange=()=>{amount.value='';preview();onDirty(true);onNotice('Metode berubah. Isi ulang nominal dalam '+currencyFor(method.value)+'.');};amount.oninput=preview;form.oninput=()=>onDirty(true);preview();
+  form.onsubmit=e=>{e.preventDefault();try{return mutation('save',invoicePayload(new FormData(form),row),detail);}catch(error){failure(error);}};
+  container.querySelector('#invoice-edit-back').onclick=()=>{if(canLeave()){onDirty(false);return existing?open(row.id):list();}};
+  const search=container.querySelector('#invoice-find-ticket');if(search)search.onsubmit=async e=>{
+   e.preventDefault();const select=form.querySelector('[name=inquiry_id]'),chosen=select.value,selected=[...select.options].find(o=>o.value===chosen);const button=search.querySelector('button');button.disabled=true;
+   try{const data=await rpc('tickets',{search:String(new FormData(search).get('search')||'')});if(!data||!form.isConnected||!current())return;select.innerHTML=ticketOptions(data.rows);if(chosen&&!data.rows.some(t=>t.id===chosen)&&selected)select.appendChild(selected);select.value=chosen;container.querySelector('#invoice-ticket-status').textContent=data.rows.length?`${data.rows.length} tiket ditemukan.`:'Belum ada tiket yang sesuai.';}catch(error){failure(error);}finally{button.disabled=false;}
+  };
+ }
+ if(options.inquiryId)await editNew(options.inquiryId);else await list();
+}
