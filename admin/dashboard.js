@@ -1,4 +1,16 @@
 import {escapeHTML as esc} from './schema.js';
+import {panelIcon,sectionHint} from './navigation.js';
+export function dashboardTasks(admin){return admin?[
+ {section:'inquiries',label:'Tindak lanjuti pelanggan'},
+ {section:'properties',label:'Perbarui properti & kos'},
+ {section:'invoices',label:'Kelola invoice & pembayaran'},
+ {section:'site_settings',label:'Ubah kontak & media sosial'}
+]:[
+ {section:'properties',label:'Perbarui properti & kos'},
+ {section:'motorbikes',label:'Atur unit rental motor'},
+ {section:'guest_moments',label:'Tambahkan momen tamu'},
+ {section:'services',label:'Perbarui layanan'}
+];}
 export function dashboardCards(admin){
  const cards=[
   {id:'properties',label:'Properti terbit',table:'properties',filters:{publication_status:'published'},status:'published',hint:'Lihat properti yang tampil di website'},
@@ -17,6 +29,8 @@ export async function loadDashboard(db,{admin,container,isCurrent,onOpen,onRefre
   if(!isCurrent())return;
   const loading=!results,errors=results?.filter(r=>r.status==='rejected').length||0;
   container.innerHTML=`<div class="page-heading"><div><p class="eyebrow">RUANG PENGELOLAAN</p><h1>Ringkasan</h1><p class="muted">${admin?'Pantau permintaan pelanggan dan konten website.':'Pantau konten yang tampil di website.'}</p></div><button class="secondary" id="refresh-summary" ${loading?'disabled':''}>${loading?'Memuat…':'Perbarui'}</button></div><p class="summary-status ${errors?'error':'muted'}" role="status">${loading?'Memuat ringkasan…':errors?'Sebagian ringkasan belum bisa dimuat. Ketuk Perbarui untuk mencoba lagi.':'Diperbarui '+new Intl.DateTimeFormat('id-ID',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Makassar'}).format(new Date())+' WITA · Ketuk kartu untuk membuka daftarnya.'}</p><div class="summary-grid" aria-busy="${loading}">${cards.map((card,i)=>cardHTML(card,results?.[i].status==='fulfilled'?results[i].value:null,loading||results?.[i].status==='rejected')).join('')}</div>`;
+  container.insertAdjacentHTML('beforeend',`<section class="dashboard-tasks" aria-labelledby="dashboard-tasks-title"><h2 id="dashboard-tasks-title">Mulai dari sini</h2><p>Pilih pekerjaan yang ingin kamu lakukan.</p><div class="dashboard-task-grid">${dashboardTasks(admin).map(task=>`<button type="button" class="dashboard-task" data-task="${task.section}">${panelIcon(task.section)}<span><strong>${task.label}</strong><small>${sectionHint(task.section)}</small></span><span class="task-arrow" aria-hidden="true">↗</span></button>`).join('')}</div></section>`);
+  container.querySelectorAll('[data-task]').forEach(button=>button.onclick=()=>onOpen(button.dataset.task,{}));
   container.querySelector('#refresh-summary').onclick=onRefresh;
   container.querySelectorAll('[data-summary]').forEach(button=>{const card=cards.find(c=>c.id===button.dataset.summary);button.onclick=()=>onOpen(card.table,{status:card.status,availability:card.availability||''});});
  }
