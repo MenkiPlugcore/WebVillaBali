@@ -17,6 +17,8 @@ package-lock.json
 wrangler.jsonc
 *.md
 *.log
+worker.js
+seo/
 
 public-tests/
 

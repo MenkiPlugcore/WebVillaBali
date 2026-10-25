@@ -22,6 +22,18 @@ function page(number='6281234567890',options={}){
 }
 const text=b=>new URL(b.link().getAttribute('href')).searchParams.get('text');
 
+test('inquiry privacy notice links to real policies and follows language without changing the submission fields',async()=>{
+ const b=page('');
+ const notice=()=>b.form.querySelector('.inquiry-policy-note');
+ assert.equal(b.form.querySelectorAll('.inquiry-policy-note').length,1);
+ assert.equal(notice().querySelector('a').getAttribute('href'),'/privacy');
+ assert.match(notice().textContent,/Dengan mengirim inquiry/);
+ b.setLanguage('en');b.document.getElementById('languageToggle').click();await new Promise(resolve=>setTimeout(resolve,10));
+ assert.match(notice().textContent,/By sending an inquiry/);
+ assert.deepEqual([...notice().querySelectorAll('a')].map(a=>a.getAttribute('href')),['/privacy','/terms']);
+ assert.equal(notice().querySelector('input'),null);
+});
+
 test('WhatsApp is the first choice and opens a context message without validating or submitting a ticket',()=>{
  const b=page();assert.equal(b.body().hidden,true);assert.equal(b.toggle().getAttribute('aria-expanded'),'false');
  assert.equal(b.link().target,'_blank');assert.equal(b.link().rel,'noopener noreferrer');
