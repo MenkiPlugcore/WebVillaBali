@@ -48,8 +48,17 @@ Pending owner setup: trusted backup execution environment, protected database cr
 
 ## Developer portal addendum
 
-The temporary developer account uses `/dev/`, its own password/MFA, and role `developer`. Owner/admin/editor use `/admin/`. The dedicated account grants are checked in the database, not inferred from the URL. Record `developer_grants` and `staff_activity` in database backup inventories. A revoked developer cannot restore their own grant. Only a current MFA-verified `owner` can manage existing developer grants through the panel. Until the real owner account is provisioned, grant administration stays with trusted Supabase project administration.
+The temporary developer account uses `/dev/`, its own password/MFA, and role `developer`. Owner/admin/editor use `/admin/`. The dedicated account grants are checked in the database, not inferred from the URL. Record `developer_grants` and `staff_activity` in database backup inventories. A revoked developer cannot restore their own grant. Current MFA-verified owners and active developers can manage grants for other existing developer accounts through the shared panel. Developers cannot change their own grant. Employee controls cannot alter owner/developer identities or grant those privileged roles. This scope was explicitly approved and deployed on 23 October 2026.
 
 ## Acceptance and backup tooling — 17 October 2026
 
 The user confirmed draft properties, save, photo upload, customer tickets, account activity and logout/fresh MFA login all work. Backend preparation now includes local backup tools in `backup/README.md`: CLI database exports, private media download, per-file checksums and GPG encryption. Ten synthetic-fixture tests pass. The tools are not an actual backup. Database/Storage export, off-site copy and isolated restore remain pending execution on an owner-controlled trusted machine with its credentials. No production restore, new backup endpoint, paid project, retention schedule or permission bypass was introduced.
+
+
+## Employee acceptance and backup coverage — 25 October 2026
+
+After being given the activation/MFA, Editor/Admin permission, and revocation checklist, the user confirmed it was completed. Employee onboarding acceptance is user-reported; it does not establish that a database or media backup exists.
+
+The backup coverage gate now requires all 15 current application tables, including `aup_private.staff_account_requests`, in schema and data statements. Comment-only table names do not satisfy coverage. Twelve local tests pass with synthetic fixtures (five coordinator and seven media tests). The backup runner still requires hidden local credential entry, encryption and checksum verification; no production backup/export or restore was performed by this update.
+
+Next execution needs a trusted computer with the backup prerequisites, locally entered database password and server secret, an encrypted off-site destination, and a separate restore environment. Keep output files outside the repository and do not send credentials or plaintext dumps in chat.

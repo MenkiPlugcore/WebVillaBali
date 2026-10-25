@@ -1,6 +1,6 @@
 # Backup tools — dijalankan pada komputer tepercaya
 
-Status 17 Oktober 2026: pengguna telah mengonfirmasi draft properti, simpan, upload foto, tiket, aktivitas akun, serta logout/login dengan MFA berhasil. Backup produksi, salinan off-site dan uji restore **belum dilakukan**. Alat ini baru diuji menggunakan data sintetis. Tidak ada password database atau server key pada repository ini.
+Status 25 Oktober 2026: pengguna telah mengonfirmasi checklist akun karyawan setelah panel owner/dev disamakan: pembuatan akun melalui dev, aktivasi/login dengan MFA, pembatasan Editor/Admin, serta penonaktifan akses. Tahap pengujian akun dinyatakan selesai berdasarkan konfirmasi pengguna. Backup produksi, salinan off-site dan uji restore **belum dilakukan**. Tidak ada password database atau server key pada repository ini.
 
 ## Persiapan Linux Mint
 
@@ -37,7 +37,7 @@ Prompt tersembunyi meminta **password database**, kemudian **server secret/servi
 Alur alat:
 
 1. Periksa CLI, Docker, project-ref yang ditautkan dan folder output di luar repository.
-2. Buat `roles.sql`, schema `public,aup_private`, dan data dengan COPY sesuai panduan CLI. Data Storage vektor dikecualikan sesuai panduan migrasi resmi. Periksa semua 14 tabel aplikasi, serta keberadaan data `auth.users` dan `auth.mfa_factors`. Jika CLI tidak menyertakan Auth, alat berhenti; jangan menganggap dump itu lengkap.
+2. Buat `roles.sql`, schema `public,aup_private`, dan data dengan COPY sesuai panduan CLI. Data Storage vektor dikecualikan sesuai panduan migrasi resmi. Periksa semua 15 tabel aplikasi (12 pada `public`, 3 pada `aup_private`, termasuk `staff_account_requests`), serta keberadaan data `auth.users` dan `auth.mfa_factors`. Nama tabel dalam komentar tidak dihitung sebagai ekspor. Tabel harus memiliki pernyataan CREATE TABLE serta COPY/INSERT yang sesuai. Jika CLI tidak menyertakan Auth, alat berhenti; jangan menganggap dump itu lengkap.
 3. Unduh seluruh objek bucket privat `aup-media` dengan listing rekursif dan pagination. Simpan nama aslinya dalam manifest, bytes dalam nama lokal berbasis hash, checksum, ukuran dan tipe konten. Bucket tetap privat. Perubahan listing selama ekspor atau unduhan gagal membatalkan keberhasilan.
 4. Verifikasi setiap checksum foto, lalu simpan manifest checksum database/foto. Informasi rahasia autentikasi, pesan pelanggan dan data lainnya dapat berada **dalam dump**, sehingga arsip diperlakukan sebagai data sensitif.
 5. Enkripsi arsip menggunakan GPG AES-256. Masukkan passphrase enkripsi terpisah dan simpan cadangannya secara aman. File sementara lokal dihapus hanya setelah enkripsi berhasil. File terenkripsi dan `.sha256` disimpan di folder output.
@@ -69,7 +69,9 @@ node --test backend/backup/media.test.mjs
 python3 -m unittest discover -s backend/backup -p 'test_*.py'
 ```
 
-7 tes media dan 3 tes coordinator lulus dengan fixture sintetis. Preflight pada lingkungan agent menemukan Supabase CLI, Docker, dan psql belum tersedia. Tidak ada uji ekspor database, enkripsi dengan data produksi, transfer off-site, maupun restore nyata yang diklaim selesai.
+7 tes media dan 5 tes coordinator lulus dengan fixture sintetis. Pemeriksaan tambahan menolak dump lama yang belum memuat `staff_account_requests` serta nama tabel yang hanya disebut dalam komentar. Inventaris 15 tabel dicocokkan dengan katalog database pada 25 Oktober 2026.
+
+Preflight pada lingkungan agent menemukan Supabase CLI, Docker, dan psql belum tersedia. Ekspor sebenarnya harus dijalankan di komputer tepercaya yang memiliki alat dan kredensial tersebut. Tidak ada uji ekspor database, enkripsi dengan data produksi, transfer off-site, maupun restore nyata yang diklaim selesai.
 
 ## Sumber resmi
 
@@ -77,3 +79,4 @@ python3 -m unittest discover -s backend/backup -p 'test_*.py'
 - https://supabase.com/docs/reference/cli/supabase-db-dump
 - https://supabase.com/docs/reference/javascript/storage-from-list
 - https://supabase.com/docs/reference/javascript/storage-from-download
+

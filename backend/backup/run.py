@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Local, interactive export coordinator. It never restores or changes production."""
-import argparse,datetime,getpass,hashlib,json,os,pathlib,shutil,subprocess,sys,tempfile
+import argparse,datetime,getpass,hashlib,json,os,pathlib,re,shutil,subprocess,sys,tempfile
 PROJECT='tvcmwkzwemrwwewphfgh'
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 APP_TABLES=['developer_grants','guest_moments','inquiries','locations','motorbike_images','motorbikes','properties','property_images','services','site_settings','staff_activity','testimonials']
+PRIVATE_TABLES=['inquiry_limits','inquiry_requests','staff_account_requests']
 def run(args,**kwargs):
     # Do not echo CLI stderr: errors from credentialed programs may include secrets.
     result=subprocess.run(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,**kwargs)
@@ -25,9 +26,13 @@ def preflight():
 def coverage(folder):
     schema=(folder/'schema.sql').read_text().replace('"','')
     data=(folder/'data.sql').read_text().replace('"','')
-    expected=['public.'+x for x in APP_TABLES]+['aup_private.inquiry_limits','aup_private.inquiry_requests']
-    if any(x not in schema or x not in data for x in expected):raise RuntimeError('Dump aplikasi belum mencakup seluruh tabel yang diperlukan.')
-    return {'application_tables':expected,'auth_users_in_data':'COPY auth.users ' in data or 'INSERT INTO auth.users ' in data,'auth_mfa_in_data':'COPY auth.mfa_factors ' in data or 'INSERT INTO auth.mfa_factors ' in data,'storage_metadata_in_data':'COPY storage.objects ' in data or 'INSERT INTO storage.objects ' in data}
+    expected=['public.'+x for x in APP_TABLES]+['aup_private.'+x for x in PRIVATE_TABLES]
+    # Check dump statements, rather than names mentioned in comments or row values.
+    identifier=r'([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)'
+    schema_tables=set(re.findall(r'^\s*CREATE\s+(?:UNLOGGED\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?'+identifier+r'\s*\(',schema,re.M|re.I))
+    data_tables=set(re.findall(r'^\s*(?:COPY|INSERT\s+INTO)\s+(?:ONLY\s+)?'+identifier+r'\s*(?:\(|FROM\b|VALUES\b)',data,re.M|re.I))
+    if any(x not in schema_tables or x not in data_tables for x in expected):raise RuntimeError('Dump aplikasi belum mencakup seluruh tabel yang diperlukan.')
+    return {'application_tables':expected,'auth_users_in_data':'auth.users' in data_tables,'auth_mfa_in_data':'auth.mfa_factors' in data_tables,'storage_metadata_in_data':'storage.objects' in data_tables}
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
@@ -86,3 +91,4 @@ if __name__=='__main__':
         print(str(error),file=sys.stderr);sys.exit(1)
     except (Exception,KeyboardInterrupt):
         print('Proses dihentikan/gagal. Tidak ada kredensial dicetak. Jangan anggap backup telah berhasil.',file=sys.stderr);sys.exit(1)
+
