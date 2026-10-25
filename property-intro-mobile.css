@@ -1,0 +1,149 @@
+/* The mobile catalogue shares the hero and contact section's forest and brass. */
+.catalog-intro { display: contents; }
+
+@media (max-width: 720px) {
+  #properties { padding-top: 48px; padding-bottom: 64px; }
+
+  #properties .catalog-intro {
+    display: block;
+    min-width: 0;
+    margin-bottom: 28px;
+    border: 1px solid #dcd6c9;
+    border-radius: 16px;
+    background: var(--paper);
+    box-shadow: 0 12px 32px rgba(16,34,27,.06);
+    overflow: hidden;
+  }
+
+  #properties .catalog-intro .section-heading {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 16px;
+    margin: 0;
+    padding: 30px 24px;
+    background:
+      radial-gradient(ellipse at top right, rgba(189,155,99,.12), transparent 70%),
+      linear-gradient(135deg, #10221b, #1c3a2c);
+    color: var(--paper);
+  }
+
+  #properties .catalog-intro .section-heading::before {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border: 1px solid rgba(228,215,188,.2);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  #properties .catalog-intro .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    color: #e4d7bc;
+    font-size: 9px;
+    line-height: 1.6;
+    letter-spacing: .19em;
+  }
+
+  #properties .catalog-intro .eyebrow::before {
+    content: "";
+    flex: 0 0 22px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  #properties .catalog-intro h2 {
+    max-width: 520px;
+    font-size: clamp(29px,8.2vw,38px);
+    line-height: 1.16;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+  }
+
+  #properties .catalog-intro .section-heading > p {
+    max-width: 43ch;
+    color: #c6d0c9;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  #properties .filter-row {
+    display: grid;
+    grid-template-columns: repeat(12,minmax(0,1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 18px;
+  }
+
+  #properties .filter-chip {
+    grid-column: span 3;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 6px;
+    border-color: #dcded6;
+    border-radius: 7px;
+    background: #fff;
+    color: #344d40;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  #properties .filter-chip:nth-child(n+5) { grid-column: span 4; }
+  #properties .filter-chip:hover { border-color: #a69167; }
+  #properties .filter-chip.active {
+    border-color: #173b2c;
+    background: #173b2c;
+    color: #fff9ec;
+    font-weight: 600;
+    box-shadow: inset 0 -2px 0 var(--gold);
+  }
+
+  #properties .filter-chip:focus-visible {
+    outline: 2px solid #96733d;
+    outline-offset: 3px;
+  }
+
+  /* The existing expandable filters are inserted after the category buttons. */
+  #properties .catalog-intro .catalog-filter-wrap {
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #e2dfd5;
+    border-radius: 0;
+    background: var(--paper);
+    box-shadow: none;
+  }
+
+  #properties .catalog-intro .catalog-filter-toolbar {
+    gap: 8px;
+    padding: 10px 18px;
+    background: #f2eee6;
+  }
+
+  #properties .catalog-intro .catalog-filter-toggle,
+  #properties .catalog-intro .catalog-filter-reset {
+    min-height: 44px !important;
+    border-radius: 7px !important;
+    font-size: 11px !important;
+  }
+
+  #properties .catalog-intro .catalog-filter-count { color: #56675c; }
+  #properties .catalog-intro .catalog-filter-panel { padding: 18px; }
+  #properties .catalog-intro .catalog-filter-field > span { color: #56675c; font-size: 9px; }
+  #properties .catalog-intro .catalog-filter-control { min-height: 44px; border-radius: 7px; }
+  #properties .catalog-intro .catalog-price-note {
+    margin: 0;
+    padding: 12px 18px 16px;
+    color: #56675c;
+    font-size: 11px;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 360px) {
+    #properties .catalog-intro .section-heading { padding: 28px 20px; }
+    #properties .filter-row { gap: 6px; padding: 16px; }
+    #properties .catalog-intro .catalog-filter-toolbar { gap: 6px; padding: 10px 16px; }
+  }
+}
