@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="/contact-refinement.css?v=20261025-1">
 <link rel="stylesheet" href="/property-intro-mobile.css?v=20261025-1">
 <link rel="stylesheet" href="/hero-search-mobile.css?v=20261025-1">
+<link rel="stylesheet" href="/review-carousel.css?v=20261025-1">
 </head>
 <body>
   <header class="site-header brandless-header" id="top">
@@ -191,7 +192,7 @@
         <div><p class="eyebrow dark" data-i18n="reviewEyebrow">Sample client stories</p><h2 data-i18n="reviewTitle">What a great property experience should feel like.</h2></div>
         <p class="review-note" data-i18n="reviewNote">Concept preview testimonials. Replace these with verified client reviews before the public launch.</p>
       </div>
-      <div class="review-grid">
+      <div class="review-grid" id="reviewTrack">
         <article class="review-card reveal-item">
           <div class="review-top"><span class="review-stars">★★★★★</span><span class="sample-badge" data-i18n="sampleBadge">Sample</span></div>
           <blockquote class="review-quote" data-i18n="reviewOne">“The listing felt more premium, and it was much easier to share the property with serious prospects.”</blockquote>
@@ -207,6 +208,13 @@
           <blockquote class="review-quote" data-i18n="reviewThree">“Clear photos, details, and inquiry steps made it easier to understand the property before arranging a viewing.”</blockquote>
           <div class="review-person"><span class="review-avatar">A</span><div><strong data-i18n="reviewThreeName">International buyer</strong><small data-i18n="reviewThreeMeta">Australia · Bali property search</small></div></div>
         </article>
+      </div>
+      <div class="review-carousel-controls" hidden>
+        <div class="review-carousel-position"><span class="review-carousel-count" aria-live="polite" aria-atomic="true"></span><span class="review-carousel-dots" aria-hidden="true"></span></div>
+        <div class="review-carousel-actions">
+          <button type="button" data-review-prev aria-controls="reviewTrack" aria-label="Previous review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6"/></svg></button>
+          <button type="button" data-review-next aria-controls="reviewTrack" aria-label="Next review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
+        </div>
       </div>
     </section>
 
@@ -259,6 +267,7 @@
   <script src="catalog-expansion.js?v=20261007-tickets"></script>
   <script src="compare.js?v=20261007-route2"></script>
 <script src="/public-settings.js?v=20261007-settings"></script><script src="/device-performance.js?v=20261011-device"></script>
-<script src="/hero-immersive.js?v=20261025-1"></script></body>
+<script src="/hero-immersive.js?v=20261025-1"></script>
+<script src="/review-carousel.js?v=20261025-1"></script></body>
 </html>
 
