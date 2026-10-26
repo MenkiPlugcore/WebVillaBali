@@ -26,6 +26,14 @@ async function readCatalog(params, fetcher) {
 }
 export async function handle(request, env, fetcher = fetch) {
   const url = new URL(request.url), head = request.method === 'HEAD';
+  if (['/pay', '/pay/', '/pay.html'].includes(url.pathname)) {
+    const response = await env.ASSETS.fetch(request), headers = new Headers(response.headers);
+    headers.set('Cache-Control', 'no-store');
+    headers.set('X-Robots-Tag', 'noindex, nofollow');
+    headers.set('Referrer-Policy', 'no-referrer');
+    headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://tvcmwkzwemrwwewphfgh.supabase.co; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+    return new Response(head ? null : response.body, { status: response.status, statusText: response.statusText, headers });
+  }
   const legacy = url.pathname.match(/^\/properties\/([a-z0-9-]+?)(?:\.html)?\/?$/);
   const detail = ['/property', '/property/', '/property.html'].includes(url.pathname);
   if (url.pathname !== '/sitemap.xml' && !detail && !legacy) return env.ASSETS.fetch(request);

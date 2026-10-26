@@ -2,10 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
+import {handle} from '../worker.js';
 const source=await readFile(new URL('../public-payments.js',import.meta.url),'utf8');let iteration=0;
 const first='a'.repeat(64),second='b'.repeat(64),third='c'.repeat(64);
 const invoice={invoice_no:'AUP-INV-100001',summary:'Villa deposit',amount_minor:12550,currency:'USD',status:'issued',due_date:'2030-01-05',terms:'Agreed cancellation terms.',notes:'',language:'en',payment_method:'paypal',paypal_environment:'sandbox',payment_review:'',expired:false};
 const tick=()=>new Promise(resolve=>setTimeout(resolve,0));
+test('checkout routes force private response headers while preserving asset responses and redirects',async()=>{
+ for(const path of ['/pay','/pay/','/pay.html'])for(const method of ['GET','HEAD']){
+  const response=await handle(new Request('https://example.invalid'+path,{method}),{ASSETS:{fetch:async()=>new Response(method==='HEAD'?null:'checkout',{status:200,headers:{'Referrer-Policy':'strict-origin-when-cross-origin','Cache-Control':'public,max-age=3600'}})}});
+  assert.equal(response.headers.get('Referrer-Policy'),'no-referrer');assert.equal(response.headers.get('Cache-Control'),'no-store');assert.equal(response.headers.get('X-Robots-Tag'),'noindex, nofollow');assert.doesNotMatch(response.headers.get('Content-Security-Policy'),/unsafe-inline/);assert.equal(await response.text(),method==='HEAD'?'':'checkout');
+ }
+ const redirected=await handle(new Request('https://example.invalid/pay.html'),{ASSETS:{fetch:async()=>new Response(null,{status:301,headers:{Location:'/pay'}})}});assert.equal(redirected.status,301);assert.equal(redirected.headers.get('Location'),'/pay');
+});
 async function open(handler){
  const {window,document}=parseHTML('<html><body><button id="payment-language"></button><main id="payment-app"></main></body></html>'),calls=[],destinations=[];
  const location={hash:'#'+first,search:'',assign:url=>destinations.push(url)};
