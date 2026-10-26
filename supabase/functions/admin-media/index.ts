@@ -53,15 +53,15 @@ export async function handle(req:Request,env:{url:string,key:string}){
  if(action!=='upload')return reply({error:'Aksi tidak valid.'},400);
  if(table==='guest_moments'&&id)return reply({error:'Tambahkan momen baru untuk foto berbeda.'},400);
  const file=get('file');if(!(file instanceof File)||!file.size||file.size>8*1024*1024)return reply({error:'Pilih foto hingga 8 MB.'},400);
- const bytes=new Uint8Array(await file.arrayBuffer());const kind=imageType(bytes);if(!kind||kind[0]!==file.type)return reply({error:'Gunakan foto JPG, PNG, atau WebP yang valid.'},400);
+ const bytes=new Uint8Array(await file.arrayBuffer());const kind=imageType(bytes);if(!kind||kind[0]!==file.type)return reply({error:'Gunakan foto JPG, PNG, atau WebP statis hingga 40 megapiksel dan maksimal 12.000 piksel per sisi.'},400);
  // Provision only this private bucket through the supported Storage API.
  const existing=await fetch(env.url+'/storage/v1/bucket/'+bucket,{headers:serverHeaders});
  if(existing.status===404||existing.status===400){const created=await fetch(env.url+'/storage/v1/bucket',{method:'POST',headers:{...serverHeaders,'Content-Type':'application/json'},body:JSON.stringify({id:bucket,name:bucket,public:false,file_size_limit:8*1024*1024,allowed_mime_types:['image/jpeg','image/png','image/webp']})});if(!created.ok&&created.status!==409)throw Error('Penyimpanan foto belum tersedia.');}
  else if(!existing.ok)throw Error('Penyimpanan foto belum tersedia.');
  else if((await existing.json()).public)throw Error('Bucket harus privat.');
- const path=table+'/'+(id||crypto.randomUUID())+'/'+crypto.randomUUID()+'.'+kind[1];
+ const recordId=id||crypto.randomUUID(),path=table+'/'+recordId+'/'+crypto.randomUUID()+'.'+kind[1];
  const upload=await fetch(env.url+'/storage/v1/object/'+bucket+'/'+path,{method:'POST',headers:{...serverHeaders,'Content-Type':kind[0],'x-upsert':'false'},body:bytes});if(!upload.ok)throw Error('Upload foto gagal.');
- let saved;try{const payload:any=parent?{[parent]:id,storage_path:path}: {storage_path:path,publication_status:'draft',consent_confirmed:false};if(parent){const images=await request('/rest/v1/'+imageTable+'?'+parent+'=eq.'+id+'&select=id,sort_order&order=sort_order.desc&limit=1');payload.is_cover=images.length===0;payload.sort_order=images.length?Number(images[0].sort_order||0)+1:0;}
+ let saved;try{const payload:any=parent?{[parent]:id,storage_path:path}: {id:recordId,storage_path:path,publication_status:'draft',consent_confirmed:false};if(parent){const images=await request('/rest/v1/'+imageTable+'?'+parent+'=eq.'+id+'&select=id,sort_order&order=sort_order.desc&limit=1');payload.is_cover=images.length===0;payload.sort_order=images.length?Number(images[0].sort_order||0)+1:0;}
  saved=await request('/rest/v1/'+imageTable,{method:'POST',body:JSON.stringify(payload)});
  }catch(error){await fetch(env.url+'/storage/v1/object/'+bucket,{method:'DELETE',headers:{...serverHeaders,'Content-Type':'application/json'},body:JSON.stringify({prefixes:[path]})});throw error;}
  return reply({success:true,record:saved[0]});

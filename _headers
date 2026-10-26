@@ -8,11 +8,13 @@
 
 /admin/*
   Cache-Control: no-store
+  Referrer-Policy: no-referrer
   X-Robots-Tag: noindex, nofollow
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://tvcmwkzwemrwwewphfgh.supabase.co; img-src 'self' data: https://tvcmwkzwemrwwewphfgh.supabase.co; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
 
 /dev/*
   Cache-Control: no-store
+  Referrer-Policy: no-referrer
   X-Robots-Tag: noindex, nofollow
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://tvcmwkzwemrwwewphfgh.supabase.co; img-src 'self' data: https://tvcmwkzwemrwwewphfgh.supabase.co; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
 

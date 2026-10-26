@@ -4,7 +4,7 @@ async function json(req){let size=0,parts=[];const reader=req.body?.getReader();
 export async function handle(req,env,fetcher=fetch){
  const origin=req.headers.get('origin'),webhook=new URL(req.url).pathname.match(/\/webhook\/(sandbox|live)$/);
  const headers={'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Access-Control-Allow-Origin':origins.includes(origin)?origin:origins[0],'Access-Control-Allow-Headers':'authorization,apikey,content-type','Access-Control-Allow-Methods':'POST,OPTIONS',Vary:'Origin'};
- const reply=(value,status=200)=>new Response(JSON.stringify(value),{status,headers});
+ const reply=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{...headers,...(status===429?{'Retry-After':'60'}:{})}});
  if(origin&&!origins.includes(origin))return reply({error:'Origin ditolak.'},403);
  if(req.method==='OPTIONS')return new Response(null,{headers});
  if(req.method!=='POST')return reply({error:'Metode tidak tersedia.'},405);
@@ -18,6 +18,9 @@ export async function handle(req,env,fetcher=fetch){
    if(typeof body.id!=='string'||body.id.length>100||typeof body.event_type!=='string')throw Error('INPUT');
    const names=['auth-algo','cert-url','transmission-id','transmission-sig','transmission-time'],verification={};
    for(const name of names){const v=req.headers.get('paypal-'+name);if(!v||v.length>4096)throw Error('SIGNATURE');verification[name.replaceAll('-','_')]=v;}
+   // Bound provider calls before fetching secrets or starting OAuth verification.
+   const quota=await backend('webhook_quota',{environment:webhook[1]});
+   if(!quota.allowed)return reply({error:'Terlalu banyak notifikasi. Coba lagi sebentar.'},429);
    // The certificate URL is sent to PayPal for verification, never fetched by this server.
    const config=await backend('credentials',{environment:webhook[1]});if(!config.connected)throw Error('CONFIG');const paypal=paypalClient(config,fetcher);
    const checked=await paypal.request('/v1/notifications/verify-webhook-signature',{method:'POST',body:{...verification,webhook_id:config.webhook_id,webhook_event:body}});
@@ -59,7 +62,7 @@ export async function handle(req,env,fetcher=fetch){
    return reply(await rpc('payment_settings',{p_action:'get'},caller));
   }
   if(!['view','start','capture'].includes(body.action)||!/^[a-f0-9]{64}$/.test(body.token||'')||Object.keys(body).some(k=>!['action','token'].includes(k)))throw Error('INPUT');
-  const quota=await backend('quota',{token:body.token});if(quota.missing)return reply({error:'Tagihan tidak ditemukan atau tautan tidak aktif.'},404);if(!quota.allowed)return reply({error:'Terlalu banyak permintaan. Coba lagi sebentar.'},429);
+  const quota=await backend('quota',{token:body.token,operation:body.action});if(quota.missing)return reply({error:'Tagihan tidak ditemukan atau tautan tidak aktif.'},404);if(!quota.allowed)return reply({error:'Terlalu banyak permintaan. Coba lagi sebentar.'},429);
   if(body.action==='view')return reply(await backend('view',{token:body.token}));
   const invoice=await backend('begin',{token:body.token});
   if(invoice.status==='paid')return reply({paid:true});
