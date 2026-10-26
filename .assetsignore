@@ -43,3 +43,5 @@ admin/team.js
 admin/staff-client.js
 admin/activation.js
 admin/activation-entry.js
+
+admin/payments.js

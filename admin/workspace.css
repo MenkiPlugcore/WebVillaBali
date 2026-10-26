@@ -146,3 +146,6 @@ body.panel-ready>header{display:none}
  .dashboard-task{min-height:86px;padding:18px}
 }
 @media(prefers-reduced-motion:reduce){.panel-sidebar{transition:none}}
+
+.payment-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}.payment-setting{padding:28px;border-radius:12px}.payment-setting-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.payment-setting h2{font-size:28px}.payment-setting .field{margin:20px 0}.payment-setting small{display:block;margin-top:8px;line-height:1.6}.payment-setting summary{min-height:46px;padding:12px 0;cursor:pointer;font-weight:600;font-size:14px}.payment-confirm{align-items:flex-start!important;line-height:1.7;font-size:12px}.payment-confirm input{flex:0 0 22px;margin-top:3px}.payment-setting form>button{width:100%;margin-top:12px}.invoice-link{margin:24px 0}.invoice-link .actions{margin-top:14px}.invoice-link input{font-size:13px}.invoice-paper a{color:inherit;overflow-wrap:anywhere}@media(max-width:1100px){.payment-settings-grid{grid-template-columns:minmax(0,1fr)}}@media(max-width:600px){.payment-setting{padding:22px 18px}.invoice-link .actions>*{flex:1 1 100%}}
+.badge.review{background:#f8e9c8;color:#76551a}

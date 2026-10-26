@@ -12,7 +12,7 @@ Live website: https://webvillabali.menkiestes.workers.dev/
 - Bilingual privacy, website/booking terms and cancellation/refund request pages.
 - Public metadata, canonical URLs and structured data; a dynamic sitemap and server-rendered published property summaries.
 
-PayPal remains deferred. Owners supply business identity/contact details and the specific commercial conditions for each transaction. Only genuine, permitted customer reviews should be presented as reviews.
+PayPal checkout is implemented and remains inactive until the owner connects the business Sandbox or Live credentials in Metode pembayaran. BCA uses manual transfer verification; its default account is configured there too. Owners supply business identity/contact details and the specific commercial conditions for each transaction. Only genuine, permitted customer reviews should be presented as reviews.
 
 ## Development and deployment
 
