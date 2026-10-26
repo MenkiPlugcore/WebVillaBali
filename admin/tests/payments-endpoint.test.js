@@ -14,7 +14,7 @@ function fixture(options={}){
   if(url.endsWith('/rpc/payment_settings'))return options.denied?Response.json({code:'42501'},{status:403}):Response.json({can_manage:options.canManage!==false,revision:1,paypal_locked:false,actor:{sub:'owner'}});
   if(url.endsWith('/rpc/payments_backend')){
    const {p_action:action,p_payload:p}=body;
-   if(action==='quota')return Response.json({allowed:true});
+   if(action==='quota'||action==='webhook_quota')return Response.json({allowed:options.quota!==false});
    if(action==='credentials')return Response.json(config);
    if(action==='begin'||action==='order')return Response.json({...invoice});
    if(action==='bind')invoice.order_id=p.order_id;
@@ -65,4 +65,19 @@ test('payment settings need a live permitted staff session; admin cannot change 
  for(const f of [fixture({denied:true}),fixture({canManage:false})]){assert.equal((await f.send(body,{headers:{Authorization:'Bearer synthetic'}})).status,403);assert.ok(!f.calls.some(c=>c.url.includes('paypal.com')));}
  const connected=fixture();const result=await connected.send(body,{headers:{Authorization:'Bearer synthetic'}});assert.equal(result.status,200);assert.equal(JSON.stringify(result.data).includes(body.secret),false);
  const save=connected.calls.find(c=>c.body?.p_action==='connect').body.p_payload;assert.equal(save.secret,body.secret);assert.equal(save.environment,'sandbox');assert.equal(save.webhook_id,'WEBHOOK12345');
+});
+test('exhausted webhook and checkout quotas stop before credentials, OAuth, orders or settlement',async()=>{
+ const hook=fixture({quota:false}),headers=Object.fromEntries(['auth-algo','cert-url','transmission-id','transmission-sig','transmission-time'].map(n=>['paypal-'+n,'synthetic']));
+ const body={id:'WH-SYNTHETIC-LIMIT',event_type:'PAYMENT.CAPTURE.COMPLETED'};
+ assert.equal((await hook.send(body,{webhook:true,headers})).status,429);
+ assert.equal(hook.calls.length,1);assert.equal(hook.calls[0].body.p_action,'webhook_quota');
+ assert.deepEqual(hook.calls[0].body.p_payload,{environment:'sandbox'});
+ const checkout=fixture({quota:false});assert.equal((await checkout.send({action:'capture',token})).status,429);
+ assert.equal(checkout.calls.length,1);assert.deepEqual(checkout.calls[0].body.p_payload,{token,operation:'capture'});
+});
+test('malformed and oversized payment bodies never reach database or provider',async()=>{
+ for(const body of ['[]','null','{','x'.repeat(65537)]){
+  const response=await handle(new Request('https://example.supabase.co/functions/v1/payments',{method:'POST',headers:{'Content-Type':'application/json'},body}),{url:'https://example.supabase.co',key:'synthetic'},()=>{throw Error('Upstream must not run');});
+  assert.equal(response.status,body.length>65536?413:400);
+ }
 });
