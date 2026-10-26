@@ -13,3 +13,8 @@ entrypoint = "./functions/public-inquiry/index.js"
 [functions.admin-staff]
 verify_jwt = true
 entrypoint = "./functions/admin-staff/index.ts"
+
+# Public checkout capabilities, signed webhooks, and independently authenticated staff actions.
+[functions.payments]
+verify_jwt = false
+entrypoint = "./functions/payments/index.ts"
