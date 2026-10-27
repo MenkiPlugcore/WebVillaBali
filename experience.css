@@ -14,9 +14,9 @@
   border-radius: 24px;
   background:
     radial-gradient(circle at 88% 18%, rgba(189,155,99,.18), transparent 31%),
-    linear-gradient(135deg, #10221b, #0c1713);
+    linear-gradient(135deg, #1b2250, #131a40);
   color: #fff;
-  box-shadow: 0 28px 70px rgba(12,23,19,.14);
+  box-shadow: 0 28px 70px rgba(27,34,80,.14);
 }
 
 .trust-panel::before {
@@ -136,7 +136,7 @@
 
 .review-heading .review-note {
   margin: 0;
-  color: #6b7870;
+  color: #59617b;
   font-size: 12px;
   line-height: 1.7;
   max-width: 340px;
@@ -154,16 +154,16 @@
   flex-direction: column;
   padding: 28px;
   background: #fff;
-  border: 1px solid rgba(16,34,27,.1);
+  border: 1px solid rgba(27,34,80,.1);
   border-radius: 18px;
-  box-shadow: 0 1px 0 rgba(16,34,27,.03);
+  box-shadow: 0 1px 0 rgba(27,34,80,.03);
   transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s ease, border-color .28s ease;
 }
 
 .review-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(16,34,27,.16);
-  box-shadow: 0 20px 44px rgba(20,34,28,.08);
+  border-color: rgba(27,34,80,.16);
+  box-shadow: 0 20px 44px rgba(27,34,80,.08);
 }
 
 .review-top {
@@ -184,7 +184,7 @@
   padding: 6px 9px;
   border-radius: 999px;
   background: #f2eee6;
-  color: #6d766f;
+  color: #59617b;
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .15em;
@@ -197,7 +197,7 @@
   font-family: "Playfair Display", serif;
   font-size: 23px;
   line-height: 1.35;
-  color: #1b3127;
+  color: #1b2250;
 }
 
 .review-person {
@@ -206,7 +206,7 @@
   align-items: center;
   padding-top: 26px;
   margin-top: 28px;
-  border-top: 1px solid rgba(16,34,27,.1);
+  border-top: 1px solid rgba(27,34,80,.1);
 }
 
 .review-avatar {
@@ -215,7 +215,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #10221b;
+  background: #1b2250;
   color: #fff;
   font-family: "Playfair Display", serif;
   font-size: 14px;
@@ -232,7 +232,7 @@
 
 .review-person small {
   margin-top: 2px;
-  color: #76827a;
+  color: #59617b;
   font-size: 10px;
 }
 
@@ -241,14 +241,14 @@
   overflow: hidden;
   border-radius: 16px;
   background: #fff;
-  border: 1px solid rgba(16,34,27,.06);
+  border: 1px solid rgba(27,34,80,.06);
 }
 
 .skeleton-media,
 .skeleton-line {
   position: relative;
   overflow: hidden;
-  background: #e9ece8;
+  background: #e2e6ef;
 }
 
 .skeleton-media {
@@ -281,7 +281,7 @@
 }
 
 .property-image.image-loading {
-  background: #e8ebe7;
+  background: #e1e5ee;
 }
 
 .property-image.image-loading .property-badges {

@@ -9,9 +9,9 @@
     padding: 14px;
     border: 1px solid rgba(228,215,188,.4);
     border-radius: 14px;
-    background: linear-gradient(145deg, rgba(16,34,27,.96), rgba(23,59,44,.94));
+    background: linear-gradient(145deg, rgba(27,34,80,.96), rgba(27,34,80,.94));
     color: #fbfaf7;
-    box-shadow: 0 16px 40px rgba(3,14,8,.24);
+    box-shadow: 0 16px 40px rgba(27,34,80,.24);
   }
 
   .hero #heroSearch::before {
@@ -79,7 +79,7 @@
     cursor: pointer;
   }
 
-  .hero #heroSearch option { background: #173b2c; color: #fbfaf7; }
+  .hero #heroSearch option { background: #1b2250; color: #fbfaf7; }
   .hero #heroSearch select:focus-visible { outline: 2px solid #e4d7bc; outline-offset: 3px; }
 
   .hero #heroSearch .search-btn {
@@ -89,7 +89,7 @@
     border: 1px solid #e4d7bc;
     border-radius: 7px;
     background: #fbfaf7;
-    color: #10221b;
+    color: #1b2250;
     box-shadow: inset 0 -2px 0 #bd9b63;
     font-size: 13px;
     line-height: 1.5;

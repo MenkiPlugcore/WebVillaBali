@@ -1,6 +1,6 @@
 /* Shared premium navigation polish for homepage + property detail pages */
 .site-header {
-  --nav-bg: rgba(12, 23, 19, .94);
+  --nav-bg: rgba(27,34,80, .94);
   --nav-line: rgba(255,255,255,.11);
   will-change: transform, background, box-shadow, backdrop-filter;
   grid-template-columns: minmax(190px,1fr) auto minmax(330px,1fr);
@@ -45,14 +45,14 @@
   position: sticky;
   top: 0;
   z-index: 80;
-  background: rgba(12,23,19,.96);
+  background: rgba(27,34,80,.96);
   -webkit-backdrop-filter: blur(16px) saturate(130%);
   backdrop-filter: blur(16px) saturate(130%);
 }
 
 .property-page .site-header .header-cta,
 .property-page .site-header .primary-btn.header-cta {
-  color: #10221b !important;
+  color: #1b2250 !important;
   background: #fff !important;
 }
 
@@ -164,7 +164,7 @@
     height: 66px !important;
     padding: 0 16px !important;
     gap: 10px !important;
-    background: rgba(12,23,19,.95);
+    background: rgba(27,34,80,.95);
     -webkit-backdrop-filter: blur(18px) saturate(135%);
     backdrop-filter: blur(18px) saturate(135%);
     box-shadow: 0 8px 28px rgba(0,0,0,.12);
@@ -225,7 +225,7 @@
     width: 16px !important;
     height: 16px !important;
     padding: 0 !important;
-    border: 2px solid #0c1713;
+    border: 2px solid #131a40;
     font-size: 7px !important;
   }
   .site-header .header-actions .compact {
@@ -275,7 +275,7 @@
     gap: 2px !important;
     border: 1px solid rgba(255,255,255,.10);
     border-radius: 18px !important;
-    background: rgba(12,23,19,.985) !important;
+    background: rgba(27,34,80,.985) !important;
     -webkit-backdrop-filter: blur(22px) saturate(140%);
     backdrop-filter: blur(22px) saturate(140%);
     box-shadow: 0 24px 60px rgba(0,0,0,.30) !important;

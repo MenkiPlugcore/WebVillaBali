@@ -1,10 +1,10 @@
-/* Homepage contact: the hero's forest, ivory, brass and architectural framing. */
+/* Homepage contact: the hero's navy, ivory, brass and architectural framing. */
 .contact-section {
   position: relative;
   display: block;
   isolation: isolate;
   padding: 96px 0;
-  background: #10221b;
+  background: #1b2250;
   color: #fbfaf7;
   scroll-margin-top: 72px;
 }
@@ -14,7 +14,7 @@
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(10,28,20,.96), rgba(10,28,20,.83) 48%, rgba(10,28,20,.58)),
+    linear-gradient(90deg, rgba(27,34,80,.96), rgba(27,34,80,.83) 48%, rgba(27,34,80,.58)),
     url("https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80") center 58% / cover no-repeat;
 }
 .contact-section::after {
@@ -60,7 +60,7 @@
 .contact-section .contact-intro > p:not(.eyebrow) {
   max-width: 390px;
   margin: 0;
-  color: #c6d0c9;
+  color: #c6cad3;
   font-size: 14px;
   line-height: 1.85;
 }
@@ -94,7 +94,7 @@
 .contact-signature-location {
   display: block;
   margin-top: 4px;
-  color: #becac2;
+  color: #c0c4cd;
   text-transform: uppercase;
   font-size: 9px;
   letter-spacing: .2em;
@@ -107,8 +107,8 @@
   border-top: 3px solid #bd9b63;
   border-radius: 12px;
   background: #fbfaf7;
-  color: #10221b;
-  box-shadow: 0 24px 60px rgba(3,14,8,.2);
+  color: #1b2250;
+  box-shadow: 0 24px 60px rgba(27,34,80,.2);
 }
 .contact-form .inquiry-channel-title {
   margin-bottom: 16px;
@@ -130,36 +130,36 @@
 }
 .contact-form .inquiry-channel svg { flex-basis: 20px; width: 20px; height: 20px; }
 .contact-form .inquiry-channel-chevron { margin-left: 0; }
-.contact-form .inquiry-channel-note { color: #5c6b62; font-size: 12px; line-height: 1.7; }
+.contact-form .inquiry-channel-note { color: #59617b; font-size: 12px; line-height: 1.7; }
 .contact-form .inquiry-ticket-fields:not([hidden]) {
   margin-top: 22px;
   padding-top: 22px;
   border-top-color: #dddcd3;
 }
 .contact-section .contact-form label { margin-bottom: 17px; }
-.contact-form label span { color: #56675b; font-size: 10px; letter-spacing: .13em; }
+.contact-form label span { color: #59617b; font-size: 10px; letter-spacing: .13em; }
 .contact-form input, .contact-form select, .contact-form textarea {
   min-height: 46px;
   padding: 12px 13px;
-  border-color: #d8dcd3;
+  border-color: #d2d6df;
   border-radius: 6px;
   background: #fff;
   font-size: 14px;
   line-height: 1.5;
 }
 .contact-form textarea { min-height: 112px; resize: vertical; }
-.contact-form input::placeholder, .contact-form textarea::placeholder { color: #79837c; opacity: 1; }
+.contact-form input::placeholder, .contact-form textarea::placeholder { color: #59617b; opacity: 1; }
 .contact-form .full-btn {
   min-height: 48px;
   border-radius: 6px;
-  background: #163b2c;
+  background: #1b2250;
   color: #fff9ec;
   font-size: 13px;
 }
-.contact-form .full-btn:hover { background: #234d3b; }
+.contact-form .full-btn:hover { background: #1b2250; }
 .contact-form .full-btn:focus-visible { outline: 3px solid #a68a51; outline-offset: 3px; }
 .contact-form .full-btn:disabled { cursor: wait; transform: none; }
-.contact-form .form-note { margin-top: 13px; color: #66736a; font-size: 11px; line-height: 1.7; }
+.contact-form .form-note { margin-top: 13px; color: #59617b; font-size: 11px; line-height: 1.7; }
 .contact-form .inquiry-status { margin-bottom: 0; }
 @media (max-width: 1000px) {
   .contact-section { padding: 76px 0; }

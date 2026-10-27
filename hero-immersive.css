@@ -4,7 +4,7 @@
   .hero-journey { position: relative; height: 205svh; }
   .hero-journey .hero {
     position: sticky; top: 0; height: 100svh; min-height: 0;
-    overflow: hidden; isolation: isolate; background: #14251d;
+    overflow: hidden; isolation: isolate; background: #1b2250;
   }
   .hero-journey .hero-media {
     inset: -2.5%; background-position: center 46%; transform-origin: 50% 52%;
@@ -22,8 +22,8 @@
   }
   .hero-journey .hero-overlay {
     background:
-      linear-gradient(90deg, rgba(6,17,12,.78) 0%, rgba(8,20,14,.51) 43%, rgba(7,17,12,.11) 82%),
-      linear-gradient(0deg, rgba(4,14,10,.66) 0%, transparent 34%, rgba(5,15,11,.19) 95%);
+      linear-gradient(90deg, rgba(27,34,80,.78) 0%, rgba(27,34,80,.51) 43%, rgba(27,34,80,.11) 82%),
+      linear-gradient(0deg, rgba(27,34,80,.66) 0%, transparent 34%, rgba(27,34,80,.19) 95%);
   }
   .hero-journey .hero::after {
     content: ""; position: absolute; inset: 16px; z-index: 1;

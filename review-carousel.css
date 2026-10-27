@@ -7,7 +7,7 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 16px;
-    color: #617267;
+    color: #59617b;
     font-size: 9px;
     line-height: 1.6;
     letter-spacing: .19em;
@@ -59,11 +59,11 @@
   }
   #reviews .review-top { margin-bottom: 22px; }
   #reviews .review-stars { color: #96733d; font-size: 13px; }
-  #reviews .sample-badge { background: #f2eee6; color: #56675c; }
+  #reviews .sample-badge { background: #f2eee6; color: #59617b; }
   #reviews .review-quote { font-size: clamp(21px,5.6vw,25px); line-height: 1.42; }
   #reviews .review-person { margin-top: 24px; padding-top: 20px; border-color: #e2dfd5; }
-  #reviews .review-avatar { flex: 0 0 38px; border: 1px solid #bd9b63; background: #173b2c; color: #fff9ec; }
-  #reviews .review-person small { color: #617267; font-size: 11px; line-height: 1.5; }
+  #reviews .review-avatar { flex: 0 0 38px; border: 1px solid #bd9b63; background: #1b2250; color: #fff9ec; }
+  #reviews .review-person small { color: #59617b; font-size: 11px; line-height: 1.5; }
 
   .review-carousel-controls {
     display: flex;
@@ -73,10 +73,10 @@
     padding: 10px 2px 0;
   }
   .review-carousel-position { display: flex; align-items: center; gap: 14px; }
-  .review-carousel-count { color: #56675c; font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+  .review-carousel-count { color: #59617b; font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
   .review-carousel-dots { display: flex; align-items: center; gap: 6px; }
-  .review-carousel-dots > span { width: 6px; height: 6px; border-radius: 6px; background: #cdd3cc; }
-  .review-carousel-dots > .is-active { width: 20px; background: #173b2c; }
+  .review-carousel-dots > span { width: 6px; height: 6px; border-radius: 6px; background: #c9cdd6; }
+  .review-carousel-dots > .is-active { width: 20px; background: #1b2250; }
   .review-carousel-actions { display: flex; gap: 8px; }
   .review-carousel-actions button {
     display: grid;
@@ -84,12 +84,12 @@
     width: 44px;
     height: 44px;
     padding: 0;
-    border: 1px solid #d2d8ce;
+    border: 1px solid #ced2db;
     border-radius: 8px;
     background: var(--paper);
-    color: #173b2c;
+    color: #1b2250;
   }
-  .review-carousel-actions [data-review-next] { border-color: #173b2c; background: #173b2c; color: #fff9ec; }
+  .review-carousel-actions [data-review-next] { border-color: #1b2250; background: #1b2250; color: #fff9ec; }
   .review-carousel-actions svg { width: 18px; height: 18px; }
   .review-carousel-actions button:disabled { opacity: .4; cursor: default; }
   .review-carousel-actions button:focus-visible { outline: 2px solid #96733d; outline-offset: 3px; }
