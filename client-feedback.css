@@ -72,7 +72,7 @@
   .hero-client-slide,.location-card.client-location-filter,.floating-whatsapp,.client-brand-logo-shell{transition:none!important}
 }
 
-/* Fixed corner contact, with the same forest-and-brass palette as the site. */
+/* Fixed corner contact in recognizable WhatsApp green. */
 .floating-whatsapp {
   position:fixed;
   right:calc(18px + env(safe-area-inset-right, 0px));
@@ -80,18 +80,23 @@
   width:54px;
   height:54px;
   border-radius:50%;
-  background:#1b2250;
-  color:#e7d5ad;
-  border:1px solid #bda77b;
-  box-shadow:0 6px 20px rgba(27,34,80,.28), inset 0 0 0 4px #1b2250;
+  background:#25d366;
+  color:#fff;
+  border:1px solid #1caf54;
+  box-shadow:0 6px 20px rgba(18,140,75,.28);
 }
 .floating-whatsapp svg { width:28px; height:28px; }
 .floating-whatsapp:hover {
   transform:none;
-  background:#1b2250;
-  box-shadow:0 8px 24px rgba(27,34,80,.34), inset 0 0 0 4px #1b2250;
+  background:#1ebe5d;
+  border-color:#128c4b;
+  box-shadow:0 8px 24px rgba(18,140,75,.34);
 }
-.floating-whatsapp:focus-visible { outline:3px solid #e7d5ad; outline-offset:4px; }
+.floating-whatsapp:focus-visible {
+  outline:3px solid #075e54;
+  outline-offset:3px;
+  box-shadow:0 0 0 3px #fff, 0 6px 20px rgba(18,140,75,.28);
+}
 @media(max-width:720px) {
   .floating-whatsapp {
     right:calc(16px + env(safe-area-inset-right, 0px));

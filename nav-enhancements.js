@@ -127,7 +127,7 @@
     if (!document.querySelector('link[data-client-feedback-style]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'client-feedback.css?v=20261011-device';
+      style.href = 'client-feedback.css?v=20261028-wa-green-1';
       style.dataset.clientFeedbackStyle = 'true';
       document.head.appendChild(style);
     }
