@@ -39,7 +39,7 @@
     scrollbar-width: none;
   }
   #reviews .review-grid::-webkit-scrollbar { display: none; }
-  #reviews .review-grid:focus-visible { outline: 2px solid #96733d; outline-offset: 4px; border-radius: 14px; }
+  #reviews .review-grid:focus-visible { outline: 2px solid #806536; outline-offset: 4px; border-radius: 14px; }
 
   #reviews .review-grid > .review-card {
     flex: 0 0 100%;
@@ -47,7 +47,7 @@
     min-height: 310px;
     padding: 24px 22px;
     border: 1px solid #deded3;
-    border-top: 2px solid #bd9b63;
+    border-top: 2px solid #c6a76d;
     border-radius: 14px;
     background: #fff;
     box-shadow: none;
@@ -58,11 +58,11 @@
     transition: none;
   }
   #reviews .review-top { margin-bottom: 22px; }
-  #reviews .review-stars { color: #96733d; font-size: 13px; }
-  #reviews .sample-badge { background: #f2eee6; color: #59617b; }
+  #reviews .review-stars { color: #806536; font-size: 13px; }
+  #reviews .sample-badge { background: #eee8dc; color: #59617b; }
   #reviews .review-quote { font-size: clamp(21px,5.6vw,25px); line-height: 1.42; }
   #reviews .review-person { margin-top: 24px; padding-top: 20px; border-color: #e2dfd5; }
-  #reviews .review-avatar { flex: 0 0 38px; border: 1px solid #bd9b63; background: #1b2250; color: #fff9ec; }
+  #reviews .review-avatar { flex: 0 0 38px; border: 1px solid #c6a76d; background: #1b2250; color: #f7f4ed; }
   #reviews .review-person small { color: #59617b; font-size: 11px; line-height: 1.5; }
 
   .review-carousel-controls {
@@ -89,8 +89,8 @@
     background: var(--paper);
     color: #1b2250;
   }
-  .review-carousel-actions [data-review-next] { border-color: #1b2250; background: #1b2250; color: #fff9ec; }
+  .review-carousel-actions [data-review-next] { border-color: #1b2250; background: #1b2250; color: #f7f4ed; }
   .review-carousel-actions svg { width: 18px; height: 18px; }
   .review-carousel-actions button:disabled { opacity: .4; cursor: default; }
-  .review-carousel-actions button:focus-visible { outline: 2px solid #96733d; outline-offset: 3px; }
+  .review-carousel-actions button:focus-visible { outline: 2px solid #806536; outline-offset: 3px; }
 }

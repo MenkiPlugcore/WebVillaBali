@@ -1,10 +1,10 @@
 (() => {
   if (typeof properties === "undefined" || typeof translations === "undefined") return;
 
-  if(!document.querySelector('link[href="living-mobility.css"]')){
+  if(!document.querySelector('link[href="living-mobility.css?v=20261028-palette-1"]')){
     const css=document.createElement("link");
     css.rel="stylesheet";
-    css.href="living-mobility.css";
+    css.href="living-mobility.css?v=20261028-palette-1";
     document.head.appendChild(css);
   }
 

@@ -5,7 +5,7 @@
   isolation: isolate;
   padding: 96px 0;
   background: #1b2250;
-  color: #fbfaf7;
+  color: #f7f4ed;
   scroll-margin-top: 72px;
 }
 .contact-section::before {
@@ -22,7 +22,7 @@
   position: absolute;
   inset: 18px;
   z-index: -1;
-  border: 1px solid rgba(228,215,188,.16);
+  border: 1px solid rgba(198,167,109,.16);
   pointer-events: none;
 }
 .contact-section .contact-layout {
@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  color: #e4d7bc;
+  color: #c6a76d;
   font-size: 10px;
   line-height: 1.7;
   letter-spacing: .22em;
@@ -46,7 +46,7 @@
   content: "";
   flex: 0 0 32px;
   height: 1px;
-  background: #bd9b63;
+  background: #c6a76d;
 }
 .contact-section h2 {
   max-width: 550px;
@@ -55,7 +55,7 @@
   line-height: 1.06;
   letter-spacing: -.04em;
   text-wrap: balance;
-  color: #fbfaf7;
+  color: #f7f4ed;
 }
 .contact-section .contact-intro > p:not(.eyebrow) {
   max-width: 390px;
@@ -71,7 +71,7 @@
   width: fit-content;
   margin-top: 46px;
   padding-top: 24px;
-  border-top: 1px solid rgba(228,215,188,.25);
+  border-top: 1px solid rgba(198,167,109,.25);
 }
 .contact-signature-mark {
   display: grid;
@@ -79,9 +79,9 @@
   flex: 0 0 44px;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(228,215,188,.4);
+  border: 1px solid rgba(198,167,109,.4);
   border-radius: 50%;
-  color: #e4d7bc;
+  color: #c6a76d;
 }
 .contact-signature-mark svg { width: 22px; height: 22px; }
 .contact-signature-name {
@@ -89,7 +89,7 @@
   font-family: "Playfair Display", serif;
   font-size: 19px;
   line-height: 1.4;
-  color: #f3ead8;
+  color: #f7f4ed;
 }
 .contact-signature-location {
   display: block;
@@ -104,9 +104,9 @@
   margin: 0;
   padding: 32px;
   border: 1px solid #e4ddcd;
-  border-top: 3px solid #bd9b63;
+  border-top: 3px solid #c6a76d;
   border-radius: 12px;
-  background: #fbfaf7;
+  background: #f7f4ed;
   color: #1b2250;
   box-shadow: 0 24px 60px rgba(27,34,80,.2);
 }
@@ -153,11 +153,11 @@
   min-height: 48px;
   border-radius: 6px;
   background: #1b2250;
-  color: #fff9ec;
+  color: #f7f4ed;
   font-size: 13px;
 }
 .contact-form .full-btn:hover { background: #1b2250; }
-.contact-form .full-btn:focus-visible { outline: 3px solid #a68a51; outline-offset: 3px; }
+.contact-form .full-btn:focus-visible { outline: 3px solid #c6a76d; outline-offset: 3px; }
 .contact-form .full-btn:disabled { cursor: wait; transform: none; }
 .contact-form .form-note { margin-top: 13px; color: #59617b; font-size: 11px; line-height: 1.7; }
 .contact-form .inquiry-status { margin-bottom: 0; }

@@ -18,7 +18,7 @@
   place-items: center;
   border: 1px solid rgba(255,255,255,.65);
   border-radius: 999px;
-  background: rgba(251,250,247,.90);
+  background: rgba(247,244,237,.90);
   color: #1b2250;
   box-shadow: 0 8px 24px rgba(27,34,80,.14);
   backdrop-filter: blur(12px);
@@ -45,7 +45,7 @@
   display:grid !important;
   place-items:center !important;
   text-align:center !important;
-  background:rgba(251,250,247,.92) !important;
+  background:rgba(247,244,237,.92) !important;
   color:#1b2250 !important;
   border:1px solid rgba(255,255,255,.68) !important;
   border-radius:999px !important;
@@ -105,7 +105,7 @@
 .detail-save-btn .save-heart { font-size: 16px; line-height: 1; }
 
 /* Saved page */
-.saved-page { background: #f6f4ef; min-height: 100vh; }
+.saved-page { background: #f7f4ed; min-height: 100vh; }
 .saved-page .site-header {
   position: sticky;
   top: 0;

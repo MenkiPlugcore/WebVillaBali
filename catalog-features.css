@@ -6,7 +6,7 @@
 .catalog-filter-count{margin-left:auto;color:#59617b;font-size:10px;white-space:nowrap}
 .catalog-filter-reset,.catalog-filter-toggle{border:0!important;width:auto!important;margin:0!important;border-radius:999px!important;min-height:34px!important;padding:0 12px!important;background:#e8ecf5!important;color:#1b2250!important;font-size:10px!important;font-weight:800!important;text-align:center!important}
 .catalog-filter-toggle{display:none!important;background:#1b2250!important;color:#fff!important}
-.catalog-filter-panel{padding:13px 14px 15px;display:grid;grid-template-columns:1.05fr .85fr 1fr 1fr .8fr;gap:10px;background:#fbfaf7}
+.catalog-filter-panel{padding:13px 14px 15px;display:grid;grid-template-columns:1.05fr .85fr 1fr 1fr .8fr;gap:10px;background:#f7f4ed}
 .catalog-filter-field{display:block;min-width:0}
 .catalog-filter-field>span{display:block;margin:0 0 6px 2px;color:#59617b;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
 .catalog-filter-control{height:42px;width:100%;border:1px solid rgba(27,34,80,.12);border-radius:11px;background:#fff;color:#1b2250;padding:0 11px;outline:none;font-size:11px;transition:border-color .2s ease,box-shadow .2s ease}
@@ -23,7 +23,7 @@
 .property-card .catalog-direct-inquiry svg{width:13px;height:13px;margin-right:6px;flex:0 0 auto}
 
 .catalog-form-highlight{animation:catalogFormPulse 1.15s ease}
-@keyframes catalogFormPulse{0%,100%{box-shadow:0 0 0 0 rgba(189,155,99,0)}35%{box-shadow:0 0 0 6px rgba(189,155,99,.16)}}
+@keyframes catalogFormPulse{0%,100%{box-shadow:0 0 0 0 rgba(198,167,109,0)}35%{box-shadow:0 0 0 6px rgba(198,167,109,.16)}}
 
 .recently-viewed-section{padding:10px 0 96px}
 .recently-viewed-section[hidden]{display:none!important}

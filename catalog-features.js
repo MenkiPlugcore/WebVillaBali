@@ -25,7 +25,7 @@
 
   function ensureStyle(){
     if(document.querySelector("link[data-catalog-features-style]"))return;
-    const link=document.createElement("link");link.rel="stylesheet";link.href=`${base}catalog-features.css`;link.dataset.catalogFeaturesStyle="true";document.head.appendChild(link)
+    const link=document.createElement("link");link.rel="stylesheet";link.href=`${base}catalog-features.css?v=20261028-palette-1`;link.dataset.catalogFeaturesStyle="true";document.head.appendChild(link)
   }
 
   function readRecent(){

@@ -13,7 +13,7 @@
     if (document.querySelector('link[data-mobile-header-polish]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = location.pathname.includes('/properties/') ? '../mobile-header-polish.css?v=20261007-bold-icons-8' : 'mobile-header-polish.css?v=20261007-bold-icons-8';
+    style.href = location.pathname.includes('/properties/') ? '../mobile-header-polish.css?v=20261028-palette-1' : 'mobile-header-polish.css?v=20261028-palette-1';
     style.dataset.mobileHeaderPolish = 'true';
     document.head.appendChild(style);
   };
@@ -22,7 +22,7 @@
     if (document.querySelector('link[data-final-brand-logo]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = location.pathname.includes('/properties/') ? '../final-brand-logo.css' : 'final-brand-logo.css';
+    style.href = location.pathname.includes('/properties/') ? '../final-brand-logo.css?v=20261028-palette-1' : 'final-brand-logo.css?v=20261028-palette-1';
     style.dataset.finalBrandLogo = 'true';
     document.head.appendChild(style);
   };
@@ -31,7 +31,7 @@
     if (document.querySelector('link[data-logo-overflow-fix]')) return;
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = location.pathname.includes('/properties/') ? '../logo-overflow-fix.css' : 'logo-overflow-fix.css';
+    style.href = location.pathname.includes('/properties/') ? '../logo-overflow-fix.css?v=20261028-palette-1' : 'logo-overflow-fix.css?v=20261028-palette-1';
     style.dataset.logoOverflowFix = 'true';
     document.head.appendChild(style);
   };
@@ -90,7 +90,7 @@
     if (!document.querySelector('link[data-guest-moments-style]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'guest-moments.css?v=20261009-guest-2';
+      style.href = 'guest-moments.css?v=20261028-palette-1';
       style.dataset.guestMomentsStyle = 'true';
       document.head.appendChild(style);
     }
@@ -108,7 +108,7 @@
     if(!document.querySelector('link[data-build-services-style]')){
       const style=document.createElement('link');
       style.rel='stylesheet';
-      style.href='build-services.css?v=20261007-services';
+      style.href='build-services.css?v=20261028-palette-1';
       style.dataset.buildServicesStyle='true';
       document.head.appendChild(style);
     }
@@ -127,7 +127,7 @@
     if (!document.querySelector('link[data-client-feedback-style]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'client-feedback.css?v=20261028-wa-green-1';
+      style.href = 'client-feedback.css?v=20261028-palette-1';
       style.dataset.clientFeedbackStyle = 'true';
       document.head.appendChild(style);
     }
@@ -152,4 +152,3 @@
     scheduleUtilitySync();
   }
 })();
-

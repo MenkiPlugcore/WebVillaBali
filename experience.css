@@ -13,8 +13,8 @@
   padding: 62px;
   border-radius: 24px;
   background:
-    radial-gradient(circle at 88% 18%, rgba(189,155,99,.18), transparent 31%),
-    linear-gradient(135deg, #1b2250, #131a40);
+    radial-gradient(circle at 88% 18%, rgba(198,167,109,.18), transparent 31%),
+    linear-gradient(135deg, #1b2250, #1b2250);
   color: #fff;
   box-shadow: 0 28px 70px rgba(27,34,80,.14);
 }
@@ -96,7 +96,7 @@
   display: grid;
   place-items: center;
   background: rgba(255,255,255,.09);
-  color: #d7c39e;
+  color: #c6a76d;
   font-size: 12px;
   letter-spacing: .08em;
 }
@@ -177,13 +177,13 @@
 .review-stars {
   letter-spacing: .13em;
   font-size: 12px;
-  color: #9b7c4a;
+  color: #806536;
 }
 
 .sample-badge {
   padding: 6px 9px;
   border-radius: 999px;
-  background: #f2eee6;
+  background: #eee8dc;
   color: #59617b;
   font-size: 8px;
   text-transform: uppercase;

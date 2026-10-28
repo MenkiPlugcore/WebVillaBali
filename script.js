@@ -1,9 +1,9 @@
 const WISHLIST_KEY = "aup-saved-properties-v1";
 
 (function ensureWishlistStyles(){
-  if(document.querySelector('link[href="wishlist.css"]')) return;
+  if(document.querySelector('link[href="wishlist.css?v=20261028-palette-1"]')) return;
   const link=document.createElement("link");
-  link.rel="stylesheet"; link.href="wishlist.css";
+  link.rel="stylesheet"; link.href="wishlist.css?v=20261028-palette-1";
   document.head.appendChild(link);
 })();
 

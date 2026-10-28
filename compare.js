@@ -35,7 +35,7 @@
   }
   function ensureStyle(){
     if(document.querySelector('link[data-compare-style]')) return;
-    const link=document.createElement("link"); link.rel="stylesheet"; link.href=`${base}compare.css`; link.dataset.compareStyle="true"; document.head.appendChild(link);
+    const link=document.createElement("link"); link.rel="stylesheet"; link.href=`${base}compare.css?v=20261028-palette-1`; link.dataset.compareStyle="true"; document.head.appendChild(link);
   }
   function toast(message){
     let el=document.querySelector(".compare-toast");

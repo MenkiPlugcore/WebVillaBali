@@ -40,7 +40,7 @@
   .hero-journey .hero-brand-wordmark strong { font-size: clamp(22px,2vw,28px); }
   .hero-journey .hero-brand-wordmark span { font-size: 8px; letter-spacing: .5em; }
   .hero-journey .hero-content > .eyebrow {
-    color: #e4d7bc; letter-spacing: .26em; margin-bottom: 13px;
+    color: #f7f4ed; letter-spacing: .26em; margin-bottom: 13px;
   }
   .hero-journey .hero h1 {
     font-size: clamp(57px,6.45vw,94px); line-height: .97;
@@ -74,7 +74,7 @@
   }
   .hero-scroll-cue-track span {
     display: block; width: 1px; height: 22px;
-    background: #ecdebc; animation: aupScrollDrop 2.3s ease-in-out infinite;
+    background: #c6a76d; animation: aupScrollDrop 2.3s ease-in-out infinite;
   }
 }
 @keyframes aupHeroBreathe {
