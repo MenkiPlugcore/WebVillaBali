@@ -4,14 +4,15 @@
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const dedicated=document.body.classList.contains('guest-moments-page');
   const copy={
-    en:{home:'Home',properties:'Properties',locations:'Locations',services:'Services',about:'About',contact:'Talk to us',eyebrow:'Guest documentation',title:'Moments with our guests.',intro:'Arrivals, visits, and memories shared with our guests.',note:'Shared with permission',view:'View all moments',foot:'A glimpse of the people and moments behind Agung Ubud Property.',caption:'Guest moment',back:'← Back to home',pageTitle:'Guest moments & memories',pageIntro:'A visual archive of visits and meaningful moments at Agung Ubud Property.',galleryTitle:'A closer look at the moments.',galleryCopy:'Guest documentation selected by our team and shared with permission.',empty:'Guest moments coming soon.',loading:'Loading guest moments…',error:'Guest moments could not be loaded.',retry:'Try again',more:'Show more moments',close:'Close photo',photoError:'Photo could not be loaded.',openGallery:'Open guest gallery',pause:'Pause',resume:'Play',pauseLabel:'Pause guest photos',resumeLabel:'Play guest photos'},
-    id:{home:'Beranda',properties:'Properti',locations:'Lokasi',services:'Layanan',about:'Tentang',contact:'Hubungi kami',eyebrow:'Dokumentasi tamu',title:'Momen bersama para tamu.',intro:'Dokumentasi kedatangan, kunjungan, dan kenangan bersama para tamu.',note:'Dibagikan dengan izin',view:'Lihat semua momen',foot:'Cerita kecil dari orang-orang dan momen di Agung Ubud Property.',caption:'Momen tamu',back:'← Kembali ke beranda',pageTitle:'Momen & dokumentasi tamu',pageIntro:'Arsip visual kunjungan dan momen bermakna di Agung Ubud Property.',galleryTitle:'Lihat momen lebih dekat.',galleryCopy:'Dokumentasi pilihan tim yang telah mendapat izin publikasi.',empty:'Dokumentasi tamu segera hadir.',loading:'Memuat dokumentasi tamu…',error:'Dokumentasi tamu belum bisa dimuat.',retry:'Coba lagi',more:'Lihat momen lainnya',close:'Tutup foto',photoError:'Foto belum bisa dimuat.',openGallery:'Buka galeri tamu',pause:'Jeda',resume:'Putar',pauseLabel:'Jeda animasi foto tamu',resumeLabel:'Putar animasi foto tamu'}
+    en:{home:'Home',properties:'Properties',locations:'Locations',services:'Services',about:'About',contact:'Talk to us',eyebrow:'Guest documentation',title:'Moments with our guests.',intro:'Arrivals, visits, and memories shared with our guests.',note:'Shared with permission',view:'View all moments',foot:'A glimpse of the people and moments behind Agung Ubud Property.',caption:'Guest moment',back:'← Back to home',pageTitle:'Guest moments & memories',pageIntro:'A visual archive of visits and meaningful moments at Agung Ubud Property.',galleryTitle:'A closer look at the moments.',galleryCopy:'Guest documentation selected by our team and shared with permission.',empty:'Guest moments coming soon.',loading:'Loading guest moments…',error:'Guest moments could not be loaded.',retry:'Try again',more:'Show more moments',close:'Close photo',photoError:'Photo could not be loaded.',openGallery:'Open guest gallery'},
+    id:{home:'Beranda',properties:'Properti',locations:'Lokasi',services:'Layanan',about:'Tentang',contact:'Hubungi kami',eyebrow:'Dokumentasi tamu',title:'Momen bersama para tamu.',intro:'Dokumentasi kedatangan, kunjungan, dan kenangan bersama para tamu.',note:'Dibagikan dengan izin',view:'Lihat semua momen',foot:'Cerita kecil dari orang-orang dan momen di Agung Ubud Property.',caption:'Momen tamu',back:'← Kembali ke beranda',pageTitle:'Momen & dokumentasi tamu',pageIntro:'Arsip visual kunjungan dan momen bermakna di Agung Ubud Property.',galleryTitle:'Lihat momen lebih dekat.',galleryCopy:'Dokumentasi pilihan tim yang telah mendapat izin publikasi.',empty:'Dokumentasi tamu segera hadir.',loading:'Memuat dokumentasi tamu…',error:'Dokumentasi tamu belum bisa dimuat.',retry:'Coba lagi',more:'Lihat momen lainnya',close:'Tutup foto',photoError:'Foto belum bisa dimuat.',openGallery:'Buka galeri tamu'}
   };
   const language=()=>localStorage.getItem('aup-language')==='id'?'id':'en';
   const t=()=>copy[language()];
   const caption=item=>item['caption_'+language()]||item.caption_en||item.caption_id||t().caption;
   const image=(id,fresh=false)=>endpoint+'?kind=guest&image='+encodeURIComponent(id)+(fresh?'&v='+Date.now():'');
-  let moments=[],page=0,hasMore=false,busy=false,failed=false,opener,paused=false,previewObserver;
+  let moments=[],page=0,hasMore=false,busy=false,failed=false,opener,hovered=false,previewObserver;
+  const touches=new Set();
   function card(item,duplicate=false){const label=caption(item),place=item.location_label||'',tag=dedicated?'button':'a';return `<${tag} class="${dedicated?'gm-tile':'guest-moment-card'}${duplicate?' gm-visual-copy':''}" ${dedicated?'type="button"':'href="/guest-moments"'} data-gm-id="${escape(item.id)}" ${duplicate?'aria-hidden="true" tabindex="-1"':''} aria-label="${escape([!dedicated?t().openGallery:'',label,place].filter(Boolean).join(' · '))}"><img src="${image(item.id)}" alt="${escape(label)}" loading="lazy" decoding="async"><span class="guest-moment-caption"><strong>${escape(place)}</strong><small>${escape(label)}</small></span></${tag}>`;}
   function preview(){
     if(moments.length<2)return `<div class="gm-home-grid${moments.length?' gm-home-single':''}">${moments.length?card(moments[0]):state()}</div>`;
@@ -24,16 +25,24 @@
     }).join('')}</div>`;
   }
   function motion(section){
-    section.classList.toggle('is-paused',paused);section.classList.toggle('is-page-hidden',document.hidden===true);
-    const toggle=section.querySelector('[data-gm-motion]');
-    if(toggle){toggle.textContent=(paused?'▶ ':'Ⅱ ')+(paused?t().resume:t().pause);toggle.setAttribute('aria-pressed',String(paused));toggle.setAttribute('aria-label',paused?t().resumeLabel:t().pauseLabel);}
+    section.classList.toggle('is-paused',hovered||touches.size>0);section.classList.toggle('is-page-hidden',document.hidden===true);
+  }
+  function previewInteraction(section){
+    const preview=section.querySelector('.guest-moments-preview');if(!preview)return;
+    const hover=event=>{if(event.pointerType!=='touch'&&!hovered){hovered=true;motion(section);}};
+    preview.addEventListener('pointerenter',hover);preview.addEventListener('pointermove',hover);
+    preview.addEventListener('pointerleave',event=>{if(event.pointerType!=='touch'){hovered=false;motion(section);}});
+    preview.addEventListener('pointerdown',event=>{if(event.pointerType==='touch'){touches.add(event.pointerId);motion(section);}});
+  }
+  function releaseTouch(event){
+    if(!touches.delete(event.pointerId))return;
+    const section=document.getElementById('guestMoments');if(section)motion(section);
   }
   function state(){const c=t();return `<div class="gm-state" role="status"><p>${escape(busy?c.loading:failed?c.error:c.empty)}</p>${failed&&!busy?`<button type="button" data-gm-retry>${c.retry}</button>`:''}</div>`;}
   function homepage(){
     let section=document.getElementById('guestMoments');
     if(!section){const anchor=document.getElementById('reviews')||document.getElementById('about');if(!anchor)return;section=document.createElement('section');section.id='guestMoments';section.className='guest-moments-section';anchor.insertAdjacentElement('beforebegin',section);}
-    const c=t();section.innerHTML=`<div class="shell"><div class="guest-moments-head"><div><p class="eyebrow light">${c.eyebrow}</p><h2>${c.title}</h2></div><div class="guest-moments-copy"><p>${c.intro}</p><span class="guest-moments-note">${c.note}</span></div></div>${preview()}<div class="guest-moments-actions"><p>${c.foot}</p><div class="guest-moments-controls">${moments.length>1?'<button class="gm-motion-toggle" type="button" data-gm-motion aria-controls="guestMomentRows"></button>':''}<a class="guest-moments-link" href="/guest-moments">${c.view} →</a></div></div></div>`;bind(section);motion(section);
-    section.querySelector('[data-gm-motion]')?.addEventListener('click',()=>{paused=!paused;motion(section);});
+    const c=t();section.innerHTML=`<div class="shell"><div class="guest-moments-head"><div><p class="eyebrow light">${c.eyebrow}</p><h2>${c.title}</h2></div><div class="guest-moments-copy"><p>${c.intro}</p><span class="guest-moments-note">${c.note}</span></div></div>${preview()}<div class="guest-moments-actions"><p>${c.foot}</p><a class="guest-moments-link" href="/guest-moments">${c.view} →</a></div></div>`;bind(section);motion(section);previewInteraction(section);
     if(!previewObserver&&typeof IntersectionObserver==='function'){previewObserver=new IntersectionObserver(entries=>{section.classList.toggle('is-offscreen',!entries.some(entry=>entry.isIntersecting));},{threshold:.01});previewObserver.observe(section);}
   }
   function render(){
@@ -60,7 +69,13 @@
     root.querySelectorAll('[data-gm-id]').forEach(button=>{button.querySelector('img').addEventListener('error',e=>{e.target.hidden=true;button.classList.add('gm-photo-error');button.querySelector('small').textContent=t().photoError;});if(!dedicated)return;button.addEventListener('click',()=>{const item=moments.find(m=>m.id===button.dataset.gmId);if(!item)return;opener=button;const box=lightbox(),label=[caption(item),item.location_label].filter(Boolean).join(' · ');box.querySelector('img').src=image(item.id,true);box.querySelector('img').alt=caption(item);box.querySelector('.gm-lightbox-caption').textContent=label;box.querySelector('button').setAttribute('aria-label',t().close);box.hidden=false;box.classList.add('open');document.body.classList.add('gm-modal-open');box.querySelector('button').focus();});});
   }
   if(dedicated){document.getElementById('guestLanguage')?.addEventListener('click',()=>{close();localStorage.setItem('aup-language',language()==='en'?'id':'en');render();});const button=document.getElementById('guestMenuButton'),menu=document.getElementById('guestMobileMenu');button?.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')==='true';button.setAttribute('aria-expanded',String(!open));menu?.classList.toggle('open',!open);});menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('open');button?.setAttribute('aria-expanded','false');}));}
-  else {document.addEventListener('visibilitychange',()=>{const section=document.getElementById('guestMoments');if(section)motion(section);});document.getElementById('languageToggle')?.addEventListener('click',()=>setTimeout(()=>{close();render();},0));}
+  else {
+    const clearTouches=()=>{touches.clear();const section=document.getElementById('guestMoments');if(section)motion(section);};
+    window.addEventListener('pointerup',releaseTouch,true);window.addEventListener('pointercancel',releaseTouch,true);
+    window.addEventListener('blur',clearTouches);
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)touches.clear();const section=document.getElementById('guestMoments');if(section)motion(section);});
+    document.getElementById('languageToggle')?.addEventListener('click',()=>setTimeout(()=>{close();hovered=false;touches.clear();render();},0));
+  }
   load();
 })();
 
