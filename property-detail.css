@@ -102,3 +102,11 @@ body.property-page header.site-header.brandless-header:not(.nav-scrolled):not(.s
   .property-page .overview-item { padding: 14px 12px; }
   .property-page .overview-item small { overflow-wrap: anywhere; }
 }
+
+/* Owner-supplied Google Maps pin. */
+.detail-map-card { margin-top: 20px; padding: 22px; border: 1px solid rgba(198,167,109,.4); border-radius: 16px; background: #eee8dc; }
+.detail-map-card p { margin: 0 0 12px; color: #59617b; }
+.detail-map-link { display: inline-flex; align-items: center; gap: 10px; max-width: 100%; padding: 12px 16px; border: 1px solid #c6a76d; border-radius: 10px; background: #f7f4ed; color: #1b2250; font-weight: 600; line-height: 1.5; text-decoration: none; }
+.detail-map-link svg { flex: 0 0 22px; width: 22px; height: 22px; }
+.detail-map-link:hover { background: #e8dbbf; }
+.detail-map-link:focus-visible { outline: 3px solid #1b2250; outline-offset: 4px; }

@@ -1,4 +1,5 @@
 import { SITE } from './config.js';
+import {googleMapsURL} from '../map-links.js';
 
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const jsonLD = value => JSON.stringify(value).replace(/[<>&\u2028\u2029]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
@@ -30,6 +31,7 @@ export function propertyPage(row) {
 }
 
 export function propertySummary(row) {
+  const mapsURL = googleMapsURL(row.maps_url);
   const title = row.title_en || row.title_id || SITE.name;
   const description = row.description_en || row.description_id || 'Contact our team for details.';
   const page = propertyPage(row);
@@ -37,5 +39,5 @@ export function propertySummary(row) {
   for (const [field, label] of [['bedrooms', 'bedrooms'], ['bathrooms', 'bathrooms']]) if (Number.isInteger(row[field]) && row[field] > 0) facts.push(`${row[field]} ${label}`);
   const price = row.price == null ? 'Price on request' : new Intl.NumberFormat(row.currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: ['IDR', 'USD'].includes(row.currency) ? row.currency : 'IDR', maximumFractionDigits: row.currency === 'IDR' ? 0 : 2 }).format(Number(row.price));
   const period = row.price == null ? '' : ({ night: '/ night', day: '/ day', month: '/ month', year: '/ year' })[row.price_period] || '';
-  return `<div class="shell"><section class="detail-hero"><div class="detail-image"><img src="${escapeHTML(page.image)}" alt="${escapeHTML(title)}" fetchpriority="high" decoding="async"></div><div class="detail-summary"><p class="detail-kicker">${facts.map(escapeHTML).join(' · ')}</p><h1>${escapeHTML(title)}</h1><p class="detail-description">${escapeHTML(description)}</p><div class="detail-price"><strong>${escapeHTML(price)}</strong><small>${escapeHTML(period)}</small></div><p>Availability, rates and booking conditions are confirmed by our team before payment.</p><a class="primary-btn dark-btn" href="/#contact">Ask about this property</a></div></section></div>`;
+  return `<div class="shell"><section class="detail-hero"><div class="detail-image"><img src="${escapeHTML(page.image)}" alt="${escapeHTML(title)}" fetchpriority="high" decoding="async"></div><div class="detail-summary"><p class="detail-kicker">${facts.map(escapeHTML).join(' · ')}</p><h1>${escapeHTML(title)}</h1><p class="detail-description">${escapeHTML(description)}</p><div class="detail-price"><strong>${escapeHTML(price)}</strong><small>${escapeHTML(period)}</small></div><p>Availability, rates and booking conditions are confirmed by our team before payment.</p><a class="primary-btn dark-btn" href="/#contact">Ask about this property</a>${mapsURL?`<p><a class="detail-map-link" href="${escapeHTML(mapsURL)}" target="_blank" rel="noopener noreferrer">View location on Google Maps ↗</a></p>`:''}</div></section></div>`;
 }

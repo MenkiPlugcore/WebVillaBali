@@ -63,8 +63,8 @@ test("hero is attached without modifying navigation or search markup", () => {
   assert.match(markup, /id="heroJourney"/);
   assert.match(markup, /<form class="search-panel" id="heroSearch">/);
   assert.match(markup, /<nav class="desktop-nav"/);
-  assert.match(markup, /hero-immersive\.css\?v=20261025-1/);
-  assert.match(markup, /hero-immersive\.js\?v=20261025-1/);
+  assert.match(markup, /hero-immersive\.css\?v=[a-z0-9-]+/);
+  assert.match(markup, /hero-immersive\.js\?v=[a-z0-9-]+/);
 });
 
 test("idle zoom is separate from scroll transform and respects reduced motion", () => {

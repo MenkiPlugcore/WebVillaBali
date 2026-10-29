@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {parseHTML} from 'linkedom';
 import {handle} from '../supabase/functions/public-catalog/index.js';
+import {googleMapsURL,normalizeMapsURL} from '../map-links.js';
+import {propertySummary} from '../seo/render.js';
 const parent='01234567-0123-4123-8123-012345678901', photo='01234567-0123-4123-8123-012345678902';
 const env={url:'https://example.supabase.co',anon:'anon-key',key:'server-secret'};
 function request(query='',init={}){return new Request('https://example.supabase.co/functions/v1/public-catalog'+query,init);}
@@ -61,4 +63,34 @@ test('comparison supports new property slugs and kost with safe current data',as
 test('Cloudflare canonical URLs and old .html URLs both preserve the property slug',()=>{
  const b=browser('<body></body>',async()=>json({properties:[],hasMore:false}));
  for(const path of ['/property?slug=tesproperty','/property/?slug=tesproperty','/property.html?slug=tesproperty','/properties/tesproperty','/properties/tesproperty/','/properties/tesproperty.html'])assert.equal(b.window.AUPCatalog.slugFromURL(path),'tesproperty',path);
+});
+
+test('Maps accepts Google share links and rejects executable or unrelated URLs in both clients',()=>{
+ const b=browser('<body></body>',async()=>json({properties:[]}));
+ for(const raw of ['https://maps.app.goo.gl/abc123','https://goo.gl/maps/Abc123','https://www.google.com/maps/place/Villa/@-8.5,115.2,17z','https://maps.google.com/?q=-8.5,115.2','https://www.google.co.id/maps/search/?api=1&query=-8.5%2C115.2']){
+  assert.equal(normalizeMapsURL(' '+raw+' '),raw);assert.equal(b.window.AUPCatalog.mapsURL(raw),googleMapsURL(raw));
+ }
+ for(const raw of ['javascript:alert(1)','data:text/html,x','http://www.google.com/maps/place/Villa','https://maps.app.goo.gl.evil.test/abc','https://www.google.com@evil.test/maps','https://evil.test/?q=google.com/maps','https://www.google.com/search?q=villa','https://maps.app.goo.gl/','https://maps.app.goo.gl/a/b','https://user:pass@maps.google.com/?q=x','https://maps.google.com:444/?q=x','https://www.google.com/maps/\nplace','https://www.google.com/maps/\\evil','https://www.google.com/maps/?q='+'a'.repeat(2048)]){
+  assert.equal(googleMapsURL(raw),'',raw);assert.equal(b.window.AUPCatalog.mapsURL(raw),'',raw);assert.throws(()=>normalizeMapsURL(raw),/Google Maps/);
+ }
+ assert.equal(normalizeMapsURL(' '),'');
+});
+test('property detail displays the exact owner Maps link, translates it and hides absent or invalid pins',async()=>{
+ for(const maps_url of ['https://maps.app.goo.gl/OwnerPin123','','javascript:alert(1)']){
+  const b=browser(fs.readFileSync('property.html','utf8'),async()=>json({properties:[{...fixture,maps_url}],hasMore:false}));b.context.location.href='https://webvillabali.menkiestes.workers.dev/property?slug=new-property';
+  vm.runInContext(fs.readFileSync('property-detail.js','utf8'),b.context);await settle();
+  const link=b.document.querySelector('.detail-map-link');
+  if(!googleMapsURL(maps_url)){assert.equal(link,null);assert.equal(b.document.querySelector('.detail-map-card'),null);continue;}
+  assert.equal(link.getAttribute('href'),maps_url);assert.equal(link.getAttribute('rel'),'noopener noreferrer');assert.equal(link.getAttribute('target'),'_blank');assert.match(link.textContent,/Lihat titik lokasi/);
+  b.document.getElementById('languageToggle').click();assert.match(b.document.querySelector('.detail-map-link').textContent,/View location/);assert.equal(b.document.querySelector('.detail-map-link').getAttribute('href'),maps_url);
+ }
+});
+test('server-rendered property includes only a validated owner pin',()=>{
+ const maps_url='https://www.google.com/maps/search/?api=1&query=-8.5%2C115.2';
+ const doc=parseHTML(propertySummary({...fixture,maps_url})).document;assert.equal(doc.querySelector('.detail-map-link').getAttribute('href'),maps_url);assert.equal(doc.querySelector('.detail-map-link').getAttribute('rel'),'noopener noreferrer');
+ assert.equal(parseHTML(propertySummary({...fixture,maps_url:'javascript:alert(1)'})).document.querySelector('.detail-map-link'),null);
+});
+test('published property catalog selects the saved Maps field',async()=>{
+ const maps_url='https://maps.app.goo.gl/OwnerPin123';
+ await mock(async url=>{assert.ok(new URL(url).searchParams.get('select').split(',').includes('maps_url'));return json([{...fixture,maps_url}]);},async()=>{const data=await (await handle(request('?slug=new-property'),env)).json();assert.equal(data.properties[0].maps_url,maps_url);});
 });
