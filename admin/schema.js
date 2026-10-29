@@ -20,6 +20,7 @@ export const sections={
  inquiries:{label:'Tiket pelanggan',admin:true,fields:[f('ticket_no','Nomor tiket','text',{readonly:true}),f('name','Nama','text',{readonly:true}),f('email','Email','text',{readonly:true}),f('phone','Telepon','text',{readonly:true}),f('message','Pesan','textarea',{readonly:true}),f('status','Status tindak lanjut','select',{options:[['new','Baru'],['contacted','Sudah dihubungi'],['in_progress','Diproses'],['closed','Selesai'],['spam','Spam']]}),f('internal_notes','Catatan internal','textarea')]},
  invoices:{label:'Invoice & pembayaran',admin:true,fields:[]},
  payment_settings:{label:'Metode pembayaran',admin:true,fields:[]},
+ rental_banner:{label:'Foto utama rental',admin:true,fields:[]},
  site_settings:{label:'Pengaturan website',admin:true,fields:[]}
 };
 export const settingFields={contact:['email','phone','whatsapp','address'],social_links:['instagram','facebook','youtube','tiktok'],brand:['name','tagline'],homepage:['title_id','title_en','description_id','description_en']};

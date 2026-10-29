@@ -163,3 +163,16 @@ Issued invoices expose a shareable /pay link. Capabilities stay in URL fragments
 PayPal invoices cannot be cancelled once a payment attempt has begun. Merchant identity cannot change after transactions exist in that environment; credentials cannot be changed while its issued invoices are outstanding. Refund, reversal and dispute notifications flag the invoice for review, with idempotent history entries. Sandbox invoices are clearly labelled in the panel, customer page and PDF.
 
 The owner must supply the real BCA name/number and PayPal environment, Client ID, Client Secret and Merchant ID through the admin panel. No real credentials are seeded and no real charge was initiated during implementation. Automated provider tests use intercepted synthetic responses; an actual merchant Sandbox end-to-end test is still required once credentials are available, before accepting live payments. Run npm test and supabase/tests/invoices.sql plus supabase/tests/payments.sql (transactional fixtures roll back).
+
+
+### Rental artwork and media cleanup
+
+Owner/admin can use **Foto utama rental** to upload the shared rental hero and homepage teaser image. `site_media` holds the fixed `rental_hero` slot; originals remain in the private `aup-media` bucket. The public catalogue signs only that database path. Empty or unavailable artwork keeps the existing built-in photo. Current listing and guest uploads use Supabase Storage; Cloudinary is used for the existing brand logo, not these uploads.
+
+**Ganti foto** preserves the image record, cover flag and order. It uploads to a fresh path, conditionally saves against the displayed old path, then cleans the retired file. Guest replacement resets publication to draft and consent to false. **Hapus produk / Hapus momen** deletes through the caller's RLS; foreign-key cascades queue every associated photo. Archiving only hides content and keeps its file.
+
+Private database triggers record retired paths transactionally in `aup_private.media_cleanup_jobs`, including direct database edits and cascades. The server leases batches, checks that paths have no current references, and deletes exact objects using the Storage API. Failed calls are retried with backoff; completed path tombstones prevent reuse. No bulk historical-orphan sweep is performed.
+
+`aup-media-cleanup` runs each minute and dispatches only when jobs are due. Its purpose-specific token is generated in Vault and never committed or sent to clients. `media-cleanup` has gateway JWT verification disabled and independently verifies this token through a server-only RPC; `admin-media` retains JWT verification plus live staff/session checks. Deploy both functions and the migrations before the frontend. Never expose the worker RPC or queue to authenticated/anonymous roles.
+
+Validation: `npm test`, `npm run build:admin`; `backend/media-lifecycle-check.sql` offers a rollback-only metadata check. The scheduler can be checked with a synthetic queue path that names no existing file; never delete a real listing for testing.

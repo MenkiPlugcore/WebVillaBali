@@ -62,8 +62,8 @@ export function imageType(bytes){
 }
 export const staffRole=user=>!!user?.id&&['owner','admin','editor','developer'].includes(user.app_metadata?.aup_role);
 export const validUUID=id=>typeof id==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
-export const mediaTables={properties:['property_images','property_id'],motorbikes:['motorbike_images','motorbike_id'],guest_moments:['guest_moments',null]};
-export const validMediaPath=(table,path,parentId)=>Object.hasOwn(mediaTables,table)&&typeof path==='string'&&new RegExp('^'+table+'/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.(jpg|png|webp)$','i').test(path)&&(table==='guest_moments'||!parentId||path.startsWith(table+'/'+parentId+'/'));
+export const mediaTables={properties:['property_images','property_id'],motorbikes:['motorbike_images','motorbike_id'],guest_moments:['guest_moments',null],site_media:['site_media',null]};
+export const validMediaPath=(table,path,parentId)=>table==='site_media'?parentId==='rental_hero'&&typeof path==='string'&&/^site_media\/rental_hero\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp)$/.test(path):Object.hasOwn(mediaTables,table)&&typeof path==='string'&&new RegExp('^'+table+'/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.(jpg|png|webp)$','i').test(path)&&(table==='guest_moments'||!parentId||path.startsWith(table+'/'+parentId+'/'));
 export async function boundedBody(req,limit){
  const reader=req.body?.getReader();if(!reader)return new Uint8Array();
  const chunks=[];let size=0;

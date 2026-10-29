@@ -3,7 +3,7 @@ import {escapeHTML as esc} from './schema.js';
 export const navigationGroups=[
  {label:'Aktivitas harian',items:['dashboard','inquiries','invoices']},
  {label:'Katalog',items:['properties','motorbikes','locations','services']},
- {label:'Konten website',items:['guest_moments','testimonials']},
+ {label:'Konten website',items:['guest_moments','testimonials','rental_banner']},
  {label:'Pengaturan',items:['site_settings','payment_settings','staff_access','activity_log','developer_access']}
 ];
 const hints={
@@ -17,6 +17,7 @@ const hints={
  guest_moments:'Kelola foto tamu beserta keterangan dan izin publikasinya.',
  testimonials:'Kelola ulasan pelanggan dan izin untuk menampilkannya.',
  payment_settings:'Atur rekening BCA dan koneksi akun PayPal bisnis.',
+ rental_banner:'Ganti foto utama rental motor di halaman rental dan beranda.',
  site_settings:'Perbarui kontak bisnis dan tautan media sosial website.',
  staff_access:'Kelola akun dan peran anggota tim.',
  activity_log:'Lihat riwayat aktivitas akun pengelola.',
@@ -33,6 +34,7 @@ const paths={
  guest_moments:'M3 4h18v16H3zM3 16l5-5 4 4 3-3 6 6M15 8h.01',
  testimonials:'M4 4h16v12H8l-4 4zM8 8h8M8 12h5',
  payment_settings:'M3 5h18v14H3zM3 10h18M7 15h3',
+ rental_banner:'M3 4h18v16H3zM3 16l5-5 4 4 3-3 6 6M15 8h.01',
  site_settings:'M4 6h16M4 12h16M4 18h16M8 4v4M16 10v4M10 16v4',
  staff_access:'M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM2 21v-2a6 6 0 0 1 12 0v2M17 4a4 4 0 0 1 0 8M22 21v-2a6 6 0 0 0-5-5',
  activity_log:'M12 8v5l3 2M4 7V3M4 7h4M4 7a9 9 0 1 1-1 8',

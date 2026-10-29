@@ -6,6 +6,11 @@ entrypoint = "./functions/public-catalog/index.js"
 verify_jwt = true
 entrypoint = "./functions/admin-media/index.ts"
 
+# Only the scoped Vault token can invoke this worker; it processes queued paths.
+[functions.media-cleanup]
+verify_jwt = false
+entrypoint = "./functions/media-cleanup/index.js"
+
 [functions.public-inquiry]
 verify_jwt = false
 entrypoint = "./functions/public-inquiry/index.js"

@@ -23,3 +23,5 @@
 
 .staff-account-mode{margin-bottom:20px}.staff-activation-link{margin:20px 0;overflow-wrap:anywhere}.staff-activation-link input{font-size:14px}.staff-activation-button{margin-top:16px;width:100%}
 .settings-shortcuts{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 18px}.settings-shortcuts button{min-height:46px}@media(max-width:600px){.settings-shortcuts button{flex:1 1 180px}}
+
+.gallery-replace{display:block;border:1px solid #c6a76d;border-radius:9px;padding:10px;font-size:12px;font-weight:700;background:#fff;cursor:pointer}.gallery-replace input{display:block;width:100%;font:inherit;font-weight:400;margin-top:6px}.rental-banner-editor{max-width:820px}.rental-banner-editor .gallery-photo{max-width:600px}.rental-banner-editor .gallery-photo img{aspect-ratio:16/9;object-fit:cover}.save-bar .danger{background:#fff;color:#9f2737;border:1px solid #9f2737;margin-right:auto}

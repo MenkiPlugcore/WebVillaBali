@@ -21,6 +21,19 @@ export async function handle(req, env) {
     return res.json();
   }
   try {
+    if(url.searchParams.get('kind')==='site_media'){
+      const image=url.searchParams.get('image');
+      if(image!==null&&image!=='rental_hero')return reply({error:'Foto tidak ditemukan.'},404);
+      const [banner]=await read('site_media',{key:'eq.rental_hero',select:'storage_path,updated_at',limit:'1'});
+      const valid=banner&&/^site_media\/rental_hero\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp)$/.test(banner.storage_path);
+      if(image===null)return reply({media:{rental_hero:valid?{version:banner.updated_at}:null}});
+      if(!valid)return reply({error:'Foto tidak ditemukan.'},404);
+      const signed=await fetch(env.url+'/storage/v1/object/sign/aup-media/'+banner.storage_path,{method:'POST',headers:{apikey:env.key,Authorization:'Bearer '+env.key,'Content-Type':'application/json'},body:JSON.stringify({expiresIn:300})});
+      if(!signed.ok)throw Error('Rental artwork signing failed.');
+      const data=await signed.json(),path=data.signedURL||data.signedUrl;
+      if(!path?.startsWith('/object/sign/aup-media/'))throw Error('Invalid rental artwork URL.');
+      return new Response(null,{status:302,headers:{...headers,Location:env.url+'/storage/v1'+path}});
+    }
     if(guest){
       const category=url.searchParams.get('category')??'property';
       if(!['property','motorbike'].includes(category))return reply({error:'Kategori galeri tidak valid.'},400);
