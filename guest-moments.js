@@ -7,18 +7,24 @@
     en:{home:'Home',properties:'Properties',locations:'Locations',services:'Services',about:'About',contact:'Talk to us',eyebrow:'Guest documentation',title:'Moments with our guests.',intro:'Arrivals, visits, and memories shared with our guests.',note:'Shared with permission',view:'View all moments',foot:'A glimpse of the people and moments behind Agung Ubud Property.',caption:'Guest moment',back:'← Back to home',pageTitle:'Guest moments & memories',pageIntro:'A visual archive of visits and meaningful moments at Agung Ubud Property.',galleryTitle:'A closer look at the moments.',galleryCopy:'Guest documentation selected by our team and shared with permission.',empty:'Guest moments coming soon.',loading:'Loading guest moments…',error:'Guest moments could not be loaded.',retry:'Try again',more:'Show more moments',close:'Close photo',photoError:'Photo could not be loaded.',openGallery:'Open guest gallery'},
     id:{home:'Beranda',properties:'Properti',locations:'Lokasi',services:'Layanan',about:'Tentang',contact:'Hubungi kami',eyebrow:'Dokumentasi tamu',title:'Momen bersama para tamu.',intro:'Dokumentasi kedatangan, kunjungan, dan kenangan bersama para tamu.',note:'Dibagikan dengan izin',view:'Lihat semua momen',foot:'Cerita kecil dari orang-orang dan momen di Agung Ubud Property.',caption:'Momen tamu',back:'← Kembali ke beranda',pageTitle:'Momen & dokumentasi tamu',pageIntro:'Arsip visual kunjungan dan momen bermakna di Agung Ubud Property.',galleryTitle:'Lihat momen lebih dekat.',galleryCopy:'Dokumentasi pilihan tim yang telah mendapat izin publikasi.',empty:'Dokumentasi tamu segera hadir.',loading:'Memuat dokumentasi tamu…',error:'Dokumentasi tamu belum bisa dimuat.',retry:'Coba lagi',more:'Lihat momen lainnya',close:'Tutup foto',photoError:'Foto belum bisa dimuat.',openGallery:'Buka galeri tamu'}
   };
+  const rentalCopy={
+    en:{eyebrow:'Motorbike rental guests',title:'Journeys with our riders.',intro:'Handover moments and memories with our motorbike rental customers.',view:'View rental moments',foot:'Photos from our motorbike rental guests.',caption:'Motorbike rental guest',pageTitle:'Motorbike rental guest moments',pageIntro:'Handover moments and memories with our motorbike rental customers.',galleryTitle:'Meet our rental guests.',galleryCopy:'Motorbike rental customer photos selected by our team and shared with permission.',empty:'Motorbike rental guest photos coming soon.',loading:'Loading rental guest photos…',error:'Rental guest photos could not be loaded.',openGallery:'Open rental guest gallery'},
+    id:{eyebrow:'Pelanggan rental motor',title:'Momen bersama pelanggan rental.',intro:'Dokumentasi serah terima dan perjalanan bersama pelanggan rental motor kami.',view:'Lihat galeri rental',foot:'Dokumentasi pelanggan yang menyewa motor bersama kami.',caption:'Pelanggan rental motor',pageTitle:'Momen pelanggan rental motor',pageIntro:'Dokumentasi serah terima dan perjalanan bersama pelanggan rental motor kami.',galleryTitle:'Cerita bersama pelanggan rental.',galleryCopy:'Foto pelanggan rental motor yang dipilih tim dan dibagikan dengan izin.',empty:'Foto pelanggan rental motor segera hadir.',loading:'Memuat foto pelanggan rental…',error:'Foto pelanggan rental belum bisa dimuat.',openGallery:'Buka galeri pelanggan rental'}
+  };
+  function gallery(category){
+  const rental=category==='motorbike',sectionId=rental?'rentalMoments':'guestMoments',galleryHref=rental?'/guest-moments?category=motorbike':'/guest-moments';
   const language=()=>localStorage.getItem('aup-language')==='id'?'id':'en';
-  const t=()=>copy[language()];
+  const t=()=>({...copy[language()],...(rental?rentalCopy[language()]:{})});
   const caption=item=>item['caption_'+language()]||item.caption_en||item.caption_id||t().caption;
-  const image=(id,fresh=false)=>endpoint+'?kind=guest&image='+encodeURIComponent(id)+(fresh?'&v='+Date.now():'');
-  let moments=[],page=0,hasMore=false,busy=false,failed=false,opener,hovered=false,previewObserver;
+  const image=(id,fresh=false)=>endpoint+'?kind=guest&image='+encodeURIComponent(id)+(rental?'&category=motorbike':'')+(fresh?'&v='+Date.now():'');
+  let moments=[],page=0,hasMore=false,busy=false,failed=false,opener,hovered=false,previewObserver,observedSection;
   const touches=new Set();
-  function card(item,duplicate=false){const label=caption(item),place=item.location_label||'',tag=dedicated?'button':'a';return `<${tag} class="${dedicated?'gm-tile':'guest-moment-card'}${duplicate?' gm-visual-copy':''}" ${dedicated?'type="button"':'href="/guest-moments"'} data-gm-id="${escape(item.id)}" ${duplicate?'aria-hidden="true" tabindex="-1"':''} aria-label="${escape([!dedicated?t().openGallery:'',label,place].filter(Boolean).join(' · '))}"><img src="${image(item.id)}" alt="${escape(label)}" loading="lazy" decoding="async"><span class="guest-moment-caption"><strong>${escape(place)}</strong><small>${escape(label)}</small></span></${tag}>`;}
+  function card(item,duplicate=false){const label=caption(item),place=item.location_label||'',tag=dedicated?'button':'a';return `<${tag} class="${dedicated?'gm-tile':'guest-moment-card'}${duplicate?' gm-visual-copy':''}" ${dedicated?'type="button"':'href="'+galleryHref+'"'} data-gm-id="${escape(item.id)}" ${duplicate?'aria-hidden="true" tabindex="-1"':''} aria-label="${escape([!dedicated?t().openGallery:'',label,place].filter(Boolean).join(' · '))}"><img src="${image(item.id)}" alt="${escape(label)}" loading="lazy" decoding="async"><span class="guest-moment-caption"><strong>${escape(place)}</strong><small>${escape(label)}</small></span></${tag}>`;}
   function preview(){
     if(moments.length<2)return `<div class="gm-home-grid${moments.length?' gm-home-single':''}">${moments.length?card(moments[0]):state()}</div>`;
     const items=moments.slice(0,12),split=items.length>6?Math.ceil(items.length/2):items.length,rows=[items.slice(0,split)];
     if(split<items.length)rows.push(items.slice(split));
-    return `<div class="guest-moments-preview" id="guestMomentRows">${rows.map((row,index)=>{
+    return `<div class="guest-moments-preview" id="${sectionId}Rows">${rows.map((row,index)=>{
       const visible=Array.from({length:Math.max(6,row.length)},(_,i)=>card(row[i%row.length],i>=row.length)).join('');
       const repeat=Array.from({length:Math.max(6,row.length)},(_,i)=>card(row[i%row.length],true)).join('');
       return `<div class="guest-moments-marquee" role="region" aria-label="${escape(t().title)}${rows.length>1?' '+(index+1):''}"><div class="guest-moments-track${index?' reverse':''}"><div class="guest-moments-group">${visible}</div><div class="guest-moments-group gm-visual-copy" aria-hidden="true">${repeat}</div></div></div>`;
@@ -36,18 +42,18 @@
   }
   function releaseTouch(event){
     if(!touches.delete(event.pointerId))return;
-    const section=document.getElementById('guestMoments');if(section)motion(section);
+    const section=document.getElementById(sectionId);if(section)motion(section);
   }
   function state(){const c=t();return `<div class="gm-state" role="status"><p>${escape(busy?c.loading:failed?c.error:c.empty)}</p>${failed&&!busy?`<button type="button" data-gm-retry>${c.retry}</button>`:''}</div>`;}
   function homepage(){
-    let section=document.getElementById('guestMoments');
-    if(!section){const anchor=document.getElementById('properties');if(!anchor)return;section=document.createElement('section');section.id='guestMoments';section.className='guest-moments-section';anchor.insertAdjacentElement('afterend',section);}
-    const c=t();section.innerHTML=`<div class="shell"><div class="guest-moments-head"><div><p class="eyebrow light">${c.eyebrow}</p><h2>${c.title}</h2></div><div class="guest-moments-copy"><p>${c.intro}</p><span class="guest-moments-note">${c.note}</span></div></div>${preview()}<div class="guest-moments-actions"><p>${c.foot}</p><a class="guest-moments-link" href="/guest-moments">${c.view} →</a></div></div>`;bind(section);motion(section);previewInteraction(section);
-    if(!previewObserver&&typeof IntersectionObserver==='function'){previewObserver=new IntersectionObserver(entries=>{section.classList.toggle('is-offscreen',!entries.some(entry=>entry.isIntersecting));},{threshold:.01});previewObserver.observe(section);}
+    let section=document.getElementById(sectionId);
+    if(!section){const anchor=rental?document.querySelector('#livingMobility .motor-teaser-panel'):document.getElementById('properties');if(!anchor)return;section=document.createElement('section');section.id=sectionId;section.className='guest-moments-section'+(rental?' rental-moments-section':'');anchor.insertAdjacentElement(rental?'beforebegin':'afterend',section);hovered=false;touches.clear();}
+    const c=t();section.innerHTML=`<div class="shell"><div class="guest-moments-head"><div><p class="eyebrow light">${c.eyebrow}</p><h2>${c.title}</h2></div><div class="guest-moments-copy"><p>${c.intro}</p><span class="guest-moments-note">${c.note}</span></div></div>${preview()}<div class="guest-moments-actions"><p>${c.foot}</p><a class="guest-moments-link" href="${galleryHref}">${c.view} →</a></div></div>`;bind(section);motion(section);previewInteraction(section);
+    if(observedSection!==section&&typeof IntersectionObserver==='function'){previewObserver?.disconnect?.();observedSection=section;previewObserver=new IntersectionObserver(entries=>{section.classList.toggle('is-offscreen',!entries.some(entry=>entry.isIntersecting));},{threshold:.01});previewObserver.observe(section);}
   }
   function render(){
     if(!dedicated){homepage();return;}
-    const c=t();document.documentElement.lang=language();document.querySelectorAll('[data-gm-copy]').forEach(el=>{if(c[el.dataset.gmCopy])el.textContent=c[el.dataset.gmCopy];});
+    const c=t();document.documentElement.lang=language();document.title=c.pageTitle+' | Agung Ubud Property';const back=document.querySelector('.gm-page-back');if(back)back.href='/index.html#'+sectionId;document.querySelectorAll('[data-gm-copy]').forEach(el=>{if(c[el.dataset.gmCopy])el.textContent=c[el.dataset.gmCopy];});
     document.querySelectorAll('.site-header a').forEach(a=>{const hash=a.getAttribute('href')?.split('#')[1];const key=hash==='top'?'home':hash;if(c[key])a.textContent=c[key];});
     const lang=document.getElementById('guestLanguage');if(lang)lang.textContent=language().toUpperCase();
     const grid=document.getElementById('guestMomentsGrid');if(grid){grid.innerHTML=moments.length?moments.map(item=>card(item)).join(''):state();grid.classList.toggle('gm-gallery-empty',!moments.length);bind(grid);}
@@ -56,7 +62,7 @@
   }
   async function load(next=false){
     if(busy)return;busy=true;failed=false;render();
-    try{const current=next?page+1:0;const res=await fetch(endpoint+'?kind=guest&page='+current,{cache:'no-store',signal:AbortSignal.timeout(20000)});if(!res.ok)throw Error('LOAD');const data=await res.json();if(!Array.isArray(data.moments))throw Error('LOAD');const valid=data.moments.filter(m=>uuid.test(m.id));moments=next?[...moments,...valid.filter(m=>!moments.some(old=>old.id===m.id))]:valid;page=current;hasMore=data.hasMore===true;}catch{failed=true;}finally{busy=false;render();}
+    try{const current=next?page+1:0;const res=await fetch(endpoint+'?kind=guest&category='+category+'&page='+current,{cache:'no-store',signal:AbortSignal.timeout(20000)});if(!res.ok)throw Error('LOAD');const data=await res.json();if(!Array.isArray(data.moments))throw Error('LOAD');const valid=data.moments.filter(m=>uuid.test(m.id)&&(m.category||'property')===category);moments=next?[...moments,...valid.filter(m=>!moments.some(old=>old.id===m.id))]:valid;page=current;hasMore=data.hasMore===true;}catch{failed=true;}finally{busy=false;render();}
   }
   function close(){const box=document.querySelector('.gm-lightbox');box?.classList.remove('open');if(box){box.hidden=true;box.querySelector('img').removeAttribute('src');}document.body.classList.remove('gm-modal-open');opener?.focus();}
   function lightbox(){
@@ -70,12 +76,16 @@
   }
   if(dedicated){document.getElementById('guestLanguage')?.addEventListener('click',()=>{close();localStorage.setItem('aup-language',language()==='en'?'id':'en');render();});const button=document.getElementById('guestMenuButton'),menu=document.getElementById('guestMobileMenu');button?.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')==='true';button.setAttribute('aria-expanded',String(!open));menu?.classList.toggle('open',!open);});menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('open');button?.setAttribute('aria-expanded','false');}));}
   else {
-    const clearTouches=()=>{touches.clear();const section=document.getElementById('guestMoments');if(section)motion(section);};
+    const clearTouches=()=>{touches.clear();const section=document.getElementById(sectionId);if(section)motion(section);};
     window.addEventListener('pointerup',releaseTouch,true);window.addEventListener('pointercancel',releaseTouch,true);
     window.addEventListener('blur',clearTouches);
-    document.addEventListener('visibilitychange',()=>{if(document.hidden)touches.clear();const section=document.getElementById('guestMoments');if(section)motion(section);});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)touches.clear();const section=document.getElementById(sectionId);if(section)motion(section);});
     document.getElementById('languageToggle')?.addEventListener('click',()=>setTimeout(()=>{close();hovered=false;touches.clear();render();},0));
   }
+  if(!dedicated&&rental)document.addEventListener('aup:mobility-rendered',homepage);
   load();
+  }
+  if(dedicated)gallery(new URLSearchParams(window.location?.search||'').get('category')==='motorbike'?'motorbike':'property');
+  else {gallery('property');gallery('motorbike');}
 })();
 

@@ -88,6 +88,7 @@
             <div class="lm-panel-footer"><span>${c.footerKost}</span><button type="button" id="showKostListings">${c.seeKost} →</button></div>
           </article>
 
+          <div class="lm-rental-column">
           <article class="lm-panel motor-teaser-panel">
             <div class="motor-teaser-media" aria-hidden="true"></div>
             <div class="motor-teaser-overlay"></div>
@@ -99,12 +100,14 @@
               <div class="motor-teaser-footer"><small>${c.bikeNote}</small><a class="motor-teaser-cta" href="motor-rental.html">${c.bikeCta} →</a></div>
             </div>
           </article>
+          </div>
         </div>
       </div>`;
 
     section.querySelector('[data-lm-kost-contact]')?.addEventListener("click",focusKostContact);
     document.getElementById("showKostListings")?.addEventListener("click",showKost);
     if(typeof observeReveals==="function")observeReveals(section);
+    document.dispatchEvent(new document.defaultView.CustomEvent("aup:mobility-rendered"));
   }
 
   injectFilters();

@@ -45,3 +45,6 @@
 @media(max-width:620px){.living-mobility-section{padding:78px 0}.lm-panel{padding:15px;border-radius:18px}.lm-panel-head{display:block}.lm-panel-head p{text-align:left;margin-top:7px;max-width:none}.stay-card{grid-template-columns:108px 1fr;padding:8px;gap:12px}.lm-card-image{min-height:105px}.lm-card-title{font-size:18px}.lm-price-row{align-items:flex-start;flex-direction:column}.lm-action{width:100%;min-height:36px}.lm-panel-footer{align-items:flex-start;flex-direction:column}.motor-teaser-panel{padding:0}.motor-teaser-content{min-height:440px;padding:24px}.motor-teaser-footer{align-items:flex-start;flex-direction:column}.motor-teaser-cta{width:100%}}
 @media(max-width:390px){.stay-card{grid-template-columns:1fr}.lm-card-image{aspect-ratio:16/9;min-height:0}.lm-heading h2{font-size:39px}.motor-teaser-content{min-height:420px;padding:20px}.motor-teaser-features span{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.stay-card,.lm-action,.motor-teaser-media,.motor-teaser-cta{transition:none!important}}
+
+/* Keep the room card compact beside the rental gallery and rental card. */
+.lm-grid > #kostLiving { align-self: start; }

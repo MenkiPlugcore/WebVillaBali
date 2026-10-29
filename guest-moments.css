@@ -56,3 +56,21 @@
  .guest-moments-preview .guest-moments-marquee { overflow-x: auto; }
  .guest-moments-preview .gm-visual-copy { display: none; }
 }
+
+/* Rental customer gallery above the rental card, including the stacked mobile layout. */
+.lm-rental-column { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.lm-rental-column > .motor-teaser-panel { flex: 1; }
+body .rental-moments-section { padding: 28px 24px; border: 1px solid rgba(198,167,109,.4); border-radius: 22px; min-width: 0; }
+.rental-moments-section > .shell { width: 100%; max-width: none; margin: 0; }
+.rental-moments-section .guest-moments-head { grid-template-columns: 1fr; gap: 14px; margin-bottom: 22px; }
+.rental-moments-section .guest-moments-head h2 { font-size: clamp(29px,3vw,40px); line-height: 1.08; }
+.rental-moments-section .guest-moments-copy { font-size: 12px; line-height: 1.65; }
+.rental-moments-section .guest-moments-copy p { margin-bottom: 10px; }
+.rental-moments-section .guest-moments-marquee { margin: 0 -6px; }
+.rental-moments-section .guest-moments-marquee::before,
+.rental-moments-section .guest-moments-marquee::after { width: 32px; }
+.rental-moments-section .guest-moment-card { width: 210px; height: 150px; border-radius: 14px; }
+.rental-moments-section .gm-home-single .guest-moment-card { width: 100%; height: 210px; }
+.rental-moments-section .guest-moments-actions { flex-direction: column; align-items: stretch; gap: 14px; margin-top: 20px; }
+.rental-moments-section .gm-state { padding: 24px 16px; font-size: 13px; }
+@media (max-width:620px) { body .rental-moments-section { padding: 25px 18px; border-radius: 18px; } }

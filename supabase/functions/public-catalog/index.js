@@ -22,10 +22,12 @@ export async function handle(req, env) {
   }
   try {
     if(guest){
+      const category=url.searchParams.get('category')??'property';
+      if(!['property','motorbike'].includes(category))return reply({error:'Kategori galeri tidak valid.'},400);
       const imageId=url.searchParams.get('image');
       if(imageId!==null){
         if(!uuid.test(imageId))return reply({error:'Foto tidak ditemukan.'},404);
-        const [moment]=await read('guest_moments',{id:'eq.'+imageId,publication_status:'eq.published',consent_confirmed:'eq.true',select:'storage_path',limit:'1'});
+        const [moment]=await read('guest_moments',{category:'eq.'+category,id:'eq.'+imageId,publication_status:'eq.published',consent_confirmed:'eq.true',select:'storage_path',limit:'1'});
         if(!moment||!/^guest_moments\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(jpg|png|webp)$/i.test(moment.storage_path))return reply({error:'Foto tidak ditemukan.'},404);
         const signed=await fetch(env.url+'/storage/v1/object/sign/aup-media/'+moment.storage_path,{method:'POST',headers:{apikey:env.key,Authorization:'Bearer '+env.key,'Content-Type':'application/json'},body:JSON.stringify({expiresIn:300})});
         if(!signed.ok)throw Error('Guest image signing failed.');
@@ -34,7 +36,7 @@ export async function handle(req, env) {
         return new Response(null,{status:302,headers:{...headers,Location:env.url+'/storage/v1'+path}});
       }
       const page=url.searchParams.get('page')||'0';if(!/^\d{1,6}$/.test(page))return reply({error:'Halaman tidak valid.'},400);
-      const rows=await read('guest_moments',{publication_status:'eq.published',consent_confirmed:'eq.true',select:'id,caption_id,caption_en,location_label,sort_order',order:'sort_order.asc,id.asc',limit:'20',offset:String(Number(page)*20)});
+      const rows=await read('guest_moments',{category:'eq.'+category,publication_status:'eq.published',consent_confirmed:'eq.true',select:'id,category,caption_id,caption_en,location_label,sort_order',order:'sort_order.asc,id.asc',limit:'20',offset:String(Number(page)*20)});
       return reply({moments:rows,hasMore:rows.length===20});
     }
     if(url.searchParams.get('kind')==='service'){const page=url.searchParams.get('page')||'0';if(!/^\d{1,6}$/.test(page))return reply({error:'Halaman tidak valid.'},400);const rows=await read('services',{publication_status:'eq.published',select:'id,slug,title_id,title_en,description_id,description_en,sort_order',order:'sort_order.asc,id.asc',limit:'100',offset:String(Number(page)*100)});return reply({services:rows,hasMore:rows.length===100});}
