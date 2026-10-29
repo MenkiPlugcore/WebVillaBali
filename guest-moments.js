@@ -41,7 +41,7 @@
   function state(){const c=t();return `<div class="gm-state" role="status"><p>${escape(busy?c.loading:failed?c.error:c.empty)}</p>${failed&&!busy?`<button type="button" data-gm-retry>${c.retry}</button>`:''}</div>`;}
   function homepage(){
     let section=document.getElementById('guestMoments');
-    if(!section){const anchor=document.getElementById('reviews')||document.getElementById('about');if(!anchor)return;section=document.createElement('section');section.id='guestMoments';section.className='guest-moments-section';anchor.insertAdjacentElement('beforebegin',section);}
+    if(!section){const anchor=document.getElementById('properties');if(!anchor)return;section=document.createElement('section');section.id='guestMoments';section.className='guest-moments-section';anchor.insertAdjacentElement('afterend',section);}
     const c=t();section.innerHTML=`<div class="shell"><div class="guest-moments-head"><div><p class="eyebrow light">${c.eyebrow}</p><h2>${c.title}</h2></div><div class="guest-moments-copy"><p>${c.intro}</p><span class="guest-moments-note">${c.note}</span></div></div>${preview()}<div class="guest-moments-actions"><p>${c.foot}</p><a class="guest-moments-link" href="/guest-moments">${c.view} →</a></div></div>`;bind(section);motion(section);previewInteraction(section);
     if(!previewObserver&&typeof IntersectionObserver==='function'){previewObserver=new IntersectionObserver(entries=>{section.classList.toggle('is-offscreen',!entries.some(entry=>entry.isIntersecting));},{threshold:.01});previewObserver.observe(section);}
   }
