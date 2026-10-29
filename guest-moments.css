@@ -39,3 +39,25 @@
 @media(max-width:620px){.gm-home-grid{grid-template-columns:1fr}.gm-home-grid .guest-moment-card{height:230px}.gm-gallery{columns:auto;display:grid;grid-template-columns:1fr;gap:16px}.gm-tile{margin:0}.gm-state{padding:32px 16px}.gm-lightbox{padding:16px}}
 
 .guest-moments-page .site-header .header-cta{color:#1b2250;background:#fff}
+
+/* Moving homepage preview; the complete archive stays on the gallery page. */
+.guest-moments-preview { display: grid; gap: 12px; position: relative; z-index: 1; }
+.guest-moments-group { display: flex; flex: 0 0 auto; gap: 14px; }
+.guest-moments-preview .guest-moment-card { padding: 0; text-decoration: none; color: #fff; border-color: rgba(198,167,109,.4); box-shadow: 0 6px 18px rgba(27,34,80,.08); }
+.guest-moments-controls { display: flex; align-items: center; gap: 12px; }
+.gm-motion-toggle { min-height: 44px; padding: 0 16px; border: 1px solid #c6a76d; border-radius: 999px; background: #f7f4ed; color: #1b2250; font: inherit; font-size: 12px; cursor: pointer; }
+.gm-motion-toggle:hover { background: #eee8dc; }
+.gm-motion-toggle:focus-visible { outline: 3px solid #1b2250; outline-offset: 4px; }
+.guest-moments-section.is-paused .guest-moments-track,
+.guest-moments-section.is-offscreen .guest-moments-track,
+.guest-moments-section.is-page-hidden .guest-moments-track { animation-play-state: paused; }
+.guest-moments-marquee:focus-within { overflow-x: auto; }
+.guest-moments-marquee:focus-within .guest-moments-track { animation: none; transform: none; }
+.guest-moments-marquee:focus-within .gm-visual-copy { display: none; }
+.gm-home-single { grid-template-columns: minmax(0,360px); justify-content: center; }
+@media (max-width:620px) { .guest-moments-controls { width: 100%; } .guest-moments-controls .guest-moments-link { flex: 1; width: auto; } .gm-motion-toggle { flex: 0 0 auto; } }
+@media (prefers-reduced-motion:reduce) {
+ .guest-moments-preview .guest-moments-track { animation: none !important; transform: none; }
+ .guest-moments-preview .guest-moments-marquee { overflow-x: auto; }
+ .guest-moments-preview .gm-visual-copy, .gm-motion-toggle { display: none; }
+}
