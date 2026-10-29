@@ -1,0 +1,313 @@
+/* Ivory is the dominant surface; navy is reserved for type and actions. */
+:root {
+  --balance-ivory: #f7f4ed;
+  --balance-sand: #eee8dc;
+  --balance-navy: #1b2250;
+  --balance-champagne: #c6a76d;
+  --balance-muted: #59617b;
+  --balance-gold-text: #806536;
+  --balance-line: rgba(198,167,109,.4);
+}
+
+/* The header and its mobile shortcuts stay light at every scroll position. */
+body .site-header,
+body .site-header.scrolled,
+body .site-header.nav-scrolled,
+body .site-header.brandless-header:not(.scrolled):not(.nav-scrolled),
+body.property-page .site-header,
+body.guest-moments-page .site-header {
+  --nav-bg: rgba(247,244,237,.98);
+  background: rgba(247,244,237,.98) !important;
+  color: var(--balance-navy);
+  border-bottom: 1px solid var(--balance-line) !important;
+  box-shadow: 0 4px 18px rgba(27,34,80,.06) !important;
+}
+body .site-header::after {
+  background: linear-gradient(90deg, transparent, var(--balance-champagne), transparent);
+}
+body .site-header .brand,
+body .site-header .brand-mark,
+body .site-header .desktop-nav a,
+body .site-header .header-actions .compact,
+body .site-header .saved-nav-link,
+body .site-header .compare-nav-link,
+body .site-header .menu-btn,
+body .site-header .saved-nav-heart,
+body .site-header .compare-nav-icon,
+body .site-header #languageToggle,
+body .site-header #currencyToggle,
+body .site-header #languageToggle::before,
+body .site-header #currencyToggle::before,
+body .site-header #languageToggle::after,
+body .site-header #currencyToggle::after,
+body .site-header .menu-btn::before {
+  color: var(--balance-navy) !important;
+}
+body .site-header .header-actions .compact,
+body .site-header .saved-nav-link,
+body .site-header .compare-nav-link,
+body .site-header .menu-btn,
+body .site-header .brand-mark {
+  background: rgba(255,255,255,.6) !important;
+  border-color: var(--balance-line) !important;
+  box-shadow: none !important;
+}
+body .site-header .header-actions > :hover {
+  background: var(--balance-sand) !important;
+  border-color: var(--balance-champagne) !important;
+}
+body .site-header .header-actions > :focus-visible {
+  outline-color: var(--balance-navy);
+}
+body .site-header .header-actions .header-cta,
+body.property-page .site-header .primary-btn.header-cta,
+body.guest-moments-page .site-header .header-cta {
+  background: var(--balance-navy) !important;
+  color: var(--balance-ivory) !important;
+}
+body .site-header .mobile-menu {
+  background: var(--balance-ivory) !important;
+  color: var(--balance-navy);
+  border: 1px solid var(--balance-line);
+}
+body .site-header .mobile-menu a,
+body .site-header .accordion-menu .nav-group summary,
+body .site-header .accordion-menu .nav-group[open] summary {
+  color: var(--balance-navy) !important;
+}
+body .site-header .accordion-menu .nav-submenu a {
+  color: var(--balance-muted) !important;
+}
+body .site-header .mobile-menu a:hover,
+body .site-header .accordion-menu .nav-group summary:hover {
+  background: var(--balance-sand);
+}
+body .site-header .accordion-menu .nav-group,
+body .site-header .accordion-menu .nav-submenu {
+  border-color: var(--balance-line);
+}
+body .site-header .accordion-menu .nav-group summary::after {
+  border-color: var(--balance-gold-text);
+}
+
+/* A warm light veil shows the photograph without tinting the whole hero blue. */
+body .hero,
+body .hero-journey .hero,
+body .hero-client-slider {
+  background-color: var(--balance-ivory);
+  color: var(--balance-navy);
+}
+body .hero .hero-overlay,
+body .hero-journey .hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(247,244,237,.98) 0%, rgba(247,244,237,.94) 30%, rgba(247,244,237,.76) 55%, rgba(247,244,237,.12) 86%),
+    linear-gradient(0deg, rgba(247,244,237,.9), rgba(247,244,237,.6) 14%, transparent 44%);
+}
+body .hero h1,
+body .hero .hero-brand-wordmark,
+body .hero .hero-brand-wordmark strong,
+body .hero .hero-brand-wordmark span {
+  color: var(--balance-navy);
+  text-shadow: none;
+}
+body .hero .hero-brand-icon-frame::before { background: none; }
+body .hero .hero-copy,
+body .hero .hero-trust { color: #414b68; }
+body .hero .hero-content > .eyebrow { color: var(--balance-gold-text); }
+body .hero .hero-scroll-cue { color: var(--balance-navy); }
+body .hero .hero-scroll-cue-track { background: rgba(27,34,80,.2); }
+body .hero-journey .hero::after { border-color: rgba(198,167,109,.35); }
+body .hero .hero-client-dot::after { background: rgba(27,34,80,.3); }
+body .hero .hero-client-dot.is-active::after { background: var(--balance-navy); }
+
+/* Large content panels use ivory and champagne instead of solid navy fills. */
+body .category-section,
+body .guest-moments-section,
+body .trust-panel,
+body .permit-service-card,
+body .rental-includes-section,
+body .rental-estimate-card,
+body .gm-page-hero,
+body .policy-hero,
+body .policy-header,
+body .contact-section,
+body .inquiry-card {
+  background: var(--balance-ivory);
+  color: var(--balance-navy);
+}
+body .trust-panel,
+body .permit-service-card,
+body .inquiry-card,
+body .rental-estimate-card {
+  border: 1px solid var(--balance-line);
+  box-shadow: 0 12px 36px rgba(27,34,80,.05);
+}
+body .trust-panel {
+  background: linear-gradient(120deg, var(--balance-ivory), #f0e8d8);
+}
+body .trust-panel::before { border-color: var(--balance-line); }
+body .trust-copy h2,
+body .permit-service-copy h2,
+body .category-section .light-title,
+body .contact-section h2,
+body .contact-signature-name,
+body .policy-brand,
+body .policy-header button,
+body .gm-page-back,
+body .inquiry-card label { color: var(--balance-navy); }
+body .trust-copy > p:not(.eyebrow),
+body .trust-point p,
+body .permit-service-copy p:not(.eyebrow),
+body .permit-service-point p,
+body .permit-service-note,
+body .guest-moments-copy,
+body .guest-moments-note,
+body .gm-page-hero p,
+body .policy-hero p:not(.eyebrow),
+body .policy-hero small,
+body .rental-includes-copy > p:not(.eyebrow),
+body .rental-includes-list p,
+body .rental-estimate-card span,
+body .rental-estimate-card small,
+body .contact-section .contact-intro > p:not(.eyebrow),
+body .contact-signature-location,
+body .inquiry-card > p,
+body .inquiry-card .detail-kicker { color: var(--balance-muted); }
+body .trust-copy > .eyebrow,
+body .permit-service-copy .eyebrow,
+body .category-section .eyebrow.light,
+body .guest-moments-section .eyebrow.light,
+body .rental-includes-section .eyebrow.light,
+body .gm-page-hero .eyebrow,
+body .policy-hero .eyebrow,
+body .contact-intro > .eyebrow { color: var(--balance-gold-text); }
+body .trust-point {
+  background: rgba(255,255,255,.7);
+  border-color: var(--balance-line);
+}
+body .trust-point:hover { background: #fff; border-color: var(--balance-champagne); }
+body .trust-point > span {
+  background: var(--balance-sand);
+  color: var(--balance-navy);
+}
+body .trust-secondary {
+  background: transparent;
+  color: var(--balance-navy);
+  border-color: var(--balance-champagne);
+}
+body .trust-actions > .primary-btn:not(.trust-secondary),
+body .permit-service-primary,
+body .guest-moments-link,
+body .inquiry-card .primary-btn,
+body .inquiry-card button[type=submit] {
+  background: var(--balance-navy);
+  color: var(--balance-ivory);
+}
+body .permit-service-point,
+body .permit-service-point:last-child,
+body .rental-includes-list article,
+body .rental-includes-list article:last-child,
+body .guest-moments-note,
+body .gm-page-badge,
+body .gm-state { border-color: var(--balance-line); }
+body .permit-service-point > span,
+body .rental-includes-list article > span { color: var(--balance-gold-text); }
+body .category-grid { background: rgba(198,167,109,.35); }
+body .category-card { color: #fff; background-color: #625b50; }
+body .category-card::before {
+  background: linear-gradient(0deg, rgba(35,33,29,.84), rgba(35,33,29,.08));
+}
+body .category-card:hover::before {
+  background: linear-gradient(0deg, rgba(35,33,29,.9), rgba(35,33,29,.16));
+}
+body .guest-moments-marquee::before {
+  background: linear-gradient(90deg, var(--balance-ivory), transparent);
+}
+body .guest-moments-marquee::after {
+  background: linear-gradient(-90deg, var(--balance-ivory), transparent);
+}
+body .guest-moment-card,
+body .gm-photo-error { background: var(--balance-sand); }
+body .gm-lightbox { background: rgba(35,33,29,.94); }
+
+/* Keep photos natural in supporting banners and service cards too. */
+body .about-overlay {
+  background: linear-gradient(90deg, rgba(35,33,29,.76), rgba(35,33,29,.14));
+}
+body .motor-teaser-overlay {
+  background: linear-gradient(0deg, rgba(35,33,29,.9), rgba(35,33,29,.4) 58%, rgba(35,33,29,.08));
+}
+body .rental-hero-overlay {
+  background: linear-gradient(90deg, rgba(35,33,29,.82), rgba(35,33,29,.4) 48%, rgba(35,33,29,.08));
+}
+body .build-service-card.visual::after {
+  background: linear-gradient(180deg, rgba(35,33,29,.04), rgba(35,33,29,.82) 78%);
+}
+body .build-service-card.dark {
+  background: var(--balance-sand);
+  border-color: var(--balance-line);
+  color: var(--balance-navy);
+}
+body .build-service-card.dark p { color: var(--balance-muted); }
+body .build-service-card.dark .build-service-tag { background: rgba(198,167,109,.16); }
+body .build-service-card.dark .build-service-meta span { border-color: var(--balance-line); }
+body .build-service-card.soft { background: #f0e8d8; }
+
+body .contact-section::before { background: linear-gradient(120deg, var(--balance-ivory), #f0e8d8); }
+body .contact-section::after { border-color: var(--balance-line); }
+body .contact-signature-mark { color: var(--balance-gold-text); }
+body .contact-section .contact-form { background: #fff; box-shadow: 0 12px 36px rgba(27,34,80,.06); }
+body .inquiry-card input,
+body .inquiry-card textarea {
+  background: #fff;
+  color: var(--balance-navy);
+  border-color: var(--balance-line);
+}
+body .inquiry-card .inquiry-channels {
+  --inquiry-ink: #1b2250;
+  --inquiry-muted: #59617b;
+  --inquiry-line: rgba(198,167,109,.4);
+  --inquiry-secondary: #fff;
+  --inquiry-primary: #1b2250;
+  --inquiry-primary-text: #f7f4ed;
+}
+body .inquiry-card .inquiry-status { color: #376047; }
+body .inquiry-card .inquiry-status.is-error { color: #a63e35; }
+body .inquiry-card .inquiry-ticket-fields { border-top-color: var(--balance-line); }
+body .inquiry-card .inquiry-ticket-toggle { color: var(--balance-navy); }
+
+/* Payment has its own small stylesheet and does not load the global tokens. */
+body:has(#payment-app) > header {
+  background: var(--balance-ivory);
+  color: var(--balance-navy);
+  border-bottom: 1px solid var(--balance-line);
+}
+body:has(#payment-app) > header button { border-color: var(--balance-champagne); }
+
+@media (max-width: 720px) {
+  body .hero .hero-overlay {
+    background: linear-gradient(180deg, rgba(247,244,237,.96), rgba(247,244,237,.92) 56%, rgba(247,244,237,.88));
+  }
+  body .hero #heroSearch {
+    background: var(--balance-ivory);
+    color: var(--balance-navy);
+    box-shadow: 0 12px 30px rgba(27,34,80,.1);
+  }
+  body .hero #heroSearch label { background: #fff; }
+  body .hero #heroSearch label:focus-within { background: #fff; }
+  body .hero #heroSearch label > span { color: var(--balance-muted); }
+  body .hero #heroSearch label::after { border-color: var(--balance-navy); }
+  body .hero #heroSearch select { color: var(--balance-navy); color-scheme: light; }
+  body .hero #heroSearch option { color: var(--balance-navy); background: var(--balance-ivory); }
+  body .hero #heroSearch select:focus-visible { outline-color: var(--balance-gold-text); }
+  body .hero #heroSearch .search-btn { background: var(--balance-navy); color: var(--balance-ivory); }
+  body .hero #heroSearch .search-btn:hover { background: #303862; }
+  body .hero #heroSearch .search-btn:active { background: var(--balance-navy); }
+  body .hero #heroSearch .search-btn:focus-visible { outline-color: var(--balance-gold-text); }
+  body #properties .catalog-intro .section-heading {
+    background: var(--balance-ivory);
+    color: var(--balance-navy);
+  }
+  body #properties .catalog-intro .eyebrow { color: var(--balance-gold-text); }
+  body #properties .catalog-intro .section-heading > p { color: var(--balance-muted); }
+}
