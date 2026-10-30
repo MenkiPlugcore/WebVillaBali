@@ -90,7 +90,7 @@ body .site-header .accordion-menu .nav-group summary::after {
   border-color: var(--balance-gold-text);
 }
 
-/* A warm light veil shows the photograph without tinting the whole hero blue. */
+/* Keep a light tint near the copy while leaving the photograph visible. */
 body .hero,
 body .hero-journey .hero,
 body .hero-client-slider {
@@ -100,8 +100,8 @@ body .hero-client-slider {
 body .hero .hero-overlay,
 body .hero-journey .hero-overlay {
   background:
-    linear-gradient(90deg, rgba(247,244,237,.98) 0%, rgba(247,244,237,.94) 30%, rgba(247,244,237,.76) 55%, rgba(247,244,237,.12) 86%),
-    linear-gradient(0deg, rgba(247,244,237,.9), rgba(247,244,237,.6) 14%, transparent 44%);
+    linear-gradient(90deg, rgba(247,244,237,.60) 0%, rgba(247,244,237,.48) 30%, rgba(247,244,237,.16) 55%, transparent 78%),
+    linear-gradient(0deg, rgba(247,244,237,.30), transparent 36%);
 }
 body .hero h1,
 body .hero .hero-brand-wordmark,
@@ -112,7 +112,10 @@ body .hero .hero-brand-wordmark span {
 }
 body .hero .hero-brand-icon-frame::before { background: none; }
 body .hero .hero-copy,
-body .hero .hero-trust { color: #414b68; }
+body .hero .hero-trust {
+  color: var(--balance-navy);
+  text-shadow: 0 1px 8px rgba(247,244,237,.5);
+}
 body .hero .hero-content > .eyebrow { color: var(--balance-gold-text); }
 body .hero .hero-scroll-cue { color: var(--balance-navy); }
 body .hero .hero-scroll-cue-track { background: rgba(27,34,80,.2); }
@@ -286,7 +289,7 @@ body:has(#payment-app) > header button { border-color: var(--balance-champagne);
 
 @media (max-width: 720px) {
   body .hero .hero-overlay {
-    background: linear-gradient(180deg, rgba(247,244,237,.96), rgba(247,244,237,.92) 56%, rgba(247,244,237,.88));
+    background: linear-gradient(180deg, rgba(247,244,237,.50), rgba(247,244,237,.46) 52%, rgba(247,244,237,.40));
   }
   body .hero #heroSearch {
     background: var(--balance-ivory);
