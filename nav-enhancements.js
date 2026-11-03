@@ -96,7 +96,7 @@
     }
     if (!document.querySelector('script[data-guest-moments-script]')) {
       const script = document.createElement('script');
-      script.src = 'guest-moments.js?v=20261029-rental-guests-1';
+      script.src = 'guest-moments.js?v=20261103-rental-home-1';
       script.defer = true;
       script.dataset.guestMomentsScript = 'true';
       document.body.appendChild(script);

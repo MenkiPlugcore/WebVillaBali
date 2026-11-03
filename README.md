@@ -34,7 +34,7 @@ Source code is retained in GitHub. Data/photo/video backup work is outside the c
 
 ## Rental customer photos
 
-The motorbike rental page displays an automatic photo strip above the fleet, using the same published rental guest photos as the homepage. Open **Momen tamu → + Tambah foto** in the staff panel, upload a photo, select **Pelanggan rental motor**, fill in the caption/location, confirm permission to publish, and save with **Status tayang: Terbit**. At least two photos enable the moving strip; a single photo is displayed as a static card. Drafts and archived photos stay hidden. The strip pauses on hover/touch and respects reduced-motion preferences; **Lihat galeri rental** opens the complete photo gallery.
+Rental guest photos appear in a full-width homepage section above **Long stay & mobility**, matching the **Moments with our guests** gallery. The motorbike rental page displays the same photos above its fleet. Open **Momen tamu → + Tambah foto** in the staff panel, upload a photo, select **Pelanggan rental motor**, fill in the caption/location, confirm permission to publish, and save with **Status tayang: Terbit**. At least two photos enable the moving strip; a single photo is displayed as a static card. Drafts and archived photos stay hidden. The strip pauses on hover/touch and respects reduced-motion preferences; **Lihat galeri rental** opens the complete photo gallery.
 
 ## Further documentation
 
