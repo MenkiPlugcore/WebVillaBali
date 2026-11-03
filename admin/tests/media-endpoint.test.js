@@ -6,6 +6,26 @@ const env={url:'https://example.invalid',key:'server-only-test-key'};
 const id='00000000-0000-4000-8000-000000000001';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json'}});
 const req=(body,headers={})=>new Request('https://example.invalid/functions/v1/admin-media',{method:'POST',headers:{Authorization:'Bearer user-test-token','Content-Type':'application/json',...headers},body:JSON.stringify(body)});
+test('poster uploads persist the exact slot with caller authorization and reject unknown slots',async()=>{
+ const old=globalThis.fetch;
+ try{for(const slot of ['tour_poster','driver_poster']){
+  let saved,uploaded;
+  globalThis.fetch=async(url,init={})=>{
+   if(url.endsWith('/auth/v1/user'))return json({id,app_metadata:{aup_role:'owner'}});
+   if(url.endsWith('/rest/v1/rpc/staff_access'))return json(true);
+   if(url.includes('/rest/v1/site_media?')){assert.equal(new URL(url).searchParams.get('key'),'eq.'+slot);return json([]);}
+   if(url.endsWith('/storage/v1/bucket/aup-media'))return json({public:false});
+   if(url.includes('/storage/v1/object/aup-media/')){uploaded=url.split('/object/aup-media/')[1];return json({});}
+   if(url.endsWith('/rest/v1/site_media')){assert.equal(init.headers.Authorization,'Bearer user-test-token');saved=JSON.parse(init.body);return json([saved]);}
+   if(url.endsWith('/rest/v1/rpc/media_cleanup'))return json([]);
+   throw Error(url);
+  };
+  const data=new FormData();data.set('table','site_media');data.set('id',slot);data.set('file',new File([png],'poster.png',{type:'image/png'}));
+  assert.equal((await handle(new Request('https://example.invalid',{method:'POST',headers:{Authorization:'Bearer user-test-token'},body:data}),env)).status,200);assert.equal(saved.key,slot);assert.equal(saved.storage_path,uploaded);assert.ok(uploaded.startsWith('site_media/'+slot+'/'));
+ }
+ assert.equal((await handle(req({action:'list',table:'site_media',id:'unapproved_poster'}),env)).status,400);
+ }finally{globalThis.fetch=old;}
+});
 test('cover and reorder mutations use caller authorization and reject malformed orders',async()=>{const old=globalThis.fetch,calls=[];try{globalThis.fetch=async(url,init={})=>{if(url.endsWith('/auth/v1/user'))return json({id,app_metadata:{aup_role:'editor'}});if(url.endsWith('/rest/v1/rpc/staff_access'))return json(true);if(url.includes('/rest/v1/properties'))return json([{id}]);if(url.endsWith('/rest/v1/rpc/manage_gallery')){calls.push(init);return json({success:true});}throw Error(url);};assert.equal((await handle(req({table:'properties',id,action:'cover',image_id:id}),env)).status,200);assert.equal(calls[0].headers.Authorization,'Bearer user-test-token');assert.deepEqual(JSON.parse(calls[0].body),{p_table:'properties',p_parent:id,p_action:'cover',p_image:id,p_order:null});assert.equal((await handle(req({table:'properties',id,action:'reorder',order:[id]}),env)).status,200);assert.equal((await handle(req({table:'properties',id,action:'reorder',order:[id,id]}),env)).status,400);assert.equal(calls.length,2);}finally{globalThis.fetch=old;}});
 test('stale gallery order reports a conflict without success',async()=>{const old=globalThis.fetch;try{globalThis.fetch=async(url)=>{if(url.endsWith('/auth/v1/user'))return json({id,app_metadata:{aup_role:'admin'}});if(url.endsWith('/rest/v1/rpc/staff_access'))return json(true);if(url.includes('/rest/v1/properties'))return json([{id}]);return json({code:'22023'},400);};const response=await handle(req({table:'properties',id,action:'reorder',order:[id]}),env);assert.equal(response.status,409);assert.match((await response.json()).error,/Galeri berubah/);}finally{globalThis.fetch=old;}});
 test('metadata removal remains successful with an explicit private-file cleanup warning',async()=>{const old=globalThis.fetch;const storage_path='properties/'+id+'/'+id+'.jpg';try{globalThis.fetch=async(url,init={})=>{if(url.endsWith('/auth/v1/user'))return json({id,app_metadata:{aup_role:'admin'}});if(url.endsWith('/rest/v1/rpc/staff_access'))return json(true);if(url.includes('/rest/v1/properties'))return json([{id}]);if(url.includes('/rest/v1/property_images'))return json([{id,storage_path}]);if(url.endsWith('/rest/v1/rpc/remove_gallery_photo'))return json({success:true,storage_path});if(url.endsWith('/storage/v1/object/aup-media'))return json({},500);throw Error(url);};const response=await handle(req({table:'properties',id,action:'remove',image_id:id}),env);assert.equal(response.status,200);const body=await response.json();assert.equal(body.success,true);assert.match(body.warning,/dicoba ulang otomatis/);}finally{globalThis.fetch=old;}});

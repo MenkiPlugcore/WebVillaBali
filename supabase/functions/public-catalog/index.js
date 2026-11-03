@@ -1,4 +1,5 @@
 import {publicSettings} from './settings.js';
+import {rentalMediaKeys,validRentalMediaPath} from '../_shared/rental-media.js';
 const origins = ['https://webvillabali.menkiestes.workers.dev', 'https://agungubudproperty.com', 'https://www.agungubudproperty.com'];
 const fields = 'id,slug,title_id,title_en,description_id,description_en,property_type,purpose,price,currency,price_period,tenure,bedrooms,bathrooms,land_area_m2,building_area_m2,facilities,address_public,maps_url,availability,is_featured,locations(name),property_images(id,alt_id,alt_en,is_cover,sort_order)';
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -23,11 +24,11 @@ export async function handle(req, env) {
   try {
     if(url.searchParams.get('kind')==='site_media'){
       const image=url.searchParams.get('image');
-      if(image!==null&&image!=='rental_hero')return reply({error:'Foto tidak ditemukan.'},404);
-      const [banner]=await read('site_media',{key:'eq.rental_hero',select:'storage_path,updated_at',limit:'1'});
-      const valid=banner&&/^site_media\/rental_hero\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp)$/.test(banner.storage_path);
-      if(image===null)return reply({media:{rental_hero:valid?{version:banner.updated_at}:null}});
-      if(!valid)return reply({error:'Foto tidak ditemukan.'},404);
+      if(image!==null&&!rentalMediaKeys.includes(image))return reply({error:'Foto tidak ditemukan.'},404);
+      const records=await read('site_media',{key:image===null?'in.('+rentalMediaKeys.join(',')+')':'eq.'+image,select:'key,storage_path,updated_at'});
+      if(image===null)return reply({media:Object.fromEntries(rentalMediaKeys.map(key=>{const row=records.find(row=>row.key===key&&validRentalMediaPath(key,row.storage_path));return [key,row?{version:row.updated_at}:null];}))});
+      const banner=records.find(row=>row.key===image&&validRentalMediaPath(image,row.storage_path));
+      if(!banner)return reply({error:'Foto tidak ditemukan.'},404);
       const signed=await fetch(env.url+'/storage/v1/object/sign/aup-media/'+banner.storage_path,{method:'POST',headers:{apikey:env.key,Authorization:'Bearer '+env.key,'Content-Type':'application/json'},body:JSON.stringify({expiresIn:300})});
       if(!signed.ok)throw Error('Rental artwork signing failed.');
       const data=await signed.json(),path=data.signedURL||data.signedUrl;

@@ -7,8 +7,8 @@ import {png} from './fixtures/images.js';
 const env={url:'https://example.invalid',key:'server-only-key'};
 const id='00000000-0000-4000-8000-000000000001',photo='00000000-0000-4000-8000-000000000002';
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status});
-function fixture({table='properties',role='owner',failPatch=false,stale=false,deleteDenied=false,failStorage=false}={}){
- const site=table==='site_media',guest=table==='guest_moments',key=site?'rental_hero':id;
+function fixture({table='properties',role='owner',failPatch=false,stale=false,deleteDenied=false,failStorage=false,slot='rental_hero'}={}){
+ const site=table==='site_media',guest=table==='guest_moments',key=site?slot:id;
  const imageTable=site||guest?table:table==='properties'?'property_images':'motorbike_images';
  const oldPath=table+'/'+key+'/'+photo+'.png',calls=[],removed=[],jobs=[];
  let path=oldPath,uploadedPath,metadataSaved=false;
@@ -44,7 +44,7 @@ function fixture({table='properties',role='owner',failPatch=false,stale=false,de
    if(deleteDenied)return json([]);
    metadataSaved=true;jobs.push({id:photo,lease_token:photo,storage_path:oldPath});return json([{id}]);
   }
-  if(url.includes('/rest/v1/'+table+'?'))return json([{id,key:site?'rental_hero':undefined,...(site||guest?{storage_path:path}:{})}]);
+  if(url.includes('/rest/v1/'+table+'?'))return json([{id,key:site?key:undefined,...(site||guest?{storage_path:path}:{})}]);
   if(url.includes('/rest/v1/'+imageTable+'?'))return json([{id:photo,storage_path:path,is_cover:true,sort_order:4}]);
   throw Error('Unexpected request '+url);
  };
@@ -88,6 +88,17 @@ test('owner can replace rental artwork while an editor cannot reach storage',asy
   assert.equal((await handle(f.replace(),env)).status,role==='owner'?200:403);
   assert.equal(f.metadataSaved,role==='owner');assert.equal(f.calls.some(c=>c.url.includes('/storage/')),role==='owner');
  }}finally{globalThis.fetch=original;}
+});
+test('poster replacements isolate tour and driver paths, reject stale images, and keep editor access denied',async()=>{
+ const original=globalThis.fetch;
+ try{for(const slot of ['tour_poster','driver_poster'])for(const role of ['owner','editor']){
+  const f=fixture({table:'site_media',slot,role});globalThis.fetch=f.fetch;
+  const response=await handle(f.replace(),env);assert.equal(response.status,role==='owner'?200:403);
+  if(role==='owner'){assert.match(f.path,new RegExp('^site_media/'+slot+'/'));assert.deepEqual(f.removed,[f.oldPath]);const patch=f.calls.find(call=>call.init.method==='PATCH');assert.equal(new URL(patch.url).searchParams.get('key'),'eq.'+slot);}
+  else assert.equal(f.uploadedPath,undefined);
+ }
+ const stale=fixture({table:'site_media',slot:'tour_poster',stale:true});globalThis.fetch=stale.fetch;assert.equal((await handle(stale.replace(),env)).status,409);assert.equal(stale.path,stale.oldPath);assert.deepEqual(stale.removed,[stale.uploadedPath]);
+ }finally{globalThis.fetch=original;}
 });
 test('deleting a product uses caller RLS and then drains its queued photos; denied deletion never touches storage',async()=>{
  const original=globalThis.fetch;

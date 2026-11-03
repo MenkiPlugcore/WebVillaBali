@@ -1,5 +1,5 @@
 const uuid='[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
-const safePath=new RegExp('^((properties|motorbikes|guest_moments)/'+uuid+'|site_media/rental_hero)/'+uuid+'\\.(jpg|png|webp)$');
+const safePath=new RegExp('^((properties|motorbikes|guest_moments)/'+uuid+'|site_media/(rental_hero|tour_poster|driver_poster))/'+uuid+'\\.(jpg|png|webp)$');
 export async function cleanupRPC(env,body){
  const response=await fetch(env.url+'/rest/v1/rpc/media_cleanup',{method:'POST',headers:{apikey:env.key,Authorization:'Bearer '+env.key,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(15000)});
  if(!response.ok)throw Error('Cleanup queue unavailable');return response.json();

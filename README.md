@@ -36,6 +36,10 @@ Source code is retained in GitHub. Data/photo/video backup work is outside the c
 
 Rental guest photos appear in a full-width homepage section above **Long stay & mobility**, matching the **Moments with our guests** gallery. The motorbike rental page displays the same photos above its fleet. Open **Momen tamu → + Tambah foto** in the staff panel, upload a photo, select **Pelanggan rental motor**, fill in the caption/location, confirm permission to publish, and save with **Status tayang: Terbit**. At least two photos enable the moving strip; a single photo is displayed as a static card. Drafts and archived photos stay hidden. The strip pauses on hover/touch and respects reduced-motion preferences; **Lihat galeri rental** opens the complete photo gallery.
 
+## Tour and driver posters
+
+The rental area on the homepage and the motorbike rental page show two matching poster frames: **Paket Tour** and **Layanan Sopir**. Manage them under **Konten website → Poster tour & sopir**. Use **1080 × 1350 px (4:5)** for both posters, with prices, routes and contact details included in the designs. JPG, PNG and WebP up to 8 MB are supported. Uploads appear immediately; **Ganti foto** replaces a poster, and **Sembunyikan poster** removes it. Images are contained within the frame without cropping, and visitors can open the original poster. Empty slots display a coming-soon message.
+
 ## Further documentation
 
 - [Backend setup and feature history](backend/README.md)

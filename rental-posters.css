@@ -1,0 +1,18 @@
+.rental-posters-section{padding-top:72px;scroll-margin-top:110px;color:#1b2250}
+.rental-posters-heading{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:end;margin-bottom:32px}
+.rental-posters-heading h2{font-family:"Playfair Display",serif;font-size:clamp(34px,4vw,54px);font-weight:500;line-height:1.05;letter-spacing:-.025em;margin:0;max-width:680px}
+.rental-posters-heading>p{font-size:14px;line-height:1.75;color:#59617b;margin:0;max-width:450px}
+.rental-posters-grid{display:grid;grid-template-columns:repeat(2,minmax(0,360px));justify-content:center;gap:28px}
+.rental-poster-card{min-width:0;padding:16px;background:#fff;border:1px solid rgba(198,167,109,.4);border-radius:20px;box-shadow:0 12px 34px rgba(27,34,80,.05)}
+.rental-poster-card h3{margin:0 0 14px;font-size:14px;font-weight:700;letter-spacing:.02em}
+.rental-poster-link{display:block;color:inherit;text-decoration:none}
+.rental-poster-frame{display:flex;aspect-ratio:4/5;width:100%;overflow:hidden;border-radius:12px;background:#f7f4ed;align-items:center;justify-content:center}
+.rental-poster-frame img{width:100%;height:100%;object-fit:contain;display:block}
+.rental-poster-frame img[hidden]{display:none}
+.rental-poster-empty{padding:28px;border:1px dashed rgba(27,34,80,.2);text-align:center;color:#59617b;font-size:14px;line-height:1.7}
+.rental-poster-open{display:block;text-align:center;font-size:12px;font-weight:700;padding:16px 4px 2px}
+.rental-poster-link:focus-visible{outline:3px solid #c6a76d;outline-offset:5px;border-radius:12px}
+.rental-posters-status{margin:0 0 24px;color:#59617b;font-size:14px}
+.rental-posters-status button{min-height:44px;border:1px solid currentColor;border-radius:99px;padding:8px 18px;background:transparent;color:inherit;cursor:pointer}
+.motor-rental-page .rental-posters-section{padding-top:90px}
+@media(max-width:720px){.rental-posters-heading{grid-template-columns:1fr;gap:16px}.rental-posters-grid{grid-template-columns:minmax(0,420px);gap:22px}.rental-posters-section,.motor-rental-page .rental-posters-section{padding-top:52px}}

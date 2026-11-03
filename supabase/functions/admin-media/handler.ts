@@ -1,4 +1,4 @@
-import {imageType,staffRole,validUUID,mediaTables,validMediaPath,boundedBody} from './validation.js';
+import {imageType,staffRole,validUUID,mediaTables,validMediaPath,boundedBody,rentalMediaKeys} from './validation.js';
 import {drainMediaCleanup,discardUpload} from '../_shared/media-cleanup.js';
 const bucket='aup-media';
 const allowedOrigins=['https://webvillabali.menkiestes.workers.dev','https://agungubudproperty.com','https://www.agungubudproperty.com'];
@@ -39,19 +39,19 @@ export async function handle(req:Request,env:{url:string,key:string}){
   const site=table==='site_media',guest=table==='guest_moments';
   if(!Object.hasOwn(mediaTables,table))return reply({error:'Jenis konten tidak valid.'},400);
   if(site){
-   if(id!=='rental_hero')return reply({error:'Bagian website tidak valid.'},400);
-   if(!['owner','admin','developer'].includes(user.app_metadata?.aup_role))return reply({error:'Hanya owner/admin yang dapat mengubah foto utama rental.'},403);
+   if(!rentalMediaKeys.includes(id))return reply({error:'Bagian website tidak valid.'},400);
+   if(!['owner','admin','developer'].includes(user.app_metadata?.aup_role))return reply({error:'Hanya owner/admin yang dapat mengubah media rental.'},403);
   }else if(!(guest&&action==='upload')&&!validUUID(id))return reply({error:'ID konten tidak valid.'},400);
   if(multipart&&!['upload','replace'].includes(action))return reply({error:'Aksi tidak valid.'},400);
   const [imageTable,parent]=mediaTables[table as keyof typeof mediaTables];
-  const recordKey=site?'key':'id',queryKey=site?'key=eq.rental_hero':'id=eq.'+id;
+  const recordKey=site?'key':'id',queryKey=site?'key=eq.'+id:'id=eq.'+id;
   let record;
   if(id){
    const records=await request('/rest/v1/'+table+'?'+queryKey+'&select='+recordKey+(guest||site?',storage_path':''));
    record=records[0];if(!record&&!site)return reply({error:'Konten tidak ditemukan.'},404);
   }
   if(action==='list'){
-   const images=guest||site?(record?[{...record,id:site?'rental_hero':record.id}]:[]):await request('/rest/v1/'+imageTable+'?'+parent+'=eq.'+id+'&select=id,storage_path,is_cover,sort_order&order=sort_order.asc,created_at.asc,id.asc');
+   const images=guest||site?(record?[{...record,id:site?id:record.id}]:[]):await request('/rest/v1/'+imageTable+'?'+parent+'=eq.'+id+'&select=id,storage_path,is_cover,sort_order&order=sort_order.asc,created_at.asc,id.asc');
    if(images.some((image:any)=>!validMediaPath(table,image.storage_path,id)))return reply({error:'Lokasi foto tidak valid.'},400);
    const signed=await Promise.all(images.map(async(image:any)=>{
     const signed=await request('/storage/v1/object/sign/'+bucket+'/'+image.storage_path,{method:'POST',body:JSON.stringify({expiresIn:300}),headers:{'Content-Type':'application/json'}},true);
@@ -87,7 +87,7 @@ export async function handle(req:Request,env:{url:string,key:string}){
   }
   if(action==='remove'){
    if(site){
-    const removed=await request('/rest/v1/site_media?key=eq.rental_hero&storage_path=eq.'+encodeURIComponent(previous.storage_path)+'&select=key',{method:'DELETE'});
+    const removed=await request('/rest/v1/site_media?key=eq.'+id+'&storage_path=eq.'+encodeURIComponent(previous.storage_path)+'&select=key',{method:'DELETE'});
     if(!removed?.length)return reply({error:'Foto sudah berubah. Muat ulang foto, lalu coba lagi.'},409);
    }else await request('/rest/v1/rpc/remove_gallery_photo',{method:'POST',body:JSON.stringify({p_table:table,p_parent:id,p_image:previous.id,p_expected_path:previous.storage_path})});
    return reply({success:true,...await drainMediaCleanup(env)});
@@ -109,11 +109,11 @@ export async function handle(req:Request,env:{url:string,key:string}){
   let saved;
   try{
    if(action==='replace'){
-    const target=site?'key=eq.rental_hero':'id=eq.'+(guest?id:previous.id)+(parent?'&'+parent+'=eq.'+id:'');
+    const target=site?'key=eq.'+id:'id=eq.'+(guest?id:previous.id)+(parent?'&'+parent+'=eq.'+id:'');
     saved=await request('/rest/v1/'+imageTable+'?'+target+'&storage_path=eq.'+encodeURIComponent(previous.storage_path),{method:'PATCH',body:JSON.stringify({storage_path:path,...(guest?{publication_status:'draft',consent_confirmed:false}:{})})});
     if(!saved?.length)throw Error('GALLERY_CHANGED');
    }else{
-    const payload:any=site?{key:'rental_hero',storage_path:path}:parent?{[parent]:id,storage_path:path}:{id:recordId,storage_path:path,publication_status:'draft',consent_confirmed:false};
+    const payload:any=site?{key:id,storage_path:path}:parent?{[parent]:id,storage_path:path}:{id:recordId,storage_path:path,publication_status:'draft',consent_confirmed:false};
     if(parent){const images=await request('/rest/v1/'+imageTable+'?'+parent+'=eq.'+id+'&select=id,sort_order&order=sort_order.desc&limit=1');payload.is_cover=images.length===0;payload.sort_order=images.length?Number(images[0].sort_order||0)+1:0;}
     saved=await request('/rest/v1/'+imageTable,{method:'POST',body:JSON.stringify(payload)});
     if(!saved?.length)throw Error('ACCESS_DENIED');

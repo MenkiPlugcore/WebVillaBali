@@ -3,7 +3,7 @@ import {escapeHTML as esc} from './schema.js';
 export const navigationGroups=[
  {label:'Aktivitas harian',items:['dashboard','inquiries','invoices']},
  {label:'Katalog',items:['properties','motorbikes','locations','services']},
- {label:'Konten website',items:['guest_moments','testimonials','rental_banner']},
+ {label:'Konten website',items:['guest_moments','testimonials','rental_banner','rental_posters']},
  {label:'Pengaturan',items:['site_settings','payment_settings','staff_access','activity_log','developer_access']}
 ];
 const hints={
@@ -18,6 +18,7 @@ const hints={
  testimonials:'Kelola ulasan pelanggan dan izin untuk menampilkannya.',
  payment_settings:'Atur rekening BCA dan koneksi akun PayPal bisnis.',
  rental_banner:'Ganti foto utama rental motor di halaman rental dan beranda.',
+ rental_posters:'Unggah atau ganti poster Paket Tour dan Layanan Sopir dengan ukuran yang sama.',
  site_settings:'Perbarui kontak bisnis dan tautan media sosial website.',
  staff_access:'Kelola akun dan peran anggota tim.',
  activity_log:'Lihat riwayat aktivitas akun pengelola.',

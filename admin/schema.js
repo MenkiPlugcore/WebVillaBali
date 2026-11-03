@@ -21,6 +21,7 @@ export const sections={
  invoices:{label:'Invoice & pembayaran',admin:true,fields:[]},
  payment_settings:{label:'Metode pembayaran',admin:true,fields:[]},
  rental_banner:{label:'Foto utama rental',admin:true,fields:[]},
+ rental_posters:{label:'Poster tour & sopir',admin:true,fields:[]},
  site_settings:{label:'Pengaturan website',admin:true,fields:[]}
 };
 export const settingFields={contact:['email','phone','whatsapp','address'],social_links:['instagram','facebook','youtube','tiktok'],brand:['name','tagline'],homepage:['title_id','title_en','description_id','description_en']};
