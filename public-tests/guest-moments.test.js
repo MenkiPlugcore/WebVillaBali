@@ -10,10 +10,10 @@ test('guest image signs only approved database path for five minutes; drafts and
  let signs=0;await mock(async(url,init)=>{if(url.includes('/guest_moments?')){assert.equal(init.headers.Authorization,'Bearer anonymous');assert.equal(new URL(url).searchParams.get('consent_confirmed'),'eq.true');return json([{storage_path:'guest_moments/'+id+'/'+id+'.jpg'}]);}signs++;assert.equal(init.headers.Authorization,'Bearer server-secret');assert.equal(JSON.parse(init.body).expiresIn,300);return json({signedURL:'/object/sign/aup-media/guest_moments/photo.jpg?token=test'});},async()=>{const response=await handle(new Request('https://example.com?kind=guest&image='+id+'&path=properties/forged.jpg'),env);assert.equal(response.status,302);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(signs,1);});
  for(const rows of [[],[{storage_path:'properties/'+id+'/'+id+'.jpg'}],[{storage_path:'guest_moments/../private.jpg'}]])await mock(async url=>{assert.match(url,/guest_moments/);return json(rows);},async()=>{assert.equal((await handle(new Request('https://example.com?kind=guest&image='+id),env)).status,404);});
 });
-async function page({dedicated=false,rows=[],fail=false,more=false,visibility=false,category='property',rentalRows=[],withRental=true}={}){
- const {window,document}=parseHTML(`<html><body class="${dedicated?'guest-moments-page':''}"><button id="languageToggle"></button><button id="guestLanguage"></button><header class="site-header"><a href="index.html#properties">Properties</a></header><section id="properties"></section><section id="propertyTypes"></section><section id="about"></section>${!dedicated&&withRental?'<section id="livingMobility"><div class="lm-grid"><article id="kostLiving"></article><div class="lm-rental-column"><article class="motor-teaser-panel"></article></div></div></section>':''}${dedicated?'<h1 data-gm-copy="pageTitle"></h1><div id="guestMomentsGrid"></div>':''}</body></html>`);window.HTMLElement.prototype.focus=function(){document.__focused=this;};let lang='id',calls=[];window.location={search:category==='motorbike'?'?category=motorbike':''};
+async function page({dedicated=false,rows=[],fail=false,more=false,visibility=false,category='property',rentalRows=[],testimonialRows=[],withRental=true,withTestimonials=false}={}){
+ const {window,document}=parseHTML(`<html><body class="${dedicated?'guest-moments-page':''}"><button id="languageToggle"></button><button id="guestLanguage"></button><header class="site-header"><a href="index.html#properties">Properties</a></header><section id="properties"></section><section id="propertyTypes"></section><section id="about"></section>${withTestimonials?'<section id="reviews"></section>':''}${!dedicated&&withRental?'<section id="livingMobility"><div class="lm-grid"><article id="kostLiving"></article><div class="lm-rental-column"><article class="motor-teaser-panel"></article></div></div></section>':''}${dedicated?'<h1 data-gm-copy="pageTitle"></h1><div id="guestMomentsGrid"></div>':''}</body></html>`);window.HTMLElement.prototype.focus=function(){document.__focused=this;};let lang='id',calls=[];window.location={search:category==='property'?'':'?category='+category};
  const observed=new Map();
- vm.runInNewContext(fs.readFileSync('guest-moments.js','utf8'),{window,document,...(visibility?{IntersectionObserver:class{constructor(cb){this.cb=cb;}observe(el){observed.set(el.id,this.cb);}disconnect(){}}}:{}),localStorage:{getItem:()=>lang,setItem:(key,v)=>lang=v},AbortSignal,URLSearchParams,setTimeout,Date,fetch:async url=>{calls.push(url);if(fail)throw Error('offline');const params=new URL(url).searchParams,kind=params.get('category')||'property',page=params.get('page');return json({moments:page==='1'?[{id:'74f847f1-f32d-450c-a64a-7af7d7368302',caption_id:'Kedua',category:kind}]:(kind==='motorbike'?rentalRows:rows),hasMore:page==='0'&&more});}});await new Promise(r=>setTimeout(r,15));return {window,document,calls,setVisible:(value,section='guestMoments')=>observed.get(section)?.([{isIntersecting:value}])};
+ vm.runInNewContext(fs.readFileSync('guest-moments.js','utf8'),{window,document,...(visibility?{IntersectionObserver:class{constructor(cb){this.cb=cb;}observe(el){observed.set(el.id,this.cb);}disconnect(){}}}:{}),localStorage:{getItem:()=>lang,setItem:(key,v)=>lang=v},AbortSignal,URLSearchParams,setTimeout,Date,fetch:async url=>{calls.push(url);if(fail)throw Error('offline');const params=new URL(url).searchParams,kind=params.get('category')||'property',page=params.get('page');return json({moments:page==='1'?[{id:'74f847f1-f32d-450c-a64a-7af7d7368302',caption_id:'Kedua',category:kind}]:({motorbike:rentalRows,testimonial:testimonialRows}[kind]||rows),hasMore:page==='0'&&more});}});await new Promise(r=>setTimeout(r,15));return {window,document,calls,setVisible:(value,section='guestMoments')=>observed.get(section)?.([{isIntersecting:value}])};
 }
 test('guest photos and captions are real, escaped and language-aware; dialog closes and returns focus',async()=>{
  const {window,document}=await page({dedicated:true,rows:[{id,caption_id:'<img src=x onerror=alert(1)>',caption_en:'Real moment',location_label:'<b>Ubud</b>'}]});assert.equal(document.querySelectorAll('#guestMomentsGrid img').length,1);const button=document.querySelector('[data-gm-id]');assert.match(button.textContent,/<img/);assert.equal(button.querySelector('b'),null);assert.match(button.querySelector('img').src,/kind=guest&image=/);button.click();assert.equal(document.querySelector('.gm-lightbox').hidden,false);assert.equal(document.querySelector('.gm-lightbox').getAttribute('aria-modal'),'true');const key=new window.Event('keydown');key.key='Escape';document.querySelector('.gm-lightbox').dispatchEvent(key);assert.equal(document.querySelector('.gm-lightbox').hidden,true);assert.equal(document.__focused,button);document.querySelector('#guestLanguage').click();assert.equal(document.querySelector('[data-gm-id] small').textContent,'Real moment');assert.equal(document.querySelector('.site-header a').textContent,'Properties');
@@ -61,7 +61,7 @@ test('a single photo remains a gallery link without repeating it or showing an a
 });
 
 test('guest API filters property and rental galleries independently and rejects unknown categories',async()=>{
- for(const category of ['property','motorbike'])await mock(async raw=>{const params=new URL(raw).searchParams;assert.equal(params.get('category'),'eq.'+category);assert.equal(params.get('publication_status'),'eq.published');assert.equal(params.get('consent_confirmed'),'eq.true');assert.match(params.get('select'),/category/);return json([{id,category,caption_id:'Kategori '+category}]);},async()=>{const res=await handle(new Request('https://example.com?kind=guest&category='+category),env);assert.equal(res.status,200);assert.equal((await res.json()).moments[0].category,category);});
+ for(const category of ['property','motorbike','testimonial'])await mock(async raw=>{const params=new URL(raw).searchParams;assert.equal(params.get('category'),'eq.'+category);assert.equal(params.get('publication_status'),'eq.published');assert.equal(params.get('consent_confirmed'),'eq.true');assert.match(params.get('select'),/category/);return json([{id,category,caption_id:'Kategori '+category}]);},async()=>{const res=await handle(new Request('https://example.com?kind=guest&category='+category),env);assert.equal(res.status,200);assert.equal((await res.json()).moments[0].category,category);});
  await mock(()=>{throw Error('Unknown categories must not read storage or rows.');},async()=>{assert.equal((await handle(new Request('https://example.com?kind=guest&category=all'),env)).status,400);});
 });
 test('rental image requests never sign a property photo or a draft without consent',async()=>{
@@ -87,4 +87,27 @@ test('rental-only full gallery preserves its category when paginating, changing 
 });
 test('wrong-category responses never appear as rental guest photos',async()=>{
  const {document}=await page({rows:[{id,category:'property'}],rentalRows:[{id,category:'property'}]});assert.equal(document.querySelectorAll('#guestMoments [data-gm-id]').length,1);assert.equal(document.querySelectorAll('#rentalMoments [data-gm-id]').length,0);assert.match(document.querySelector('#rentalMoments .gm-state').textContent,/rental motor/);
+});
+test('testimonial grid opens images and keeps the preview and full gallery separate from guest photos', async () => {
+  const testimonialRows = Array.from({length: 5}, (_, i) => ({
+    id: '74f847f1-f32d-450c-a64a-7af7d73683' + String(i + 20),
+    category: 'testimonial',
+    caption_id: 'Testimoni ' + (i + 1)
+  }));
+  const home = await page({withTestimonials: true, testimonialRows, rows: [{id, category: 'property'}]});
+  const section = home.document.getElementById('customerTestimonials');
+  assert.equal(section.previousElementSibling.id, 'reviews');
+  assert.equal(section.querySelector('a').getAttribute('href'), '/guest-moments?category=testimonial');
+  assert.equal(section.querySelectorAll('.testimonial-tile').length, 4);
+  assert.equal(home.document.querySelectorAll('#guestMoments [data-gm-id]').length, 1);
+  const tile = section.querySelector('button');
+  tile.click();
+  const modal = home.document.querySelector('.gm-lightbox');
+  assert.equal(modal.hidden, false);
+  assert.match(modal.querySelector('img').getAttribute('src'), /category=testimonial/);
+  modal.querySelector('button').click();
+  assert.equal(home.document.__focused, tile);
+  const archive = await page({dedicated: true, category: 'testimonial', testimonialRows});
+  assert.match(archive.document.querySelector('h1').textContent, /Testimoni pelanggan/);
+  assert.equal(archive.document.querySelectorAll('.testimonial-grid .testimonial-tile').length, 5);
 });

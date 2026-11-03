@@ -74,3 +74,92 @@ body .rental-moments-section { padding: 28px 24px; border: 1px solid rgba(198,16
 .rental-moments-section .guest-moments-actions { flex-direction: column; align-items: stretch; gap: 14px; margin-top: 20px; }
 .rental-moments-section .gm-state { padding: 24px 16px; font-size: 13px; }
 @media (max-width:620px) { body .rental-moments-section { padding: 25px 18px; border-radius: 18px; } }
+
+.testimonial-section {
+  padding-block: 36px 76px;
+  scroll-margin-top: 100px;
+}
+
+.testimonial-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px clamp(14px, 3vw, 24px);
+  margin-bottom: 20px;
+  border: 1px solid rgba(27, 34, 80, .14);
+  border-radius: 18px;
+  background: #fffdf8;
+  color: #1b2250;
+}
+
+.testimonial-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: inherit;
+  font-size: clamp(15px, 3.7vw, 23px);
+  font-weight: 700;
+}
+
+.testimonial-heading svg {
+  flex: none;
+  width: 24px;
+  color: #89662f;
+}
+
+.testimonial-heading a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: #785721;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 2vw, 20px);
+  align-items: start;
+  columns: auto;
+}
+
+.testimonial-grid .gm-state {
+  border-color: rgba(27, 34, 80, .14);
+}
+
+.testimonial-tile {
+  margin: 0;
+  border: 1px solid rgba(27, 34, 80, .14);
+  background: #f6f1e7;
+  color: #1b2250;
+}
+
+.testimonial-tile img {
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
+}
+
+.testimonial-tile:hover img {
+  transform: none;
+}
+
+.testimonial-tile img[hidden], .testimonial-caption:empty {
+  display: none;
+}
+
+.testimonial-caption {
+  display: block;
+  padding: 10px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .testimonial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

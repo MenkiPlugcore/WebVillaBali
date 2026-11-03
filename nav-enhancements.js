@@ -90,13 +90,13 @@
     if (!document.querySelector('link[data-guest-moments-style]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'guest-moments.css?v=20261029-rental-guests-1';
+      style.href = 'guest-moments.css?v=20261104-testimonials-1';
       style.dataset.guestMomentsStyle = 'true';
       document.head.appendChild(style);
     }
     if (!document.querySelector('script[data-guest-moments-script]')) {
       const script = document.createElement('script');
-      script.src = 'guest-moments.js?v=20261103-rental-home-1';
+      script.src = 'guest-moments.js?v=20261104-testimonials-1';
       script.defer = true;
       script.dataset.guestMomentsScript = 'true';
       document.body.appendChild(script);

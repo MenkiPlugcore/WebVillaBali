@@ -37,7 +37,7 @@ export async function handle(req, env) {
     }
     if(guest){
       const category=url.searchParams.get('category')??'property';
-      if(!['property','motorbike'].includes(category))return reply({error:'Kategori galeri tidak valid.'},400);
+      if(!['property','motorbike','testimonial'].includes(category))return reply({error:'Kategori galeri tidak valid.'},400);
       const imageId=url.searchParams.get('image');
       if(imageId!==null){
         if(!uuid.test(imageId))return reply({error:'Foto tidak ditemukan.'},404);
