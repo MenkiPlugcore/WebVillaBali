@@ -3,6 +3,7 @@
   const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const dedicated=document.body.classList.contains('guest-moments-page');
+  const rentalPage=document.body.classList.contains('motor-rental-page');
   const copy={
     en:{home:'Home',properties:'Properties',locations:'Locations',services:'Services',about:'About',contact:'Talk to us',eyebrow:'Guest documentation',title:'Moments with our guests.',intro:'Arrivals, visits, and memories shared with our guests.',note:'Shared with permission',view:'View all moments',foot:'A glimpse of the people and moments behind Agung Ubud Property.',caption:'Guest moment',back:'← Back to home',pageTitle:'Guest moments & memories',pageIntro:'A visual archive of visits and meaningful moments at Agung Ubud Property.',galleryTitle:'A closer look at the moments.',galleryCopy:'Guest documentation selected by our team and shared with permission.',empty:'Guest moments coming soon.',loading:'Loading guest moments…',error:'Guest moments could not be loaded.',retry:'Try again',more:'Show more moments',close:'Close photo',photoError:'Photo could not be loaded.',openGallery:'Open guest gallery'},
     id:{home:'Beranda',properties:'Properti',locations:'Lokasi',services:'Layanan',about:'Tentang',contact:'Hubungi kami',eyebrow:'Dokumentasi tamu',title:'Momen bersama para tamu.',intro:'Dokumentasi kedatangan, kunjungan, dan kenangan bersama para tamu.',note:'Dibagikan dengan izin',view:'Lihat semua momen',foot:'Cerita kecil dari orang-orang dan momen di Agung Ubud Property.',caption:'Momen tamu',back:'← Kembali ke beranda',pageTitle:'Momen & dokumentasi tamu',pageIntro:'Arsip visual kunjungan dan momen bermakna di Agung Ubud Property.',galleryTitle:'Lihat momen lebih dekat.',galleryCopy:'Dokumentasi pilihan tim yang telah mendapat izin publikasi.',empty:'Dokumentasi tamu segera hadir.',loading:'Memuat dokumentasi tamu…',error:'Dokumentasi tamu belum bisa dimuat.',retry:'Coba lagi',more:'Lihat momen lainnya',close:'Tutup foto',photoError:'Foto belum bisa dimuat.',openGallery:'Buka galeri tamu'}
@@ -47,7 +48,7 @@
   function state(){const c=t();return `<div class="gm-state" role="status"><p>${escape(busy?c.loading:failed?c.error:c.empty)}</p>${failed&&!busy?`<button type="button" data-gm-retry>${c.retry}</button>`:''}</div>`;}
   function homepage(){
     let section=document.getElementById(sectionId);
-    if(!section){const anchor=rental?document.querySelector('#livingMobility .motor-teaser-panel'):document.getElementById('properties');if(!anchor)return;section=document.createElement('section');section.id=sectionId;section.className='guest-moments-section'+(rental?' rental-moments-section':'');anchor.insertAdjacentElement(rental?'beforebegin':'afterend',section);hovered=false;touches.clear();}
+    if(!section){const anchor=rental?(rentalPage?document.getElementById('fleet'):document.querySelector('#livingMobility .motor-teaser-panel')):document.getElementById('properties');if(!anchor)return;section=document.createElement('section');section.id=sectionId;section.className='guest-moments-section'+(rental?' rental-moments-section':'');anchor.insertAdjacentElement(rental?'beforebegin':'afterend',section);hovered=false;touches.clear();}
     const c=t();section.innerHTML=`<div class="shell"><div class="guest-moments-head"><div><p class="eyebrow light">${c.eyebrow}</p><h2>${c.title}</h2></div><div class="guest-moments-copy"><p>${c.intro}</p><span class="guest-moments-note">${c.note}</span></div></div>${preview()}<div class="guest-moments-actions"><p>${c.foot}</p><a class="guest-moments-link" href="${galleryHref}">${c.view} →</a></div></div>`;bind(section);motion(section);previewInteraction(section);
     if(observedSection!==section&&typeof IntersectionObserver==='function'){previewObserver?.disconnect?.();observedSection=section;previewObserver=new IntersectionObserver(entries=>{section.classList.toggle('is-offscreen',!entries.some(entry=>entry.isIntersecting));},{threshold:.01});previewObserver.observe(section);}
   }
@@ -80,12 +81,13 @@
     window.addEventListener('pointerup',releaseTouch,true);window.addEventListener('pointercancel',releaseTouch,true);
     window.addEventListener('blur',clearTouches);
     document.addEventListener('visibilitychange',()=>{if(document.hidden)touches.clear();const section=document.getElementById(sectionId);if(section)motion(section);});
-    document.getElementById('languageToggle')?.addEventListener('click',()=>setTimeout(()=>{close();hovered=false;touches.clear();render();},0));
+    document.querySelectorAll('#languageToggle, #rentalLanguage').forEach(button=>button.addEventListener('click',()=>setTimeout(()=>{close();hovered=false;touches.clear();render();},0)));
   }
   if(!dedicated&&rental)document.addEventListener('aup:mobility-rendered',homepage);
   load();
   }
   if(dedicated)gallery(new URLSearchParams(window.location?.search||'').get('category')==='motorbike'?'motorbike':'property');
+  else if(rentalPage)gallery('motorbike');
   else {gallery('property');gallery('motorbike');}
 })();
 
